@@ -41,7 +41,7 @@
     <button
         type="button"
         x-ref="trigger"
-        class="text-sm hover:text-accent transition-colors flex items-center gap-1 {{ request()->routeIs('*.solutions*') ? 'text-accent' : '' }}"
+        class="text-sm hover:text-accent transition-colors flex items-center gap-1 focus:outline-none focus:text-accent {{ request()->routeIs('*.solutions*') ? 'text-accent' : '' }}"
         @click="open = !open"
         @keydown.arrow-down.prevent="open = true; $nextTick(() => focusNext())"
         @keydown.arrow-up.prevent="open = true; $nextTick(() => focusPrev())"
@@ -50,6 +50,8 @@
         :aria-expanded="open.toString()"
         aria-haspopup="true"
         aria-controls="solutions-menu"
+        data-nav-item
+        role="menuitem"
     >
         {{ __('navigation.solutions') }}
         <svg

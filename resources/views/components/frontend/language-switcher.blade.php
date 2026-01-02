@@ -2,27 +2,31 @@
     $currentLocale = app()->getLocale();
 @endphp
 
-<div class="flex items-center gap-1 text-sm">
+<div class="flex items-center gap-1 text-sm" role="group" aria-label="{{ $currentLocale === 'de' ? 'Sprache wählen' : 'Select language' }}">
     <a
         href="{{ $currentLocale === 'de' ? '#' : alternate_locale_url('de') }}"
         @class([
-            'font-medium transition-colors',
+            'font-medium transition-colors focus:outline-none focus:underline',
             'text-foreground' => $currentLocale === 'de',
             'text-muted-foreground hover:text-foreground' => $currentLocale !== 'de',
         ])
         @if($currentLocale === 'de') aria-current="true" @endif
+        data-nav-item
+        aria-label="Deutsch"
     >
         DE
     </a>
-    <span class="text-muted-foreground">|</span>
+    <span class="text-muted-foreground" aria-hidden="true">|</span>
     <a
         href="{{ $currentLocale === 'en' ? '#' : alternate_locale_url('en') }}"
         @class([
-            'font-medium transition-colors',
+            'font-medium transition-colors focus:outline-none focus:underline',
             'text-foreground' => $currentLocale === 'en',
             'text-muted-foreground hover:text-foreground' => $currentLocale !== 'en',
         ])
         @if($currentLocale === 'en') aria-current="true" @endif
+        data-nav-item
+        aria-label="English"
     >
         EN
     </a>

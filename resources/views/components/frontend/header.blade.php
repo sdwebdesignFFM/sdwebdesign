@@ -4,6 +4,23 @@
         scrolled: false,
         mobileFocusIndex: -1,
         mobileMenuItems: [],
+        desktopNavItems: [],
+        desktopNavIndex: -1,
+        initDesktopNav() {
+            this.desktopNavItems = [...this.$refs.desktopNav.querySelectorAll('[data-nav-item]')];
+        },
+        focusDesktopNext() {
+            if (this.desktopNavItems.length === 0) this.initDesktopNav();
+            const currentIndex = this.desktopNavItems.findIndex(el => el === document.activeElement || el.contains(document.activeElement));
+            const nextIndex = currentIndex < this.desktopNavItems.length - 1 ? currentIndex + 1 : 0;
+            this.desktopNavItems[nextIndex]?.focus();
+        },
+        focusDesktopPrev() {
+            if (this.desktopNavItems.length === 0) this.initDesktopNav();
+            const currentIndex = this.desktopNavItems.findIndex(el => el === document.activeElement || el.contains(document.activeElement));
+            const prevIndex = currentIndex > 0 ? currentIndex - 1 : this.desktopNavItems.length - 1;
+            this.desktopNavItems[prevIndex]?.focus();
+        },
         initMobileMenu() {
             this.$nextTick(() => {
                 this.mobileMenuItems = [...this.$refs.mobileMenuContent.querySelectorAll('a')];
@@ -25,7 +42,7 @@
             this.$refs.mobileMenuButton.focus();
         }
     }"
-    x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 })"
+    x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 }); initDesktopNav()"
     :class="{ 'bg-white/95 backdrop-blur-md shadow-sm': scrolled, 'bg-transparent': !scrolled }"
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
 >
@@ -43,15 +60,39 @@
             </a>
 
             {{-- Desktop Navigation --}}
-            <div class="hidden lg:flex items-center gap-8">
+            <div
+                x-ref="desktopNav"
+                class="hidden lg:flex items-center gap-8"
+                role="menubar"
+                aria-label="{{ app()->getLocale() === 'de' ? 'Hauptnavigation' : 'Main navigation' }}"
+                @keydown.arrow-right.prevent="focusDesktopNext()"
+                @keydown.arrow-left.prevent="focusDesktopPrev()"
+                @keydown.home.prevent="desktopNavItems[0]?.focus()"
+                @keydown.end.prevent="desktopNavItems[desktopNavItems.length - 1]?.focus()"
+            >
                 <x-frontend.mega-menu />
-                <a href="{{ localized_route('references') }}" class="text-sm hover:text-accent transition-colors {{ request()->routeIs('*.references*') ? 'text-accent' : '' }}">
+                <a
+                    href="{{ localized_route('references') }}"
+                    class="text-sm hover:text-accent transition-colors focus:outline-none focus:text-accent {{ request()->routeIs('*.references*') ? 'text-accent' : '' }}"
+                    data-nav-item
+                    role="menuitem"
+                >
                     {{ __('navigation.references') }}
                 </a>
-                <a href="{{ localized_route('about') }}" class="text-sm hover:text-accent transition-colors {{ request()->routeIs('*.about') ? 'text-accent' : '' }}">
+                <a
+                    href="{{ localized_route('about') }}"
+                    class="text-sm hover:text-accent transition-colors focus:outline-none focus:text-accent {{ request()->routeIs('*.about') ? 'text-accent' : '' }}"
+                    data-nav-item
+                    role="menuitem"
+                >
                     {{ __('navigation.about') }}
                 </a>
-                <a href="{{ localized_route('guides') }}" class="text-sm hover:text-accent transition-colors {{ request()->routeIs('*.guides*') || request()->routeIs('*.guide.*') ? 'text-accent' : '' }}">
+                <a
+                    href="{{ localized_route('guides') }}"
+                    class="text-sm hover:text-accent transition-colors focus:outline-none focus:text-accent {{ request()->routeIs('*.guides*') || request()->routeIs('*.guide.*') ? 'text-accent' : '' }}"
+                    data-nav-item
+                    role="menuitem"
+                >
                     {{ app()->getLocale() === 'de' ? 'Ratgeber' : 'Guides' }}
                 </a>
 
