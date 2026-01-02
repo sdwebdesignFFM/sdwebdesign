@@ -4,9 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Spatie\Translatable\HasTranslations;
 
 class Setting extends Model
 {
+    use HasTranslations;
+
+    /**
+     * @var array<int, string>
+     */
+    public array $translatable = [
+        'tagline',
+        'cta_title',
+        'cta_subtitle',
+        'cta_button_text',
+        'cta_secondary_button_text',
+        'default_meta_title',
+        'default_meta_description',
+    ];
+
     protected $fillable = [
         'company_name',
         'owner_name',

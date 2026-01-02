@@ -2,7 +2,7 @@
     {{-- Back Navigation --}}
     <section class="pt-24 border-b border-border bg-muted/20">
         <div class="max-w-4xl mx-auto px-6 py-6">
-            <a href="{{ route('blog') }}" class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <a href="{{ localized_route('blog') }}" class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m15 18-6-6 6-6"/>
                 </svg>
@@ -67,12 +67,16 @@
                     Wir beraten Sie gerne zu digitalen Systemen, Integrationen und technischen Architekturen –
                     pragmatisch, ohne Marketing-Gerede.
                 </p>
-                <a href="{{ route('contact') }}" class="btn-primary text-lg py-5 px-10">
+                <button
+                    type="button"
+                    onclick="Livewire.dispatch('openContactModal')"
+                    class="btn-primary text-lg py-5 px-10"
+                >
                     Projekt besprechen
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m9 18 6-6-6-6"/>
                     </svg>
-                </a>
+                </button>
             </div>
         </div>
     </section>
@@ -88,7 +92,7 @@
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($relatedArticles as $related)
-                <a href="{{ route('blog.show', $related->slug) }}"
+                <a href="{{ localized_route('blog.show', ['slug' => $related->slug]) }}"
                    class="group border border-border hover:border-foreground hover:shadow-lg transition-all bg-white">
                     <div class="p-6">
                         <div class="inline-flex items-center gap-1.5 mb-4 px-2.5 py-1 bg-accent/5 border border-accent/20 rounded-sm">

@@ -25,6 +25,9 @@
                 x-transition:leave="transition ease-in duration-200"
                 x-transition:leave-start="opacity-100 scale-100"
                 x-transition:leave-end="opacity-0 scale-95"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="contact-modal-title"
                 class="relative w-full max-w-3xl bg-white shadow-2xl rounded-2xl overflow-hidden"
             >
                 @if($isSubmitted)
@@ -35,16 +38,16 @@
                                 <path d="M20 6 9 17l-5-5"/>
                             </svg>
                         </div>
-                        <h2 class="text-2xl font-semibold mb-3">Vielen Dank für Ihre Anfrage!</h2>
+                        <h2 class="text-2xl font-semibold mb-3">{{ __('contact.success_title') }}</h2>
                         <p class="text-muted-foreground mb-8 max-w-md mx-auto">
-                            Wir haben Ihre Nachricht erhalten und melden uns innerhalb von 24 Stunden bei Ihnen.
+                            {{ __('contact.success_message') }}
                         </p>
                         <button
                             type="button"
                             wire:click="close"
                             class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-foreground text-background hover:bg-foreground/90 transition-all rounded-lg"
                         >
-                            Schliessen
+                            {{ __('contact.close') }}
                         </button>
                     </div>
                 @else
@@ -52,24 +55,32 @@
                     <div class="bg-accent text-white p-6 pb-8">
                         <div class="flex items-start justify-between">
                             <div>
-                                <h2 class="text-2xl font-semibold mb-1">Angebot anfragen</h2>
-                                <p class="text-white/70 text-sm">Schritt {{ $currentStep }} von {{ $totalSteps }}</p>
+                                <h2 id="contact-modal-title" class="text-2xl font-semibold mb-1">{{ __('contact.modal_title') }}</h2>
+                                <p class="text-white/70 text-sm">{{ __('contact.step_of', ['current' => $currentStep, 'total' => $totalSteps]) }}</p>
                             </div>
                             <button
                                 type="button"
                                 wire:click="close"
                                 class="text-white/70 hover:text-white transition-colors"
+                                aria-label="{{ __('accessibility.close_modal') }}"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                                 </svg>
                             </button>
                         </div>
 
                         {{-- Progress Bar --}}
-                        <div class="flex gap-2 mt-6">
+                        <div
+                            class="flex gap-2 mt-6"
+                            role="progressbar"
+                            aria-valuenow="{{ $currentStep }}"
+                            aria-valuemin="1"
+                            aria-valuemax="{{ $totalSteps }}"
+                            aria-label="{{ __('accessibility.step_progress', ['current' => $currentStep, 'total' => $totalSteps]) }}"
+                        >
                             @for($i = 1; $i <= $totalSteps; $i++)
-                                <div class="flex-1 h-1 rounded-full {{ $i <= $currentStep ? 'bg-white' : 'bg-white/30' }}"></div>
+                                <div class="flex-1 h-1 rounded-full {{ $i <= $currentStep ? 'bg-white' : 'bg-white/30' }}" aria-hidden="true"></div>
                             @endfor
                         </div>
                     </div>
@@ -78,11 +89,11 @@
                         {{-- Step 1: Project Types --}}
                         @if($currentStep === 1)
                             <div>
-                                <h3 class="text-lg font-semibold mb-1">Welche Art von Projekt planen Sie?</h3>
-                                <p class="text-muted-foreground text-sm mb-6">Mehrfachauswahl möglich</p>
+                                <h3 class="text-lg font-semibold mb-1">{{ __('contact.step1_title') }}</h3>
+                                <p class="text-muted-foreground text-sm mb-6">{{ __('contact.step1_subtitle') }}</p>
 
                                 <div class="grid sm:grid-cols-2 gap-3">
-                                    @foreach($projectTypes as $key => $type)
+                                    @foreach($this->projectTypes as $key => $type)
                                         @php $isSelected = in_array($key, $selectedProjectTypes); @endphp
                                         <button
                                             type="button"
@@ -118,12 +129,12 @@
                         @if($currentStep === 2)
                             <div class="space-y-8">
                                 <div>
-                                    <h3 class="text-lg font-semibold mb-4">Budget & Zeitrahmen</h3>
+                                    <h3 class="text-lg font-semibold mb-4">{{ __('contact.step2_title') }}</h3>
 
                                     <div class="mb-6">
-                                        <p class="text-sm font-medium mb-3">Geplantes Budget</p>
+                                        <p class="text-sm font-medium mb-3">{{ __('contact.planned_budget') }}</p>
                                         <div class="grid grid-cols-2 gap-2">
-                                            @foreach($budgets as $key => $label)
+                                            @foreach($this->budgets as $key => $label)
                                                 <button
                                                     type="button"
                                                     wire:click="selectBudget('{{ $key }}')"
@@ -136,9 +147,9 @@
                                     </div>
 
                                     <div>
-                                        <p class="text-sm font-medium mb-3">Gewünschter Zeitrahmen</p>
+                                        <p class="text-sm font-medium mb-3">{{ __('contact.desired_timeline') }}</p>
                                         <div class="grid grid-cols-2 gap-2">
-                                            @foreach($timelines as $key => $label)
+                                            @foreach($this->timelines as $key => $label)
                                                 <button
                                                     type="button"
                                                     wire:click="selectTimeline('{{ $key }}')"
@@ -156,73 +167,92 @@
                         {{-- Step 3: Contact Information --}}
                         @if($currentStep === 3)
                             <div class="space-y-6">
-                                <h3 class="text-lg font-semibold">Ihre Kontaktdaten</h3>
+                                <h3 class="text-lg font-semibold">{{ __('contact.step3_title') }}</h3>
 
                                 <div class="grid sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-sm font-medium mb-2">Name <span class="text-red-500">*</span></label>
+                                        <label for="contact-name" class="block text-sm font-medium mb-2">
+                                            {{ __('contact.name') }}
+                                            <span class="text-red-500" aria-hidden="true">*</span>
+                                            <span class="sr-only">{{ __('accessibility.required_field') }}</span>
+                                        </label>
                                         <input
                                             type="text"
+                                            id="contact-name"
                                             wire:model="name"
-                                            class="w-full px-4 py-3 border-2 border-border rounded-xl focus:border-accent focus:outline-none transition-colors"
+                                            aria-required="true"
+                                            aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}"
+                                            @if($errors->has('name')) aria-describedby="name-error" @endif
+                                            class="w-full px-4 py-3 border-2 border-border rounded-xl focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors"
                                         >
                                         @error('name')
-                                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                            <p id="name-error" class="mt-1 text-sm text-red-500" role="alert">{{ $message }}</p>
                                         @enderror
                                     </div>
 
                                     <div>
-                                        <label class="block text-sm font-medium mb-2">Unternehmen</label>
+                                        <label for="contact-company" class="block text-sm font-medium mb-2">{{ __('contact.company') }}</label>
                                         <input
                                             type="text"
+                                            id="contact-company"
                                             wire:model="company"
-                                            class="w-full px-4 py-3 border-2 border-border rounded-xl focus:border-accent focus:outline-none transition-colors"
+                                            class="w-full px-4 py-3 border-2 border-border rounded-xl focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors"
                                         >
                                     </div>
                                 </div>
 
                                 <div class="grid sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-sm font-medium mb-2">E-Mail <span class="text-red-500">*</span></label>
+                                        <label for="contact-email" class="block text-sm font-medium mb-2">
+                                            {{ __('contact.email') }}
+                                            <span class="text-red-500" aria-hidden="true">*</span>
+                                            <span class="sr-only">{{ __('accessibility.required_field') }}</span>
+                                        </label>
                                         <input
                                             type="email"
+                                            id="contact-email"
                                             wire:model="email"
-                                            class="w-full px-4 py-3 border-2 border-border rounded-xl focus:border-accent focus:outline-none transition-colors"
+                                            aria-required="true"
+                                            aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
+                                            @if($errors->has('email')) aria-describedby="email-error" @endif
+                                            class="w-full px-4 py-3 border-2 border-border rounded-xl focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors"
                                         >
                                         @error('email')
-                                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                            <p id="email-error" class="mt-1 text-sm text-red-500" role="alert">{{ $message }}</p>
                                         @enderror
                                     </div>
 
                                     <div>
-                                        <label class="block text-sm font-medium mb-2">Telefon</label>
+                                        <label for="contact-phone" class="block text-sm font-medium mb-2">{{ __('contact.phone') }}</label>
                                         <input
                                             type="tel"
+                                            id="contact-phone"
                                             wire:model="phone"
-                                            class="w-full px-4 py-3 border-2 border-border rounded-xl focus:border-accent focus:outline-none transition-colors"
+                                            class="w-full px-4 py-3 border-2 border-border rounded-xl focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors"
                                         >
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium mb-2">Projektbeschreibung</label>
+                                    <label for="contact-description" class="block text-sm font-medium mb-2">{{ __('contact.project_description') }}</label>
                                     <textarea
+                                        id="contact-description"
                                         wire:model="projectDescription"
                                         rows="4"
-                                        placeholder="Beschreiben Sie kurz Ihr Projekt und Ihre Anforderungen..."
-                                        class="w-full px-4 py-3 border-2 border-border rounded-xl focus:border-accent focus:outline-none transition-colors resize-none"
+                                        placeholder="{{ __('contact.project_description_placeholder') }}"
+                                        class="w-full px-4 py-3 border-2 border-border rounded-xl focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors resize-none"
                                     ></textarea>
                                 </div>
 
                                 {{-- Callback Preferences --}}
                                 <div class="pt-4 border-t border-border">
-                                    <p class="text-sm font-medium mb-4">Gewünschte Rückrufzeit <span class="text-muted-foreground font-normal">(optional)</span></p>
+                                    <p class="text-sm font-medium mb-4">{{ __('contact.callback_time') }} <span class="text-muted-foreground font-normal">{{ __('contact.callback_optional') }}</span></p>
 
                                     {{-- Weekdays --}}
                                     <div class="mb-4">
-                                        <p class="text-xs text-muted-foreground mb-2">Bevorzugte Wochentage</p>
+                                        <p class="text-xs text-muted-foreground mb-2">{{ __('contact.preferred_weekdays') }}</p>
                                         <div class="flex flex-wrap gap-2">
-                                            @foreach($callbackDays as $key => $label)
+                                            @foreach($this->callbackDays as $key => $label)
                                                 @php $isSelected = in_array($key, $selectedCallbackDays); @endphp
                                                 <button
                                                     type="button"
@@ -237,9 +267,9 @@
 
                                     {{-- Time Slots --}}
                                     <div>
-                                        <p class="text-xs text-muted-foreground mb-2">Bevorzugtes Zeitfenster</p>
+                                        <p class="text-xs text-muted-foreground mb-2">{{ __('contact.preferred_time_slot') }}</p>
                                         <div class="grid grid-cols-2 gap-2">
-                                            @foreach($callbackTimes as $key => $label)
+                                            @foreach($this->callbackTimes as $key => $label)
                                                 <button
                                                     type="button"
                                                     wire:click="selectCallbackTime('{{ $key }}')"
@@ -254,24 +284,24 @@
 
                                 {{-- Summary --}}
                                 <div class="bg-muted/30 rounded-xl p-4">
-                                    <p class="font-semibold mb-2">Zusammenfassung</p>
+                                    <p class="font-semibold mb-2">{{ __('contact.summary') }}</p>
                                     <div class="text-sm text-muted-foreground space-y-1">
-                                        <p><span class="text-foreground">Projekttyp(en):</span> {{ implode(', ', $this->getSelectedProjectTypesLabels()) }}</p>
+                                        <p><span class="text-foreground">{{ __('contact.summary_project_types') }}:</span> {{ implode(', ', $this->getSelectedProjectTypesLabels()) }}</p>
                                         @if($budget)
-                                            <p><span class="text-foreground">Budget:</span> {{ $budgets[$budget] }}</p>
+                                            <p><span class="text-foreground">{{ __('contact.summary_budget') }}:</span> {{ $this->budgets[$budget] }}</p>
                                         @endif
                                         @if($timeline)
-                                            <p><span class="text-foreground">Zeitrahmen:</span> {{ $timelines[$timeline] }}</p>
+                                            <p><span class="text-foreground">{{ __('contact.summary_timeline') }}:</span> {{ $this->timelines[$timeline] }}</p>
                                         @endif
                                         @if(count($selectedCallbackDays) > 0 || $callbackTime)
                                             <p>
-                                                <span class="text-foreground">Rückruf:</span>
+                                                <span class="text-foreground">{{ __('contact.summary_callback') }}:</span>
                                                 @if(count($selectedCallbackDays) > 0)
                                                     {{ implode(', ', $this->getSelectedCallbackDaysLabels()) }}
                                                 @endif
                                                 @if(count($selectedCallbackDays) > 0 && $callbackTime), @endif
                                                 @if($callbackTime)
-                                                    {{ $callbackTimes[$callbackTime] }}
+                                                    {{ $this->callbackTimes[$callbackTime] }}
                                                 @endif
                                             </p>
                                         @endif
@@ -279,9 +309,8 @@
                                 </div>
 
                                 <p class="text-xs text-muted-foreground">
-                                    Mit dem Absenden stimmen Sie unserer
-                                    <a href="{{ route('privacy') }}" target="_blank" class="underline hover:text-foreground">Datenschutzerklärung</a>
-                                    zu.
+                                    {{ __('contact.privacy_notice') }}
+                                    <a href="{{ localized_route('privacy') }}" target="_blank" class="underline hover:text-foreground">{{ __('contact.privacy_policy') }}</a>.
                                 </p>
                             </div>
                         @endif
@@ -301,7 +330,7 @@
                                     wire:click="previousStep"
                                     class="text-muted-foreground hover:text-foreground transition-colors font-medium"
                                 >
-                                    Zurück
+                                    {{ __('contact.back') }}
                                 </button>
                             @else
                                 <div></div>
@@ -314,7 +343,7 @@
                                     @if($currentStep === 1 && empty($selectedProjectTypes)) disabled @endif
                                     class="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background hover:bg-foreground/90 transition-all rounded-lg font-medium disabled:opacity-40 disabled:cursor-not-allowed"
                                 >
-                                    Weiter
+                                    {{ __('contact.next') }}
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="m9 18 6-6-6-6"/>
                                     </svg>
@@ -326,8 +355,8 @@
                                     wire:loading.attr="disabled"
                                     class="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white hover:bg-accent/90 transition-all rounded-lg font-medium disabled:opacity-50"
                                 >
-                                    <span wire:loading.remove wire:target="submit">Anfrage absenden</span>
-                                    <span wire:loading wire:target="submit">Wird gesendet...</span>
+                                    <span wire:loading.remove wire:target="submit">{{ __('contact.submit_request') }}</span>
+                                    <span wire:loading wire:target="submit">{{ __('contact.sending') }}</span>
                                     <svg wire:loading.remove wire:target="submit" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M20 6 9 17l-5-5"/>
                                     </svg>

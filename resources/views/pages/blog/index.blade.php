@@ -23,7 +23,7 @@
     <section class="py-12 border-t border-border bg-gradient-to-b from-muted/20 to-transparent">
         <div class="max-w-8xl mx-auto px-6">
             <div class="max-w-5xl">
-                <form action="{{ route('blog') }}" method="GET" class="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
+                <form action="{{ localized_route('blog') }}" method="GET" class="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
                     {{-- Search --}}
                     <div class="relative flex-1 max-w-md">
                         <x-frontend.icon name="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -38,12 +38,12 @@
 
                     {{-- Category Filter --}}
                     <div class="flex flex-wrap gap-2">
-                        <a href="{{ route('blog') }}"
+                        <a href="{{ localized_route('blog') }}"
                            class="px-4 py-2 text-xs border transition-all {{ !$category ? 'bg-foreground text-background border-foreground' : 'bg-white text-foreground border-border hover:border-foreground' }}">
                             Alle Artikel
                         </a>
                         @foreach($categories as $cat)
-                        <a href="{{ route('blog', ['category' => $cat]) }}"
+                        <a href="{{ localized_route('blog', ['category' => $cat]) }}"
                            class="px-4 py-2 text-xs border transition-all {{ $category === $cat ? 'bg-foreground text-background border-foreground' : 'bg-white text-foreground border-border hover:border-foreground' }}">
                             {{ $cat }}
                         </a>
@@ -67,7 +67,7 @@
                 <div class="grid lg:grid-cols-2 gap-8">
                     @foreach($articles as $article)
                     <article class="group border-2 border-border hover:border-foreground hover:shadow-2xl transition-all bg-white">
-                        <a href="{{ route('blog.show', $article->slug) }}" class="block p-8">
+                        <a href="{{ localized_route('blog.show', ['slug' => $article->slug]) }}" class="block p-8">
                             {{-- Category & Meta --}}
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-accent/5 border border-accent/20 rounded-sm">
@@ -118,7 +118,7 @@
                 @else
                 <div class="text-center py-20">
                     <p class="text-lg text-muted-foreground mb-4">Keine Artikel gefunden.</p>
-                    <a href="{{ route('blog') }}" class="text-sm text-accent hover:underline">Filter zurücksetzen</a>
+                    <a href="{{ localized_route('blog') }}" class="text-sm text-accent hover:underline">Filter zurücksetzen</a>
                 </div>
                 @endif
             </div>

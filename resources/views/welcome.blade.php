@@ -50,7 +50,7 @@
                         Professionelles Webdesign
                     </h1>
                     <p class="text-xl md:text-2xl mb-8 text-blue-100">
-                        Wir erstellen moderne, SEO-optimierte Websites fuer Ihr Business
+                        Wir erstellen moderne, SEO-optimierte Websites für Ihr Business
                     </p>
                     <div class="flex justify-center space-x-4">
                         <a href="#kontakt" class="bg-white text-blue-600 px-8 py-3 rounded-md font-semibold hover:bg-gray-100 transition">
@@ -79,7 +79,7 @@
                             </svg>
                         </div>
                         <h3 class="text-xl font-semibold text-gray-900 mb-2">Webdesign</h3>
-                        <p class="text-gray-600">Modernes, responsives Design, das auf allen Geraeten perfekt aussieht.</p>
+                        <p class="text-gray-600">Modernes, responsives Design, das auf allen Geräten perfekt aussieht.</p>
                     </article>
                     <article class="bg-gray-50 p-8 rounded-lg">
                         <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
@@ -88,7 +88,7 @@
                             </svg>
                         </div>
                         <h3 class="text-xl font-semibold text-gray-900 mb-2">Webentwicklung</h3>
-                        <p class="text-gray-600">Massgeschneiderte Webanwendungen mit Laravel und modernsten Technologien.</p>
+                        <p class="text-gray-600">Maßgeschneiderte Webanwendungen mit Laravel und modernsten Technologien.</p>
                     </article>
                     <article class="bg-gray-50 p-8 rounded-lg">
                         <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
@@ -97,7 +97,7 @@
                             </svg>
                         </div>
                         <h3 class="text-xl font-semibold text-gray-900 mb-2">SEO Optimierung</h3>
-                        <p class="text-gray-600">Suchmaschinenoptimierung fuer bessere Rankings und mehr Sichtbarkeit.</p>
+                        <p class="text-gray-600">Suchmaschinenoptimierung für bessere Rankings und mehr Sichtbarkeit.</p>
                     </article>
                 </div>
             </div>
@@ -106,8 +106,8 @@
         <!-- CTA Section -->
         <section id="kontakt" class="py-20 bg-gray-900 text-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Bereit fuer Ihr Projekt?</h2>
-                <p class="text-xl text-gray-300 mb-8">Kontaktieren Sie uns fuer eine unverbindliche Beratung</p>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Bereit für Ihr Projekt?</h2>
+                <p class="text-xl text-gray-300 mb-8">Kontaktieren Sie uns für eine unverbindliche Beratung</p>
                 <a href="mailto:info@sdwebdesign.test" class="bg-blue-600 text-white px-8 py-3 rounded-md font-semibold hover:bg-blue-700 transition inline-block">
                     Jetzt anfragen
                 </a>
@@ -120,7 +120,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div>
                         <h4 class="text-white font-semibold mb-4">SD Webdesign</h4>
-                        <p class="text-sm">Professionelles Webdesign und Webentwicklung fuer Ihr Business.</p>
+                        <p class="text-sm">Professionelles Webdesign und Webentwicklung für Ihr Business.</p>
                     </div>
                     <div>
                         <h4 class="text-white font-semibold mb-4">Links</h4>

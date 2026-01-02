@@ -25,6 +25,8 @@ class Settings extends Page implements HasForms
 
     public ?array $data = [];
 
+    public string $activeLocale = 'de';
+
     public static function getNavigationLabel(): string
     {
         return 'Einstellungen';
@@ -47,8 +49,35 @@ class Settings extends Page implements HasForms
 
     public function mount(): void
     {
+        $this->activeLocale = request()->query('locale', 'de');
+        $this->loadFormData();
+    }
+
+    protected function loadFormData(): void
+    {
         $setting = Setting::instance();
-        $this->form->fill($setting->toArray());
+
+        // Get translatable field names
+        $translatableFields = $setting->translatable;
+
+        // Build form data with proper locale values for translatable fields
+        $data = [];
+        foreach ($setting->getAttributes() as $key => $value) {
+            if (in_array($key, $translatableFields)) {
+                // Get the translation for the active locale
+                $data[$key] = $setting->getTranslation($key, $this->activeLocale, false) ?? '';
+            } else {
+                $data[$key] = $value;
+            }
+        }
+
+        $this->form->fill($data);
+    }
+
+    public function setActiveLocale(string $locale): void
+    {
+        $this->activeLocale = $locale;
+        $this->loadFormData();
     }
 
     public function form(Schema $schema): Schema
@@ -268,16 +297,44 @@ class Settings extends Page implements HasForms
         ];
     }
 
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('locale_de')
+                ->label('DE')
+                ->color($this->activeLocale === 'de' ? 'primary' : 'gray')
+                ->size('sm')
+                ->action(fn () => $this->setActiveLocale('de')),
+            Action::make('locale_en')
+                ->label('EN')
+                ->color($this->activeLocale === 'en' ? 'primary' : 'gray')
+                ->size('sm')
+                ->action(fn () => $this->setActiveLocale('en')),
+        ];
+    }
+
     public function save(): void
     {
         $data = $this->form->getState();
 
         $setting = Setting::instance();
-        $setting->fill($data);
+
+        // Get translatable field names
+        $translatableFields = $setting->translatable;
+
+        // Save each field, using setTranslation for translatable fields
+        foreach ($data as $key => $value) {
+            if (in_array($key, $translatableFields)) {
+                $setting->setTranslation($key, $this->activeLocale, $value);
+            } else {
+                $setting->{$key} = $value;
+            }
+        }
+
         $setting->save();
 
         Notification::make()
-            ->title('Einstellungen gespeichert')
+            ->title('Einstellungen gespeichert ('.strtoupper($this->activeLocale).')')
             ->success()
             ->send();
     }

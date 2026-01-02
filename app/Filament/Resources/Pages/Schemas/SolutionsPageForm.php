@@ -77,13 +77,12 @@ class SolutionsPageForm
 
                                 Repeater::make('features')
                                     ->label('Features')
-                                    ->schema([
+                                    ->simple(
                                         TextInput::make('text')
                                             ->label('Feature')
-                                            ->required(),
-                                    ])
+                                            ->required()
+                                    )
                                     ->addActionLabel('Feature hinzufügen')
-                                    ->simple()
                                     ->maxItems(5),
                             ])
                             ->addActionLabel('Lösung hinzufügen')

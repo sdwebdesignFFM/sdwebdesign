@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -18,6 +19,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use LaraZeus\SpatieTranslatable\SpatieTranslatablePlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -30,6 +32,22 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->colors([
                 'primary' => Color::Amber,
+            ])
+            ->plugin(
+                SpatieTranslatablePlugin::make()
+                    ->defaultLocales(['de', 'en'])
+                    ->persist()
+            )
+            ->navigationGroups([
+                NavigationGroup::make('Hauptseiten')
+                    ->collapsed(false),
+                NavigationGroup::make('Leistungen'),
+                NavigationGroup::make('Referenzen'),
+                NavigationGroup::make('Ratgeber'),
+                NavigationGroup::make('Lokale Seiten'),
+                NavigationGroup::make('Blog'),
+                NavigationGroup::make('System')
+                    ->collapsed(true),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

@@ -1,4 +1,15 @@
 <x-layouts.frontend>
+    @php
+        $hero = $page->getSection('hero');
+        $problem = $page->getSection('problem');
+        $solutions = $page->getSection('solutions');
+        $principles = $page->getSection('principles');
+        $whyUs = $page->getSection('why_us');
+        $process = $page->getSection('process');
+        $cta = $page->getSection('cta');
+        $settings = \App\Models\Setting::instance();
+    @endphp
+
     {{-- Hero Section --}}
     <section class="relative max-w-[1400px] mx-auto px-6 pt-40 pb-40 overflow-hidden">
         {{-- Animated background grid --}}
@@ -6,47 +17,46 @@
 
         <div class="relative grid lg:grid-cols-2 gap-20 items-center">
             <div class="motion motion-fade-up">
+                @if($hero['badge'] ?? false)
                 <div class="inline-block px-4 py-2 mb-8 border border-border bg-background/50 backdrop-blur-sm">
                     <p class="text-[0.8125rem] uppercase tracking-wider text-muted-foreground">
-                        System- & Lösungsplattform
+                        {{ $hero['badge'] }}
                     </p>
                 </div>
+                @endif
 
-                <h1 class="mb-8 max-w-[650px]">
-                    Digitale Systeme für Unternehmen, die Komplexität beherrschen wollen
+                <h1 class="mb-8 max-w-[650px] text-[2.75rem] lg:text-[3.25rem] leading-[1.1]">
+                    {{ $hero['title'] ?? 'Digitale Lösungen, die Abläufe vereinfachen und Wachstum ermöglichen' }}
                 </h1>
 
+                @if($hero['subtitle'] ?? false)
                 <p class="mb-6 max-w-[600px] text-[1.125rem] leading-relaxed text-muted-foreground">
-                    Wir entwickeln maßgeschneiderte Webanwendungen, automatisieren Geschäftsprozesse und integrieren bestehende Systeme zu stabilen, skalierbaren Plattformen.
+                    {{ $hero['subtitle'] }}
                 </p>
+                @endif
 
+                @if($hero['tags'] ?? false)
                 <div class="mb-12 flex flex-wrap gap-3">
-                    @foreach(['Architektur', 'Integration', 'Automatisierung', 'Wartbarkeit'] as $tag)
+                    @foreach($hero['tags'] as $tag)
                     <span class="px-4 py-2 text-[0.875rem] border border-border hover:border-foreground transition-colors">
                         {{ $tag }}
                     </span>
                     @endforeach
                 </div>
+                @endif
 
-                <div class="flex flex-wrap gap-4 mb-16">
-                    <a href="{{ route('contact') }}" class="group px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all flex items-center gap-2">
-                        Projekt besprechen
+                <div class="flex flex-wrap gap-4">
+                    <button
+                        type="button"
+                        onclick="Livewire.dispatch('openContactModal')"
+                        class="group px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all flex items-center gap-2"
+                    >
+                        {{ $hero['cta_primary_text'] ?? 'Projekt besprechen' }}
                         <span class="inline-block animate-bounce-x">→</span>
+                    </button>
+                    <a href="{{ localized_route('solutions') }}" class="px-8 py-4 border border-border hover:border-foreground transition-colors">
+                        {{ $hero['cta_secondary_text'] ?? 'Lösungen entdecken' }}
                     </a>
-                    <a href="{{ route('solutions') }}" class="px-8 py-4 border border-border hover:border-foreground transition-colors">
-                        Lösungen entdecken
-                    </a>
-                </div>
-
-                <div class="flex gap-12 pt-8 border-t border-border">
-                    <div>
-                        <p class="text-[2rem] font-light mb-1">15+</p>
-                        <p class="text-[0.875rem] text-muted-foreground">Jahre Erfahrung</p>
-                    </div>
-                    <div>
-                        <p class="text-[2rem] font-light mb-1">50+</p>
-                        <p class="text-[0.875rem] text-muted-foreground">Projekte umgesetzt</p>
-                    </div>
                 </div>
             </div>
 
@@ -54,7 +64,7 @@
             <div class="relative hidden lg:block">
                 <div class="space-y-6">
                     @php
-                        $layers = [
+                        $layers = $hero['layers'] ?? [
                             ['icon' => 'globe', 'label' => 'Frontend Layer', 'desc' => 'React, TypeScript'],
                             ['icon' => 'code', 'label' => 'API Layer', 'desc' => 'REST, GraphQL'],
                             ['icon' => 'layers', 'label' => 'Business Logic', 'desc' => 'Services, Workflows'],
@@ -92,6 +102,7 @@
     </section>
 
     {{-- Problem Section --}}
+    @if($problem['title'] ?? false)
     <section class="max-w-[1400px] mx-auto px-6 py-32 border-t border-border">
         <div class="max-w-[1100px]">
             <div class="motion motion-fade-up">
@@ -100,66 +111,49 @@
                         <x-frontend.icon name="alert-circle" class="w-6 h-6 text-muted-foreground" />
                     </div>
                     <h2 class="flex-1 max-w-[800px]">
-                        Viele Unternehmen sind digital präsent – aber nicht digital effizient.
+                        {{ $problem['title'] }}
                     </h2>
                 </div>
             </div>
 
             <div class="grid lg:grid-cols-2 gap-16 mb-16">
                 {{-- Typische Ausgangssituation --}}
+                @if($problem['items'] ?? false)
                 <div class="relative motion motion-fade-left motion-delay-2">
                     <div class="absolute -left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-muted-foreground/20 to-transparent"></div>
 
                     <h4 class="mb-8 text-[0.875rem] uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                         <span class="w-2 h-2 bg-foreground rounded-full"></span>
-                        Typische Ausgangssituation
+                        {{ app()->getLocale() === 'en' ? 'Typical Starting Point' : 'Typische Ausgangssituation' }}
                     </h4>
 
                     <div class="space-y-4">
-                        @php
-                            $problems = [
-                                ['label' => '6–10 verschiedene Tools', 'value' => '8'],
-                                ['label' => '3–4 isolierte Datenquellen', 'value' => '4'],
-                                ['label' => 'Manuelle Exporte & Importe', 'value' => '∞'],
-                                ['label' => 'Keine zentrale Geschäftslogik', 'value' => '0'],
-                                ['label' => 'Gewachsene Insellösungen', 'value' => '++'],
-                            ];
-                        @endphp
-
-                        @foreach($problems as $i => $problem)
+                        @foreach($problem['items'] as $i => $item)
                         <div class="motion motion-fade-up motion-delay-{{ $i + 3 }}">
                             <div class="group flex items-start justify-between gap-4 p-4 border border-border hover:border-foreground transition-all hover:shadow-md bg-white">
-                                <span class="flex-1 text-[0.9375rem]">{{ $problem['label'] }}</span>
+                                <span class="flex-1 text-[0.9375rem]">{{ $item['label'] }}</span>
                                 <span class="font-mono text-[1.25rem] text-muted-foreground group-hover:text-foreground transition-colors">
-                                    {{ $problem['value'] }}
+                                    {{ $item['value'] }}
                                 </span>
                             </div>
                         </div>
                         @endforeach
                     </div>
                 </div>
+                @endif
 
                 {{-- Ergebnis --}}
+                @if($problem['results'] ?? false)
                 <div class="relative motion motion-fade-right motion-delay-4">
                     <div class="absolute -left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-red-500/20 to-transparent"></div>
 
                     <h4 class="mb-8 text-[0.875rem] uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                         <x-frontend.icon name="trending-down" class="w-4 h-4" />
-                        Ergebnis
+                        {{ app()->getLocale() === 'en' ? 'Result' : 'Ergebnis' }}
                     </h4>
 
                     <div class="space-y-3">
-                        @php
-                            $results = [
-                                'Medienbrüche & Doppelerfassung',
-                                'Inkonsistente Daten',
-                                'Skalierungsprobleme',
-                                'Hoher Wartungsaufwand',
-                                'Wachsende Komplexität',
-                            ];
-                        @endphp
-
-                        @foreach($results as $i => $result)
+                        @foreach($problem['results'] as $i => $result)
                         <div class="motion motion-fade-up motion-delay-{{ $i + 5 }}">
                             <div class="flex items-start gap-3 p-4 bg-red-50/30 border border-red-100 hover:border-red-200 transition-colors">
                                 <span class="text-red-400 mt-1">×</span>
@@ -169,173 +163,217 @@
                         @endforeach
                     </div>
                 </div>
+                @endif
             </div>
 
             {{-- Unser Ansatz --}}
+            @if($problem['approach'] ?? false)
             <div class="motion motion-fade-up motion-delay-8">
                 <div class="relative mt-20 p-8 border-2 border-foreground bg-foreground/[0.02]">
                     <div class="absolute -top-3 left-8 px-3 bg-white">
                         <span class="text-[0.75rem] uppercase tracking-wider text-muted-foreground">
-                            Unser Ansatz
+                            {{ app()->getLocale() === 'en' ? 'Our Approach' : 'Unser Ansatz' }}
                         </span>
                     </div>
                     <p class="text-[1.25rem] leading-relaxed">
-                        Genau hier setzen wir an: <span class="font-medium">Komplexität strukturieren</span>, Systeme integrieren, Prozesse automatisieren.
+                        {!! $problem['approach'] !!}
                     </p>
                 </div>
             </div>
+            @endif
         </div>
     </section>
+    @endif
 
-    @php
-        $services = $page->getSection('services');
-        $principles = $page->getSection('principles');
-        $whyUs = $page->getSection('why_us');
-        $process = $page->getSection('process');
-        $cta = $page->getSection('cta');
-
-        // Fallback services data matching Figma design
-        if (empty($services['items'])) {
-            $services = [
-                'badge' => 'Leistungsübersicht',
-                'title' => 'Unsere Leistungen',
-                'subtitle' => 'Von der ersten Analyse bis zur langfristigen Betreuung – wir begleiten Ihr digitales Vorhaben als technischer Partner.',
-                'button_text' => 'Alle Lösungen',
-                'button_link' => route('solutions'),
-                'items' => [
-                    [
-                        'icon' => 'layout-dashboard',
-                        'title' => 'Digitale Plattformen & Webanwendungen',
-                        'description' => 'Maßgeschneiderte Softwarelösungen, die Ihre Geschäftslogik abbilden und mit Ihrem Unternehmen wachsen.',
-                        'capabilities' => ['Kundenportale & Self-Service', 'Interne Administrationssysteme', 'Multitenancy-Architekturen', 'Dashboards & Reporting'],
-                        'technical_focus' => ['Laravel & PHP', 'React & TypeScript', 'PostgreSQL & Redis'],
-                    ],
-                    [
-                        'icon' => 'workflow',
-                        'title' => 'Prozessdigitalisierung & Automatisierung',
-                        'description' => 'Manuelle, fehleranfällige Abläufe in digitale, nachvollziehbare Prozesse überführen.',
-                        'capabilities' => ['Analyse bestehender Prozesse & Engpässe', 'Digitale Workflows & Freigaben', 'Automatisierte Benachrichtigungen', 'Status-Tracking & Auswertungen'],
-                        'technical_focus' => ['Workflow-Engines', 'Ereignisbasierte Prozesse', 'Datenvalidierung & -konsistenz'],
-                    ],
-                    [
-                        'icon' => 'git-merge',
-                        'title' => 'API- & Systemintegration',
-                        'description' => 'Bestehende Systeme verbinden, Datensilos auflösen und eine konsistente Datenbasis schaffen.',
-                        'capabilities' => ['ERP-, CRM- & Drittsystem-Anbindungen', 'Bidirektionaler Datenaustausch', 'Middleware & Schnittstellenlogik', 'Datenmigration & Synchronisation'],
-                        'technical_focus' => ['REST & GraphQL APIs', 'API-first-Architekturen', 'Sicherheit & Zugriffskonzepte'],
-                    ],
-                ],
-            ];
-        }
-    @endphp
-
-    {{-- Services Section --}}
-    @if($services['items'] ?? false)
-    <section id="leistungen" class="max-w-[1400px] mx-auto px-6 py-32 border-t border-border bg-gradient-to-b from-transparent to-muted/10">
-        <div class="max-w-[1100px]">
+    {{-- Solutions Section - Compact Overview --}}
+    <section id="loesungen" class="max-w-[1400px] mx-auto px-6 py-32 border-t border-border">
+        <div class="max-w-[1200px]">
             {{-- Header --}}
-            <div class="motion motion-fade-up mb-24">
-                @if($services['badge'] ?? false)
+            <div class="motion motion-fade-up mb-16">
+                @if($solutions['badge'] ?? false)
                 <div class="inline-block px-4 py-2 mb-6 border border-border">
-                    <p class="text-[0.8125rem] uppercase tracking-wider text-muted-foreground">{{ $services['badge'] }}</p>
+                    <p class="text-[0.8125rem] uppercase tracking-wider text-muted-foreground">{{ $solutions['badge'] }}</p>
                 </div>
                 @endif
 
-                <div class="flex items-end justify-between gap-8 mb-6">
-                    <h2>{{ $services['title'] ?? 'Unsere Leistungen' }}</h2>
+                <h2 class="mb-6">{{ $solutions['title'] ?? 'Unsere Lösungen – vom Einstieg bis zum digitalen System' }}</h2>
 
-                    @if($services['button_text'] ?? false)
-                    <a href="{{ $services['button_link'] ?? route('solutions') }}" class="hidden md:flex items-center gap-2 px-6 py-3 border-2 border-foreground hover:bg-foreground hover:text-background transition-all">
-                        {{ $services['button_text'] }}
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-                        </svg>
-                    </a>
-                    @endif
-                </div>
-
-                @if($services['subtitle'] ?? false)
-                <p class="max-w-[800px] text-[1.0625rem] text-muted-foreground leading-relaxed">
-                    {{ $services['subtitle'] }}
+                @if($solutions['subtitle'] ?? false)
+                <p class="max-w-[900px] text-[1.0625rem] text-muted-foreground leading-relaxed mb-8">
+                    {{ $solutions['subtitle'] }}
                 </p>
                 @endif
+
+                <a href="{{ localized_route('solutions') }}" class="inline-flex items-center gap-2 text-[0.9375rem] font-medium hover:text-accent transition-colors">
+                    {{ app()->getLocale() === 'en' ? 'View all solutions' : 'Alle Lösungen ansehen' }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                    </svg>
+                </a>
             </div>
 
-            {{-- Core Services - Interactive Cards --}}
-            <div class="space-y-6 mb-32" x-data="{ expandedService: 0 }">
-                @foreach($services['items'] as $index => $service)
+            {{-- 4 Primary Solution Accordions --}}
+            @php
+                $solutionAccordions = $solutions['accordions'] ?? [
+                    [
+                        'number' => '01',
+                        'icon' => 'globe',
+                        'title' => 'Unternehmenswebsites mit Substanz',
+                        'subtitle' => 'Professionelle Webauftritte, die heute passen – und morgen mitwachsen',
+                        'description' => 'Eine Unternehmenswebsite ist oft der erste Kontaktpunkt mit Ihrem Unternehmen. Sie soll Vertrauen schaffen, Inhalte klar vermitteln und technisch zuverlässig funktionieren – ohne unnötige Komplexität, aber mit einer Basis, die spätere Erweiterungen ermöglicht.',
+                        'suitable_for' => ['Unternehmenswebsites & Leistungsseiten', 'Relaunch bestehender Websites', 'SEO-orientierte Content-Strukturen'],
+                        'character' => ['Klarer Einstieg mit überschaubarem Budget', 'Sauber umgesetzt, performant & wartbar', 'Erweiterbar Richtung Shop, Portal oder Plattform'],
+                        'link' => '/loesungen/websites',
+                    ],
+                    [
+                        'number' => '02',
+                        'icon' => 'layout-dashboard',
+                        'title' => 'Digitale Plattformen & Webanwendungen',
+                        'subtitle' => 'Zentrale Systeme für Prozesse, Daten und Zusammenarbeit',
+                        'description' => 'Wenn Standardsoftware an Grenzen stößt, entstehen individuelle Plattformen. Wir entwickeln Webanwendungen, die Geschäftslogik, Daten und Nutzerrollen zentral abbilden – als maßgeschneiderte Werkzeuge für Ihre Abläufe.',
+                        'suitable_for' => ['Interne Tools & Verwaltungsplattformen', 'Kunden- & Partnerportale', 'Individuelle Geschäftslogik & Workflows'],
+                        'character' => ['Maßgeschneidert auf Ihre Abläufe', 'Saubere Trennung von Oberfläche, Logik & Daten', 'Skalierbar und langfristig wartbar'],
+                        'link' => '/loesungen/plattformen',
+                    ],
+                    [
+                        'number' => '03',
+                        'icon' => 'shopping-cart',
+                        'title' => 'E-Commerce & Online-Shops',
+                        'subtitle' => 'Verkaufen – integriert, performant und erweiterbar',
+                        'description' => 'Ein Shop ist mehr als ein Produktkatalog. Wir entwickeln E-Commerce-Lösungen, die zuverlässig funktionieren, Prozesse vereinfachen und sich sauber in bestehende Systeme integrieren lassen.',
+                        'suitable_for' => ['B2C-Online-Shops', 'B2B-Bestellplattformen', 'Integrierte Shop- & Warenwirtschaftslösungen'],
+                        'character' => ['Technische Substanz statt Feature-Overload', 'Skalierbar bei Wachstum', 'Fokus auf Performance & Wartbarkeit'],
+                        'link' => '/loesungen/e-commerce',
+                    ],
+                    [
+                        'number' => '04',
+                        'icon' => 'device-phone-mobile',
+                        'title' => 'Mobile Anwendungen (iOS / Android / PWA)',
+                        'subtitle' => 'Mobile Erweiterungen bestehender Systeme',
+                        'description' => 'Mobile Anwendungen entfalten ihren Wert, wenn sie Teil eines bestehenden Systems sind. Wir entwickeln mobile Lösungen, die Webanwendungen, Plattformen oder Shops sinnvoll ergänzen – nicht ersetzen.',
+                        'suitable_for' => ['Native iOS- oder Android-Apps', 'Progressive Web Apps (PWA)', 'Mobile Companion- & Service-Apps'],
+                        'character' => ['Integration statt Insellösung', 'Gemeinsame Datenbasis & Logik', 'Schrittweise ausbaubar'],
+                        'link' => '/loesungen/mobile-anwendungen',
+                    ],
+                ];
+            @endphp
+
+            <div class="space-y-4 mb-16" x-data="{ openAccordion: 0 }" role="region" aria-label="{{ app()->getLocale() === 'en' ? 'Solution areas' : 'Lösungsbereiche' }}">
+                @foreach($solutionAccordions as $index => $accordion)
                 <div class="motion motion-fade-up motion-delay-{{ $index + 1 }}">
-                    <div
-                        class="border-2 transition-all duration-300 cursor-pointer bg-white"
-                        :class="expandedService === {{ $index }} ? 'border-foreground shadow-xl' : 'border-border hover:border-foreground/40'"
-                        @click="expandedService = expandedService === {{ $index }} ? null : {{ $index }}"
-                    >
-                        <div class="p-8">
-                            <div class="flex items-start gap-6 mb-4">
-                                @if($service['icon'] ?? false)
-                                <div
-                                    class="p-4 border-2 transition-all"
-                                    :class="expandedService === {{ $index }} ? 'border-foreground' : 'border-border'"
-                                >
-                                    <x-frontend.icon :name="$service['icon']" class="w-8 h-8" />
+                    <div class="border-2 border-border bg-white transition-all" :class="openAccordion === {{ $index }} ? 'border-foreground shadow-xl' : 'hover:border-foreground/50'">
+                        {{-- Accordion Header --}}
+                        <button
+                            type="button"
+                            class="w-full p-6 md:p-8 text-left"
+                            @click="openAccordion = openAccordion === {{ $index }} ? null : {{ $index }}"
+                            :aria-expanded="openAccordion === {{ $index }} ? 'true' : 'false'"
+                            aria-controls="accordion-content-{{ $index }}"
+                            :id="'accordion-header-{{ $index }}'"
+                        >
+                            <div class="flex items-start gap-4 md:gap-6">
+                                {{-- Icon Box --}}
+                                @if($accordion['icon'] ?? false)
+                                <div class="p-4 border-2 border-foreground shrink-0 hidden md:block">
+                                    <x-frontend.icon :name="$accordion['icon']" class="w-8 h-8" />
                                 </div>
                                 @endif
 
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-4 mb-3">
-                                        <span class="text-[0.875rem] font-mono text-muted-foreground">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                                        <h3 class="text-[1.375rem]">{{ $service['title'] }}</h3>
+                                {{-- Content --}}
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <span class="text-[0.875rem] font-mono text-muted-foreground">{{ $accordion['number'] ?? str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
                                     </div>
-                                    <p class="text-muted-foreground leading-relaxed">{{ $service['description'] }}</p>
+                                    <h3 class="text-[1.25rem] md:text-[1.5rem] mb-2">{{ $accordion['title'] }}</h3>
+                                    @if($accordion['subtitle'] ?? false)
+                                    <p class="text-[0.9375rem] text-muted-foreground">{{ $accordion['subtitle'] }}</p>
+                                    @endif
                                 </div>
 
-                                <div
-                                    class="transition-transform duration-300"
-                                    :class="expandedService === {{ $index }} ? 'rotate-90' : ''"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="m9 18 6-6-6-6"/>
+                                {{-- Toggle Icon --}}
+                                <div class="shrink-0 p-2">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="w-5 h-5 text-muted-foreground transition-transform duration-300"
+                                        :class="openAccordion === {{ $index }} ? 'rotate-180' : ''"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        aria-hidden="true"
+                                    >
+                                        <path d="m6 9 6 6 6-6"/>
                                     </svg>
                                 </div>
                             </div>
+                        </button>
 
-                            <div x-show="expandedService === {{ $index }}" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-cloak>
-                                @if(!empty($service['capabilities']) || !empty($service['technical_focus']))
-                                <div class="pt-8 mt-8 border-t border-border grid md:grid-cols-2 gap-12">
-                                    @if(!empty($service['capabilities']))
+                        {{-- Accordion Content --}}
+                        <div
+                            x-show="openAccordion === {{ $index }}"
+                            x-collapse
+                            x-cloak
+                            id="accordion-content-{{ $index }}"
+                            role="region"
+                            :aria-labelledby="'accordion-header-{{ $index }}'"
+                        >
+                            <div class="px-6 md:px-8 pb-8 pt-0 md:pl-[7.5rem]">
+                                {{-- Description --}}
+                                @if($accordion['description'] ?? false)
+                                <p class="text-[0.9375rem] text-muted-foreground leading-relaxed mb-8">
+                                    {{ $accordion['description'] }}
+                                </p>
+                                @endif
+
+                                {{-- Two Column Lists --}}
+                                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                                    {{-- Typisch geeignet für --}}
+                                    @if($accordion['suitable_for'] ?? false)
                                     <div>
-                                        <h4 class="mb-6 text-[0.875rem] uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                                        <h4 class="text-[0.75rem] uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
                                             <span class="w-1.5 h-1.5 bg-foreground rounded-full"></span>
-                                            Systemfähigkeiten
+                                            {{ app()->getLocale() === 'en' ? 'Typically suited for' : 'Typisch geeignet für' }}
                                         </h4>
-                                        <ul class="space-y-3">
-                                            @foreach($service['capabilities'] as $capability)
-                                            <li class="flex items-start gap-3 text-[0.9375rem]">
-                                                <span class="text-accent mt-1">→</span>
-                                                <span>{{ is_array($capability) ? ($capability['item'] ?? '') : $capability }}</span>
+                                        <ul class="space-y-2">
+                                            @foreach($accordion['suitable_for'] as $item)
+                                            <li class="flex items-start gap-3 text-[0.875rem]">
+                                                <span class="text-accent mt-0.5">→</span>
+                                                <span>{{ $item }}</span>
                                             </li>
                                             @endforeach
                                         </ul>
                                     </div>
                                     @endif
 
-                                    @if(!empty($service['technical_focus']))
+                                    {{-- Charakter --}}
+                                    @if($accordion['character'] ?? false)
                                     <div>
-                                        <h4 class="mb-6 text-[0.875rem] uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                                        <h4 class="text-[0.75rem] uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
                                             <span class="w-1.5 h-1.5 bg-foreground rounded-full"></span>
-                                            Technischer Fokus
+                                            {{ app()->getLocale() === 'en' ? 'Character' : 'Charakter' }}
                                         </h4>
-                                        <ul class="space-y-3">
-                                            @foreach($service['technical_focus'] as $focus)
-                                            <li class="flex items-start gap-3 text-[0.9375rem] font-mono text-sm">
-                                                <span class="text-accent mt-1">→</span>
-                                                <span>{{ is_array($focus) ? ($focus['item'] ?? '') : $focus }}</span>
+                                        <ul class="space-y-2">
+                                            @foreach($accordion['character'] as $item)
+                                            <li class="flex items-start gap-3 text-[0.875rem]">
+                                                <span class="text-accent mt-0.5">→</span>
+                                                <span>{{ $item }}</span>
                                             </li>
                                             @endforeach
                                         </ul>
                                     </div>
                                     @endif
                                 </div>
+
+                                {{-- Link --}}
+                                @if($accordion['link'] ?? false)
+                                <a href="{{ $accordion['link'] }}" class="inline-flex items-center gap-2 text-[0.9375rem] font-medium hover:text-accent transition-colors group">
+                                    {{ app()->getLocale() === 'en' ? 'Learn more' : 'Mehr erfahren' }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                                    </svg>
+                                </a>
                                 @endif
                             </div>
                         </div>
@@ -344,30 +382,121 @@
                 @endforeach
             </div>
 
-            {{-- Additional Services --}}
-            @if(!empty($services['additional_items']))
-            <div class="motion motion-fade-up pt-12 border-t-2 border-dashed border-border">
-                <h3 class="mb-10 text-[1.125rem] text-muted-foreground">Ergänzende Leistungen</h3>
-                <div class="grid md:grid-cols-3 gap-6">
-                    @foreach($services['additional_items'] as $index => $service)
-                    <div class="motion motion-scale motion-delay-{{ $index + 1 }}">
-                        <div class="group p-6 border border-border hover:border-foreground transition-all hover:shadow-lg bg-white h-full">
-                            @if($service['icon'] ?? false)
-                            <div class="mb-4 p-3 border border-border group-hover:border-foreground transition-colors inline-block">
-                                <x-frontend.icon :name="$service['icon']" class="w-5 h-5" />
+            {{-- Secondary Block: Wachstum & Sichtbarkeit (SEO/SEA) --}}
+            <div class="motion motion-fade-up motion-delay-5 pt-12 border-t border-dashed border-border">
+                <h3 class="text-[1.25rem] mb-3">{{ $solutions['growth_title'] ?? 'Wachstum & Sichtbarkeit' }}</h3>
+                <p class="text-[0.9375rem] text-muted-foreground mb-8 max-w-[700px]">
+                    {{ $solutions['growth_text'] ?? 'Damit Ihre Lösung nicht nur funktioniert, sondern auch gefunden wird: SEO und SEA als integrierte Wachstumsbausteine – technisch sauber umgesetzt.' }}
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    {{-- SEO Card --}}
+                    <a href="{{ route('de.seo') }}" class="group block p-6 border border-border hover:border-foreground bg-muted/5 hover:bg-white transition-all">
+                        <div class="flex items-start gap-4">
+                            <div class="p-2 border border-border group-hover:border-foreground transition-colors">
+                                <x-frontend.icon name="search" class="w-5 h-5" />
                             </div>
-                            @endif
-                            <h4 class="mb-3 text-[1rem]">{{ $service['title'] }}</h4>
-                            <p class="text-[0.875rem] text-muted-foreground leading-relaxed">{{ $service['description'] }}</p>
+                            <div class="flex-1">
+                                <h4 class="text-[1rem] mb-2 group-hover:text-accent transition-colors">{{ app()->getLocale() === 'en' ? 'Search Engine Optimization (SEO)' : 'Suchmaschinenoptimierung (SEO)' }}</h4>
+                                <p class="text-[0.875rem] text-muted-foreground leading-relaxed mb-4">
+                                    {{ app()->getLocale() === 'en' ? 'Sustainable visibility through technical substance, structure and content systems.' : 'Nachhaltige Sichtbarkeit durch technische Substanz, Struktur und Content-Systeme.' }}
+                                </p>
+                                <span class="inline-flex items-center gap-2 text-[0.8125rem] font-medium group-hover:gap-3 transition-all">
+                                    {{ app()->getLocale() === 'en' ? 'Learn more' : 'Mehr erfahren' }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    @endforeach
+                    </a>
+
+                    {{-- SEA Card --}}
+                    <a href="{{ route('de.sea') }}" class="group block p-6 border border-border hover:border-foreground bg-muted/5 hover:bg-white transition-all">
+                        <div class="flex items-start gap-4">
+                            <div class="p-2 border border-border group-hover:border-foreground transition-colors">
+                                <x-frontend.icon name="megaphone" class="w-5 h-5" />
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-[1rem] mb-2 group-hover:text-accent transition-colors">{{ app()->getLocale() === 'en' ? 'Search Engine Advertising (SEA)' : 'Suchmaschinenwerbung (SEA)' }}</h4>
+                                <p class="text-[0.875rem] text-muted-foreground leading-relaxed mb-4">
+                                    {{ app()->getLocale() === 'en' ? 'Targeted reach through structured campaigns, landing pages and clean tracking.' : 'Gezielte Reichweite über strukturierte Kampagnen, Landingpages und sauberes Tracking.' }}
+                                </p>
+                                <span class="inline-flex items-center gap-2 text-[0.8125rem] font-medium group-hover:gap-3 transition-all">
+                                    {{ app()->getLocale() === 'en' ? 'Learn more' : 'Mehr erfahren' }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
-            @endif
+
+            {{-- Betrieb & Wartung Block --}}
+            <div class="motion motion-fade-up motion-delay-6 pt-12 border-t border-dashed border-border">
+                <h3 class="text-[1.25rem] mb-3">{{ app()->getLocale() === 'en' ? 'Hosting & Maintenance' : 'Betrieb, Hosting & Wartung' }}</h3>
+                <p class="text-[0.9375rem] text-muted-foreground mb-8 max-w-[700px]">
+                    {{ app()->getLocale() === 'en' ? 'To keep your digital solution stable, secure and up-to-date – we handle the technical operations.' : 'Damit Ihre digitale Lösung dauerhaft stabil, sicher und aktuell bleibt – übernehmen wir den technischen Betrieb.' }}
+                </p>
+
+                <a href="{{ localized_route('maintenance') }}" class="group block p-6 border border-border hover:border-foreground bg-muted/5 hover:bg-white transition-all">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 border border-border group-hover:border-foreground transition-colors">
+                            <x-frontend.icon name="server-stack" class="w-6 h-6" />
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-[0.875rem] font-mono text-muted-foreground">07</span>
+                                <h4 class="text-[1rem] group-hover:text-accent transition-colors">{{ app()->getLocale() === 'en' ? 'Reliable operations for your solution' : 'Zuverlässiger Betrieb für Ihre Lösung' }}</h4>
+                            </div>
+                            <p class="text-[0.875rem] text-muted-foreground leading-relaxed mb-4">
+                                {{ app()->getLocale() === 'en' ? 'Updates, monitoring, backups and support – we ensure you can focus on your core business.' : 'Updates, Monitoring, Backups und Support – wir sorgen dafür, dass Sie sich auf Ihr Kerngeschäft konzentrieren können.' }}
+                            </p>
+                            <div class="flex flex-wrap gap-4 text-[0.8125rem] text-muted-foreground mb-4">
+                                <span class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 bg-accent rounded-full"></span>
+                                    Managed Hosting
+                                </span>
+                                <span class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 bg-accent rounded-full"></span>
+                                    Updates & Security
+                                </span>
+                                <span class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 bg-accent rounded-full"></span>
+                                    Monitoring & Backup
+                                </span>
+                            </div>
+                            <span class="inline-flex items-center gap-2 text-[0.8125rem] font-medium group-hover:gap-3 transition-all">
+                                {{ app()->getLocale() === 'en' ? 'Learn more' : 'Mehr erfahren' }}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Optional Microcopy CTA --}}
+            <div class="motion motion-fade-up motion-delay-7 mt-16 p-8 border-2 border-border bg-muted/5 text-center">
+                <p class="text-[1rem] text-muted-foreground mb-6">
+                    {{ $solutions['microcopy'] ?? (app()->getLocale() === 'en' ? 'Not sure which entry point makes sense? We help with the assessment – no obligation.' : 'Unsicher, welcher Einstieg sinnvoll ist? Wir helfen bei der Einordnung – unverbindlich.') }}
+                </p>
+                <button
+                    type="button"
+                    onclick="Livewire.dispatch('openContactModal')"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background hover:bg-foreground/90 transition-all text-[0.9375rem]"
+                >
+                    {{ $solutions['microcopy_button'] ?? (app()->getLocale() === 'en' ? 'Discuss project' : 'Projekt besprechen') }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
         </div>
     </section>
-    @endif
 
     {{-- Technical Principles --}}
     @if($principles['items'] ?? false)
@@ -419,8 +548,8 @@
             @if(!empty($principles['tech_stack']))
             <div class="motion motion-fade-up pt-16 border-t-2 border-border">
                 <div class="mb-12">
-                    <h3 class="mb-4 text-[1.25rem]">Technische Grundlage</h3>
-                    <p class="text-[0.9375rem] text-muted-foreground">Moderne, erprobte Technologien für stabile und skalierbare Systeme</p>
+                    <h3 class="mb-4 text-[1.25rem]">{{ app()->getLocale() === 'en' ? 'Technical Foundation' : 'Technische Grundlage' }}</h3>
+                    <p class="text-[0.9375rem] text-muted-foreground">{{ app()->getLocale() === 'en' ? 'Modern, proven technologies for stable and scalable systems' : 'Moderne, erprobte Technologien für stabile und skalierbare Systeme' }}</p>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -446,7 +575,7 @@
                 @if($principles['additional_tools'] ?? false)
                 <div class="motion motion-fade-up motion-delay-4 mt-12">
                     <div class="pl-6 border-l-4 border-foreground">
-                        <p class="text-[0.8125rem] uppercase tracking-wider text-muted-foreground mb-2">Weitere Technologien & Tools</p>
+                        <p class="text-[0.8125rem] uppercase tracking-wider text-muted-foreground mb-2">{{ app()->getLocale() === 'en' ? 'Additional Technologies & Tools' : 'Weitere Technologien & Tools' }}</p>
                         <p class="text-[1rem] leading-relaxed">{{ $principles['additional_tools'] }}</p>
                     </div>
                 </div>
@@ -499,7 +628,7 @@
             <div class="motion motion-fade-up motion-delay-4">
                 <div class="relative p-10 border-2 border-foreground bg-white shadow-lg">
                     <div class="absolute -top-4 left-10 px-4 py-1 bg-foreground text-background text-[0.75rem] uppercase tracking-wider">
-                        Unser Versprechen
+                        {{ app()->getLocale() === 'en' ? 'Our Promise' : 'Unser Versprechen' }}
                     </div>
 
                     <p class="text-[1.0625rem] text-muted-foreground leading-relaxed">
@@ -612,7 +741,7 @@
         <div class="motion motion-fade-up relative max-w-[1000px] mx-auto text-center">
             <div class="inline-flex items-center gap-3 px-4 py-2 mb-8 border border-border bg-white">
                 <x-frontend.icon name="mail" class="w-4 h-4 text-muted-foreground" />
-                <span class="text-[0.8125rem] uppercase tracking-wider text-muted-foreground">Kontakt aufnehmen</span>
+                <span class="text-[0.8125rem] uppercase tracking-wider text-muted-foreground">{{ app()->getLocale() === 'en' ? 'Get in touch' : 'Kontakt aufnehmen' }}</span>
             </div>
 
             <h2 class="mb-8 max-w-[700px] mx-auto">{{ $cta['title'] }}</h2>
@@ -624,15 +753,19 @@
             @endif
 
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="mailto:{{ $settings->email ?? 'info@sdwebdesign.de' }}" class="group inline-flex items-center gap-3 px-10 py-5 bg-foreground text-background hover:bg-foreground/90 transition-all shadow-lg hover:shadow-xl text-[1.0625rem]">
+                <button
+                    type="button"
+                    onclick="Livewire.dispatch('openContactModal')"
+                    class="group inline-flex items-center gap-3 px-10 py-5 bg-foreground text-background hover:bg-foreground/90 transition-all shadow-lg hover:shadow-xl text-[1.0625rem]"
+                >
                     <x-frontend.icon name="mail" class="w-5 h-5" />
                     {{ $cta['button_text'] ?? 'Projekt besprechen' }}
                     <span class="animate-bounce-x">→</span>
-                </a>
+                </button>
 
                 @if($settings->phone ?? false)
                 <a href="tel:{{ preg_replace('/\s+/', '', $settings->phone) }}" class="inline-flex items-center gap-2 px-8 py-5 border-2 border-border hover:border-foreground transition-all text-[1.0625rem] bg-white">
-                    Oder direkt anrufen
+                    {{ app()->getLocale() === 'en' ? 'Or call directly' : 'Oder direkt anrufen' }}
                 </a>
                 @endif
             </div>
@@ -640,15 +773,15 @@
             <div class="mt-16 pt-12 border-t border-border">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-[0.875rem] text-muted-foreground">
                     <div>
-                        <p class="mb-1 font-medium text-foreground">Erstgespräch</p>
-                        <p>Kostenlos & unverbindlich</p>
+                        <p class="mb-1 font-medium text-foreground">{{ app()->getLocale() === 'en' ? 'Initial consultation' : 'Erstgespräch' }}</p>
+                        <p>{{ app()->getLocale() === 'en' ? 'Free & non-binding' : 'Kostenlos & unverbindlich' }}</p>
                     </div>
                     <div>
-                        <p class="mb-1 font-medium text-foreground">Reaktionszeit</p>
-                        <p>Antwort innerhalb 24h</p>
+                        <p class="mb-1 font-medium text-foreground">{{ app()->getLocale() === 'en' ? 'Response time' : 'Reaktionszeit' }}</p>
+                        <p>{{ app()->getLocale() === 'en' ? 'Reply within 24h' : 'Antwort innerhalb 24h' }}</p>
                     </div>
                     <div>
-                        <p class="mb-1 font-medium text-foreground">Standort</p>
+                        <p class="mb-1 font-medium text-foreground">{{ app()->getLocale() === 'en' ? 'Location' : 'Standort' }}</p>
                         <p>{{ $settings->city ?? 'Frankfurt am Main' }}</p>
                     </div>
                 </div>

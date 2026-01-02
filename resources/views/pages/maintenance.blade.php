@@ -1,0 +1,249 @@
+<x-layouts.frontend>
+    @php
+        $hero = $page->getSection('hero');
+        $whenUseful = $page->getSection('when_useful');
+        $approach = $page->getSection('approach');
+        $infrastructure = $page->getSection('infrastructure');
+        $services = $page->getSection('services');
+        $models = $page->getSection('models');
+        $differentiation = $page->getSection('differentiation');
+        $cta = $page->getSection('cta');
+    @endphp
+
+    {{-- Breadcrumb --}}
+    <section class="pt-24">
+        <div class="max-w-[1400px] mx-auto px-6 py-6">
+            <a href="{{ localized_route('solutions') }}" class="flex items-center gap-2 text-[0.875rem] text-muted-foreground hover:text-foreground transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+                {{ app()->getLocale() === 'en' ? 'Back to all solutions' : 'Zurück zu allen Lösungen' }}
+            </a>
+        </div>
+    </section>
+
+    {{-- Hero Section --}}
+    <section class="relative py-16 overflow-hidden border-t border-b border-border">
+        <div class="absolute inset-0 opacity-[0.02] grid-background"></div>
+
+        <div class="relative max-w-[1400px] mx-auto px-6">
+            <div class="max-w-[900px]">
+                <div class="motion motion-fade-up flex items-start gap-8">
+                    {{-- Icon Box --}}
+                    @if($hero['icon'] ?? false)
+                    <div class="p-5 border-2 border-foreground shrink-0 hidden md:block">
+                        <x-frontend.icon :name="$hero['icon']" class="w-10 h-10" />
+                    </div>
+                    @endif
+
+                    <div class="flex-1">
+                        @if($hero['number'] ?? false)
+                        <span class="text-[0.875rem] font-mono text-muted-foreground block mb-2">{{ $hero['number'] }}</span>
+                        @endif
+
+                        <h1 class="mb-6">{{ $hero['title'] ?? $page->title }}</h1>
+
+                        @if($hero['intro'] ?? false)
+                        <div class="text-[1.0625rem] text-muted-foreground leading-relaxed space-y-4">
+                            @foreach(explode("\n\n", $hero['intro']) as $paragraph)
+                            <p>{{ $paragraph }}</p>
+                            @endforeach
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- When Useful Section --}}
+    @if($whenUseful['title'] ?? false)
+    <section class="py-16 border-b border-border">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="max-w-[900px]">
+                <div class="motion motion-fade-up">
+                    <h2 class="text-[1.375rem] mb-6">{{ $whenUseful['title'] }}</h2>
+
+                    @if($whenUseful['conditions'] ?? false)
+                    <div class="space-y-3">
+                        @foreach($whenUseful['conditions'] as $condition)
+                        <div class="flex items-start gap-3 text-[0.9375rem]">
+                            <x-frontend.icon name="check-circle" class="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                            <span>{{ $condition }}</span>
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- Approach Section with Steps --}}
+    @if($approach['title'] ?? false)
+    <section class="py-16 border-b border-border bg-accent/5">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="max-w-[900px]">
+                <div class="motion motion-fade-up">
+                    <h2 class="text-[1.375rem] mb-8">{{ $approach['title'] }}</h2>
+
+                    @if($approach['steps'] ?? false)
+                    <div class="space-y-6">
+                        @foreach($approach['steps'] as $step)
+                        <div class="flex gap-6">
+                            <span class="w-10 h-10 flex items-center justify-center border-2 border-foreground text-[0.875rem] font-mono font-medium shrink-0">{{ $step['number'] }}</span>
+                            <div>
+                                <h3 class="text-[1.0625rem] font-medium mb-2">{{ $step['title'] }}</h3>
+                                <p class="text-[0.9375rem] text-muted-foreground leading-relaxed">{{ $step['text'] }}</p>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- Infrastructure Section --}}
+    @if($infrastructure['title'] ?? false)
+    <section class="py-16 border-b border-border">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="max-w-[1200px]">
+                <div class="motion motion-fade-up mb-8">
+                    <h2 class="text-[1.375rem]">{{ $infrastructure['title'] }}</h2>
+                </div>
+
+                @if($infrastructure['items'] ?? false)
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @foreach($infrastructure['items'] as $item)
+                    <div class="p-5 border border-border bg-white">
+                        <h3 class="text-[0.9375rem] font-medium mb-2">{{ $item['title'] }}</h3>
+                        <p class="text-[0.875rem] text-muted-foreground">{{ $item['text'] }}</p>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- Services Section (5 Categories) --}}
+    @if($services['title'] ?? false)
+    <section class="py-16 border-b border-border bg-accent/5">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="max-w-[1200px]">
+                <div class="motion motion-fade-up mb-10">
+                    <h2 class="text-[1.375rem]">{{ $services['title'] }}</h2>
+                </div>
+
+                @if($services['categories'] ?? false)
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($services['categories'] as $index => $category)
+                    <div class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }}">
+                        <div class="p-6 border border-border bg-white h-full">
+                            <h3 class="text-[1.0625rem] font-medium mb-4">{{ $category['title'] }}</h3>
+
+                            @if($category['items'] ?? false)
+                            <div class="space-y-2">
+                                @foreach($category['items'] as $item)
+                                <div class="flex items-start gap-2 text-[0.875rem]">
+                                    <span class="text-accent shrink-0 mt-0.5">→</span>
+                                    <span>{{ $item }}</span>
+                                </div>
+                                @endforeach
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- Service Models Section --}}
+    @if($models['title'] ?? false)
+    <section class="py-16 border-b border-border">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="max-w-[1200px]">
+                <div class="motion motion-fade-up mb-10">
+                    <h2 class="text-[1.375rem]">{{ $models['title'] }}</h2>
+                </div>
+
+                @if($models['items'] ?? false)
+                <div class="grid md:grid-cols-3 gap-6">
+                    @foreach($models['items'] as $index => $model)
+                    <div class="motion motion-fade-up motion-delay-{{ $index + 1 }}">
+                        <div class="p-6 border-2 {{ $index === 1 ? 'border-foreground' : 'border-border' }} bg-white h-full flex flex-col">
+                            <h3 class="text-[1.125rem] font-medium mb-2">{{ $model['title'] }}</h3>
+                            <p class="text-[0.875rem] text-muted-foreground mb-6">{{ $model['description'] }}</p>
+
+                            @if($model['features'] ?? false)
+                            <div class="space-y-2 flex-1">
+                                @foreach($model['features'] as $feature)
+                                <div class="flex items-start gap-2 text-[0.875rem]">
+                                    <x-frontend.icon name="check-circle" class="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                                    <span>{{ $feature }}</span>
+                                </div>
+                                @endforeach
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- Differentiation Section --}}
+    @if($differentiation['title'] ?? false)
+    <section class="py-16 border-b border-border bg-accent/5">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="max-w-[900px]">
+                <div class="motion motion-fade-up">
+                    <h2 class="text-[1.375rem] mb-6">{{ $differentiation['title'] }}</h2>
+
+                    @if($differentiation['text'] ?? false)
+                    <p class="text-[0.9375rem] text-muted-foreground leading-relaxed">
+                        {{ $differentiation['text'] }}
+                    </p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- CTA Section --}}
+    @if($cta['title'] ?? false)
+    <section class="py-20">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="max-w-[1100px]">
+                <div class="motion motion-fade-up p-12 border-2 border-foreground text-center">
+                    <h2 class="text-[1.5rem] mb-4">{{ $cta['title'] }}</h2>
+                    @if($cta['text'] ?? false)
+                    <p class="text-[1rem] text-muted-foreground mb-8 max-w-[600px] mx-auto">
+                        {{ $cta['text'] }}
+                    </p>
+                    @endif
+                    <a href="{{ localized_route('contact') }}" class="inline-flex items-center gap-3 px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all">
+                        {{ $cta['button_text'] ?? (app()->getLocale() === 'en' ? 'Discuss project' : 'Projekt besprechen') }}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
+</x-layouts.frontend>

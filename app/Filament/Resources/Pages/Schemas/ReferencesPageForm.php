@@ -78,12 +78,11 @@ class ReferencesPageForm
 
                                         Repeater::make('challenge.items')
                                             ->label('Punkte')
-                                            ->schema([
+                                            ->simple(
                                                 TextInput::make('text')
                                                     ->label('Punkt')
-                                                    ->required(),
-                                            ])
-                                            ->simple()
+                                                    ->required()
+                                            )
                                             ->addActionLabel('Punkt hinzufügen'),
                                     ]),
 
@@ -95,12 +94,11 @@ class ReferencesPageForm
 
                                         Repeater::make('solution.items')
                                             ->label('Punkte')
-                                            ->schema([
+                                            ->simple(
                                                 TextInput::make('text')
                                                     ->label('Punkt')
-                                                    ->required(),
-                                            ])
-                                            ->simple()
+                                                    ->required()
+                                            )
                                             ->addActionLabel('Punkt hinzufügen'),
                                     ]),
 
@@ -112,12 +110,11 @@ class ReferencesPageForm
 
                                         Repeater::make('result.items')
                                             ->label('Punkte')
-                                            ->schema([
+                                            ->simple(
                                                 TextInput::make('text')
                                                     ->label('Punkt')
-                                                    ->required(),
-                                            ])
-                                            ->simple()
+                                                    ->required()
+                                            )
                                             ->addActionLabel('Punkt hinzufügen'),
                                     ]),
 
@@ -126,12 +123,11 @@ class ReferencesPageForm
                                     ->schema([
                                         Repeater::make('tech_stack')
                                             ->label('Technologien')
-                                            ->schema([
+                                            ->simple(
                                                 TextInput::make('name')
                                                     ->label('Technologie')
-                                                    ->required(),
-                                            ])
-                                            ->simple()
+                                                    ->required()
+                                            )
                                             ->addActionLabel('Technologie hinzufügen'),
                                     ]),
                             ])

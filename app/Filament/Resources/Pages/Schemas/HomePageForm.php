@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Pages\Schemas;
 
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -20,7 +19,7 @@ class HomePageForm
         return [
             self::getHeroTab(),
             self::getProblemTab(),
-            self::getServicesTab(),
+            self::getSolutionsTab(),
             self::getPrinciplesTab(),
             self::getWhyUsTab(),
             self::getProcessTab(),
@@ -37,11 +36,11 @@ class HomePageForm
                     ->schema([
                         TextInput::make('content.hero.badge')
                             ->label('Badge-Text')
-                            ->placeholder('z.B. Digitale Lösungen')
+                            ->placeholder('z.B. System- & Lösungsplattform')
                             ->maxLength(50),
 
                         TextInput::make('content.hero.title')
-                            ->label('Headline')
+                            ->label('Headline (H1)')
                             ->required()
                             ->maxLength(255),
 
@@ -49,26 +48,54 @@ class HomePageForm
                             ->label('Subline')
                             ->rows(3)
                             ->maxLength(500),
+
+                        Repeater::make('content.hero.tags')
+                            ->label('Tags')
+                            ->simple(
+                                TextInput::make('tag')
+                                    ->placeholder('z.B. Architektur')
+                            )
+                            ->reorderable()
+                            ->defaultItems(0)
+                            ->maxItems(6),
                     ]),
 
                 Section::make('Call-to-Action Buttons')
                     ->columns(2)
                     ->schema([
                         TextInput::make('content.hero.cta_primary_text')
-                            ->label('Primärer Button Text')
+                            ->label('Primaerer Button Text')
                             ->placeholder('z.B. Projekt besprechen'),
 
-                        TextInput::make('content.hero.cta_primary_link')
-                            ->label('Primärer Button Link')
-                            ->placeholder('/kontakt'),
-
                         TextInput::make('content.hero.cta_secondary_text')
-                            ->label('Sekundärer Button Text')
-                            ->placeholder('z.B. Lösungen ansehen'),
+                            ->label('Sekundaerer Button Text')
+                            ->placeholder('z.B. Loesungen entdecken'),
+                    ]),
 
-                        TextInput::make('content.hero.cta_secondary_link')
-                            ->label('Sekundärer Button Link')
-                            ->placeholder('/loesungen'),
+                Section::make('Technische Visualisierung (rechte Seite)')
+                    ->description('Die 4 Layer-Boxen auf der rechten Seite')
+                    ->schema([
+                        Repeater::make('content.hero.layers')
+                            ->label('Layer')
+                            ->schema([
+                                TextInput::make('icon')
+                                    ->label('Icon')
+                                    ->placeholder('z.B. globe, code, layers, database'),
+
+                                TextInput::make('label')
+                                    ->label('Label')
+                                    ->placeholder('z.B. Frontend Layer')
+                                    ->required(),
+
+                                TextInput::make('desc')
+                                    ->label('Beschreibung')
+                                    ->placeholder('z.B. React, TypeScript'),
+                            ])
+                            ->reorderable()
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
+                            ->defaultItems(0)
+                            ->maxItems(4),
                     ]),
             ]);
     }
@@ -82,114 +109,149 @@ class HomePageForm
                     ->description('Zeigt die typischen Probleme der Zielgruppe')
                     ->schema([
                         TextInput::make('content.problem.title')
-                            ->label('Überschrift')
+                            ->label('Ueberschrift')
                             ->required()
                             ->maxLength(255),
 
                         Repeater::make('content.problem.items')
-                            ->label('Problem-Punkte')
+                            ->label('Typische Ausgangssituation')
                             ->schema([
-                                TextInput::make('title')
-                                    ->label('Titel')
+                                TextInput::make('label')
+                                    ->label('Text')
+                                    ->placeholder('z.B. 6-10 verschiedene Tools')
                                     ->required(),
 
-                                Textarea::make('description')
-                                    ->label('Beschreibung')
-                                    ->rows(2)
+                                TextInput::make('value')
+                                    ->label('Wert')
+                                    ->placeholder('z.B. 8, ++, ∞')
                                     ->required(),
                             ])
-                            ->addActionLabel('Problem hinzufügen')
+                            ->addActionLabel('Problem hinzufuegen')
                             ->reorderable()
                             ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
-                            ->maxItems(4),
+                            ->itemLabel(fn (array $state): ?string => $state['label'] ?? null)
+                            ->maxItems(6),
+
+                        Repeater::make('content.problem.results')
+                            ->label('Ergebnisse (rote Box)')
+                            ->simple(
+                                TextInput::make('result')
+                                    ->placeholder('z.B. Medienbrueche & Doppelerfassung')
+                            )
+                            ->addActionLabel('Ergebnis hinzufuegen')
+                            ->reorderable()
+                            ->maxItems(6),
+
+                        Textarea::make('content.problem.approach')
+                            ->label('Unser Ansatz (Box unten)')
+                            ->rows(2)
+                            ->placeholder('z.B. Genau hier setzen wir an...'),
                     ]),
             ]);
     }
 
-    private static function getServicesTab(): Tab
+    private static function getSolutionsTab(): Tab
     {
-        return Tab::make('Leistungen')
+        return Tab::make('Loesungen')
             ->icon(Heroicon::OutlinedRectangleGroup)
             ->schema([
-                Section::make('Leistungen-Übersicht')
+                Section::make('Loesungen-Uebersicht')
                     ->columnSpanFull()
                     ->schema([
-                        TextInput::make('content.services.badge')
+                        TextInput::make('content.solutions.badge')
                             ->label('Badge-Text')
-                            ->placeholder('z.B. KERNKOMPETENZEN'),
+                            ->placeholder('z.B. Loesungsuebersicht'),
 
-                        TextInput::make('content.services.title')
-                            ->label('Überschrift')
+                        TextInput::make('content.solutions.title')
+                            ->label('Ueberschrift')
                             ->required(),
 
-                        Textarea::make('content.services.subtitle')
+                        Textarea::make('content.solutions.subtitle')
                             ->label('Untertitel')
-                            ->rows(2),
+                            ->rows(3),
                     ]),
 
-                Section::make('Button')
+                Section::make('Loesungs-Akkordeons')
                     ->columnSpanFull()
-                    ->columns(2)
+                    ->description('Die 4 aufklappbaren Loesungskarten')
                     ->schema([
-                        TextInput::make('content.services.button_text')
-                            ->label('Button Text')
-                            ->placeholder('z.B. Alle Lösungen im Detail'),
-
-                        TextInput::make('content.services.button_link')
-                            ->label('Button Link')
-                            ->placeholder('/loesungen'),
-                    ]),
-
-                Section::make('Leistungs-Karten (Accordion)')
-                    ->columnSpanFull()
-                    ->schema([
-                        Repeater::make('content.services.items')
-                            ->label('Leistungen')
+                        Repeater::make('content.solutions.accordions')
+                            ->label('Akkordeons')
                             ->schema([
+                                TextInput::make('number')
+                                    ->label('Nummer')
+                                    ->placeholder('01'),
+
                                 TextInput::make('icon')
                                     ->label('Icon')
-                                    ->placeholder('z.B. code, workflow, git-branch')
-                                    ->helperText('Verfügbar: code, workflow, git-branch, layers, globe, database'),
+                                    ->placeholder('z.B. globe, layout-dashboard, shopping-cart'),
 
                                 TextInput::make('title')
                                     ->label('Titel')
                                     ->required(),
 
+                                TextInput::make('subtitle')
+                                    ->label('Untertitel'),
+
                                 Textarea::make('description')
-                                    ->label('Kurzbeschreibung')
-                                    ->rows(2)
-                                    ->required(),
+                                    ->label('Beschreibung')
+                                    ->rows(3),
+
+                                Repeater::make('suitable_for')
+                                    ->label('Typisch geeignet fuer')
+                                    ->simple(
+                                        TextInput::make('item')
+                                            ->placeholder('z.B. Unternehmenswebsites')
+                                    )
+                                    ->reorderable()
+                                    ->defaultItems(0)
+                                    ->maxItems(5),
+
+                                Repeater::make('character')
+                                    ->label('Charakter')
+                                    ->simple(
+                                        TextInput::make('item')
+                                            ->placeholder('z.B. Klarer Einstieg')
+                                    )
+                                    ->reorderable()
+                                    ->defaultItems(0)
+                                    ->maxItems(5),
 
                                 TextInput::make('link')
-                                    ->label('Detail-Link')
-                                    ->placeholder('/loesungen/digitale-plattformen'),
-
-                                Repeater::make('capabilities')
-                                    ->label('Systemfähigkeiten')
-                                    ->simple(
-                                        TextInput::make('item')
-                                            ->placeholder('z.B. Geschäftslogik & Regelwerke')
-                                    )
-                                    ->addActionLabel('Fähigkeit hinzufügen')
-                                    ->reorderable()
-                                    ->maxItems(6),
-
-                                Repeater::make('technical_focus')
-                                    ->label('Technischer Fokus')
-                                    ->simple(
-                                        TextInput::make('item')
-                                            ->placeholder('z.B. Saubere Trennung von Oberfläche, Logik und Daten')
-                                    )
-                                    ->addActionLabel('Fokus hinzufügen')
-                                    ->reorderable()
-                                    ->maxItems(6),
+                                    ->label('Link')
+                                    ->placeholder('/loesungen/websites'),
                             ])
-                            ->addActionLabel('Leistung hinzufügen')
+                            ->addActionLabel('Akkordeon hinzufuegen')
                             ->reorderable()
                             ->collapsible()
                             ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
                             ->maxItems(6),
+                    ]),
+
+                Section::make('Wachstum & Sichtbarkeit')
+                    ->columnSpanFull()
+                    ->description('SEO/SEA Block')
+                    ->schema([
+                        TextInput::make('content.solutions.growth_title')
+                            ->label('Ueberschrift')
+                            ->placeholder('Wachstum & Sichtbarkeit'),
+
+                        Textarea::make('content.solutions.growth_text')
+                            ->label('Text')
+                            ->rows(2),
+                    ]),
+
+                Section::make('Microcopy CTA')
+                    ->columnSpanFull()
+                    ->schema([
+                        Textarea::make('content.solutions.microcopy')
+                            ->label('Text')
+                            ->rows(2)
+                            ->placeholder('Unsicher, welcher Einstieg sinnvoll ist?'),
+
+                        TextInput::make('content.solutions.microcopy_button')
+                            ->label('Button-Text')
+                            ->placeholder('Projekt besprechen'),
                     ]),
             ]);
     }
@@ -207,26 +269,20 @@ class HomePageForm
                             ->placeholder('z.B. TECHNISCHE PRINZIPIEN'),
 
                         TextInput::make('content.principles.title')
-                            ->label('Überschrift')
+                            ->label('Ueberschrift')
                             ->required(),
 
                         Textarea::make('content.principles.subtitle')
                             ->label('Untertitel')
                             ->rows(2)
-                            ->placeholder('z.B. Technische Entscheidungen bestimmen, ob ein System nach 2 Jahren noch erweiterbar ist...'),
+                            ->placeholder('z.B. Technische Entscheidungen bestimmen...'),
 
                         Repeater::make('content.principles.items')
                             ->label('Prinzipien')
                             ->schema([
                                 TextInput::make('icon')
                                     ->label('Icon')
-                                    ->placeholder('z.B. layers, git-branch, refresh-cw, wrench')
-                                    ->helperText('Verfügbar: layers, git-branch, refresh-cw, wrench, code, database'),
-
-                                TextInput::make('number')
-                                    ->label('Nummer')
-                                    ->placeholder('01')
-                                    ->maxLength(2),
+                                    ->placeholder('z.B. layers, git-branch'),
 
                                 TextInput::make('title')
                                     ->label('Titel')
@@ -237,11 +293,41 @@ class HomePageForm
                                     ->rows(2)
                                     ->required(),
                             ])
-                            ->addActionLabel('Prinzip hinzufügen')
+                            ->addActionLabel('Prinzip hinzufuegen')
                             ->reorderable()
                             ->collapsible()
                             ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
                             ->maxItems(4),
+                    ]),
+
+                Section::make('Tech Stack')
+                    ->columnSpanFull()
+                    ->schema([
+                        Repeater::make('content.principles.tech_stack')
+                            ->label('Technologie-Kategorien')
+                            ->schema([
+                                TextInput::make('category')
+                                    ->label('Kategorie')
+                                    ->placeholder('z.B. Frontend')
+                                    ->required(),
+
+                                Repeater::make('items')
+                                    ->label('Technologien')
+                                    ->simple(
+                                        TextInput::make('name')
+                                            ->placeholder('z.B. React')
+                                    )
+                                    ->reorderable()
+                                    ->defaultItems(0),
+                            ])
+                            ->reorderable()
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string => $state['category'] ?? null)
+                            ->maxItems(4),
+
+                        Textarea::make('content.principles.additional_tools')
+                            ->label('Weitere Technologien & Tools')
+                            ->rows(2),
                     ]),
             ]);
     }
@@ -254,12 +340,16 @@ class HomePageForm
                 Section::make('Warum sdWebdesign')
                     ->schema([
                         TextInput::make('content.why_us.title')
-                            ->label('Überschrift')
+                            ->label('Ueberschrift')
                             ->required(),
 
                         Repeater::make('content.why_us.items')
                             ->label('Argumente')
                             ->schema([
+                                TextInput::make('icon')
+                                    ->label('Icon')
+                                    ->placeholder('z.B. code, shield, clock'),
+
                                 TextInput::make('title')
                                     ->label('Titel')
                                     ->required(),
@@ -269,11 +359,15 @@ class HomePageForm
                                     ->rows(2)
                                     ->required(),
                             ])
-                            ->addActionLabel('Argument hinzufügen')
+                            ->addActionLabel('Argument hinzufuegen')
                             ->reorderable()
                             ->collapsible()
                             ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
                             ->maxItems(4),
+
+                        Textarea::make('content.why_us.promise')
+                            ->label('Unser Versprechen (Box)')
+                            ->rows(3),
                     ]),
             ]);
     }
@@ -290,8 +384,12 @@ class HomePageForm
                             ->placeholder('z.B. So arbeiten wir'),
 
                         TextInput::make('content.process.title')
-                            ->label('Überschrift')
+                            ->label('Ueberschrift')
                             ->required(),
+
+                        Textarea::make('content.process.subtitle')
+                            ->label('Untertitel')
+                            ->rows(2),
 
                         Repeater::make('content.process.steps')
                             ->label('Prozess-Schritte')
@@ -301,6 +399,10 @@ class HomePageForm
                                     ->placeholder('01')
                                     ->maxLength(2),
 
+                                TextInput::make('icon')
+                                    ->label('Icon (optional)')
+                                    ->placeholder('z.B. message-circle'),
+
                                 TextInput::make('title')
                                     ->label('Titel')
                                     ->required(),
@@ -309,12 +411,36 @@ class HomePageForm
                                     ->label('Beschreibung')
                                     ->rows(2)
                                     ->required(),
+
+                                Repeater::make('details')
+                                    ->label('Details (Stichpunkte)')
+                                    ->simple(
+                                        TextInput::make('item')
+                                            ->placeholder('z.B. Analyse bestehender Systeme')
+                                    )
+                                    ->reorderable()
+                                    ->defaultItems(0)
+                                    ->maxItems(5),
+
+                                TextInput::make('goal')
+                                    ->label('Ziel (kursiv)')
+                                    ->placeholder('z.B. Klarheit ueber Anforderungen'),
                             ])
-                            ->addActionLabel('Schritt hinzufügen')
+                            ->addActionLabel('Schritt hinzufuegen')
                             ->reorderable()
                             ->collapsible()
                             ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
-                            ->maxItems(5),
+                            ->maxItems(6),
+                    ]),
+
+                Section::make('Fazit')
+                    ->schema([
+                        TextInput::make('content.process.conclusion.title')
+                            ->label('Fazit Titel'),
+
+                        Textarea::make('content.process.conclusion.text')
+                            ->label('Fazit Text')
+                            ->rows(2),
                     ]),
             ]);
     }
@@ -325,27 +451,19 @@ class HomePageForm
             ->icon(Heroicon::OutlinedRocketLaunch)
             ->schema([
                 Section::make('Call-to-Action Sektion')
-                    ->description('Abschließender Aufruf zur Kontaktaufnahme')
+                    ->description('Abschliessender Aufruf zur Kontaktaufnahme')
                     ->schema([
                         TextInput::make('content.cta.title')
-                            ->label('Überschrift')
+                            ->label('Ueberschrift')
                             ->required(),
 
                         Textarea::make('content.cta.subtitle')
                             ->label('Untertitel')
                             ->rows(2),
-                    ]),
 
-                Section::make('Buttons')
-                    ->columns(2)
-                    ->schema([
                         TextInput::make('content.cta.button_text')
                             ->label('Button Text')
                             ->placeholder('z.B. Projekt besprechen'),
-
-                        TextInput::make('content.cta.button_link')
-                            ->label('Button Link')
-                            ->placeholder('/kontakt'),
                     ]),
             ]);
     }

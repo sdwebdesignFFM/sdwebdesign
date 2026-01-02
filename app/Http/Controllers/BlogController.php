@@ -25,7 +25,7 @@ class BlogController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('excerpt', 'like', "%{$search}%");
+                    ->orWhere('excerpt', 'like', "%{$search}%");
             });
         }
 
@@ -47,13 +47,13 @@ class BlogController extends Controller
     {
         $article = BlogArticle::query()
             ->published()
-            ->where('slug', $slug)
+            ->bySlug($slug)
             ->firstOrFail();
 
         $relatedArticles = BlogArticle::query()
             ->published()
             ->where('id', '!=', $article->id)
-            ->where('category', $article->category)
+            ->byCategory($article->category)
             ->latest('published_at')
             ->limit(3)
             ->get();

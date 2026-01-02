@@ -22,57 +22,10 @@ class ContactModal extends Component
     // Step 1: Project Types (Multiple Selection)
     public array $selectedProjectTypes = [];
 
-    public array $projectTypes = [
-        'webdesign' => [
-            'label' => 'Webdesign & UI/UX',
-            'description' => 'Firmenwebseite, Relaunch',
-            'icon' => 'layout',
-        ],
-        'web_application' => [
-            'label' => 'Webanwendung',
-            'description' => 'Firmenprozesse digitalisieren, Portale',
-            'icon' => 'code',
-        ],
-        'ecommerce' => [
-            'label' => 'E-Commerce / Shop',
-            'description' => 'Online-Shop, Marktplatz, B2B-Portal',
-            'icon' => 'shopping-cart',
-        ],
-        'mobile_app' => [
-            'label' => 'Mobile App',
-            'description' => 'iOS & Android Apps, PWA',
-            'icon' => 'smartphone',
-        ],
-        'api_integration' => [
-            'label' => 'API & Integration',
-            'description' => 'Systeme verbinden, Automatisierung',
-            'icon' => 'git-merge',
-        ],
-        'ai_integration' => [
-            'label' => 'KI-Integration',
-            'description' => 'Chatbots, Automatisierung, AI-Tools',
-            'icon' => 'cpu',
-        ],
-    ];
-
     // Step 2: Budget & Timeline
     public string $budget = '';
 
-    public array $budgets = [
-        'under_5k' => '< 5.000 €',
-        '5k_15k' => '5.000 - 15.000 €',
-        '15k_50k' => '15.000 - 50.000 €',
-        'over_50k' => '> 50.000 €',
-    ];
-
     public string $timeline = '';
-
-    public array $timelines = [
-        'asap' => 'So schnell wie möglich',
-        '1_3_months' => '1-3 Monate',
-        '3_6_months' => '3-6 Monate',
-        'flexible' => 'Flexibel',
-    ];
 
     // Step 3: Contact Information
     #[Validate('required|string|max:255')]
@@ -93,29 +46,91 @@ class ContactModal extends Component
     // Callback preferences
     public array $selectedCallbackDays = [];
 
-    public array $callbackDays = [
-        'mo' => 'Mo',
-        'di' => 'Di',
-        'mi' => 'Mi',
-        'do' => 'Do',
-        'fr' => 'Fr',
-        'sa' => 'Sa',
-    ];
-
     public string $callbackTime = '';
-
-    public array $callbackTimes = [
-        'morning' => '9 - 12 Uhr',
-        'noon' => '12 - 14 Uhr',
-        'afternoon' => '14 - 18 Uhr',
-        'evening' => '18 - 20 Uhr',
-    ];
 
     public bool $isSubmitting = false;
 
     public bool $isSubmitted = false;
 
     public string $rateLimitError = '';
+
+    public function getProjectTypesProperty(): array
+    {
+        return [
+            'websites' => [
+                'label' => __('contact.project_type_websites'),
+                'description' => __('contact.project_type_websites_desc'),
+                'icon' => 'globe',
+            ],
+            'platforms' => [
+                'label' => __('contact.project_type_platforms'),
+                'description' => __('contact.project_type_platforms_desc'),
+                'icon' => 'layout-dashboard',
+            ],
+            'ecommerce' => [
+                'label' => __('contact.project_type_ecommerce'),
+                'description' => __('contact.project_type_ecommerce_desc'),
+                'icon' => 'shopping-cart',
+            ],
+            'mobile' => [
+                'label' => __('contact.project_type_mobile'),
+                'description' => __('contact.project_type_mobile_desc'),
+                'icon' => 'device-phone-mobile',
+            ],
+            'seo' => [
+                'label' => __('contact.project_type_seo'),
+                'description' => __('contact.project_type_seo_desc'),
+                'icon' => 'magnifying-glass',
+            ],
+            'sea' => [
+                'label' => __('contact.project_type_sea'),
+                'description' => __('contact.project_type_sea_desc'),
+                'icon' => 'currency-euro',
+            ],
+        ];
+    }
+
+    public function getBudgetsProperty(): array
+    {
+        return [
+            'under_5k' => __('contact.budget_under_5k'),
+            '5k_15k' => __('contact.budget_5k_15k'),
+            '15k_50k' => __('contact.budget_15k_50k'),
+            'over_50k' => __('contact.budget_over_50k'),
+        ];
+    }
+
+    public function getTimelinesProperty(): array
+    {
+        return [
+            'asap' => __('contact.timeline_asap'),
+            '1_3_months' => __('contact.timeline_1_3_months'),
+            '3_6_months' => __('contact.timeline_3_6_months'),
+            'flexible' => __('contact.timeline_flexible'),
+        ];
+    }
+
+    public function getCallbackDaysProperty(): array
+    {
+        return [
+            'mo' => __('contact.day_mo'),
+            'di' => __('contact.day_di'),
+            'mi' => __('contact.day_mi'),
+            'do' => __('contact.day_do'),
+            'fr' => __('contact.day_fr'),
+            'sa' => __('contact.day_sa'),
+        ];
+    }
+
+    public function getCallbackTimesProperty(): array
+    {
+        return [
+            'morning' => __('contact.time_morning'),
+            'noon' => __('contact.time_noon'),
+            'afternoon' => __('contact.time_afternoon'),
+            'evening' => __('contact.time_evening'),
+        ];
+    }
 
     #[On('openContactModal')]
     public function open(): void
@@ -163,6 +178,14 @@ class ContactModal extends Component
         );
     }
 
+    public function getSelectedProjectTypesLabels(): array
+    {
+        return array_map(
+            fn ($type) => $this->projectTypes[$type]['label'] ?? $type,
+            $this->selectedProjectTypes
+        );
+    }
+
     public function close(): void
     {
         $this->isOpen = false;
@@ -205,25 +228,17 @@ class ContactModal extends Component
         }
     }
 
-    public function getSelectedProjectTypesLabels(): array
-    {
-        return array_map(
-            fn ($type) => $this->projectTypes[$type]['label'] ?? $type,
-            $this->selectedProjectTypes
-        );
-    }
-
     public function submit(): mixed
     {
         $this->rateLimitError = '';
 
         // Rate limiting: 5 submissions per hour per IP
-        $rateLimitKey = 'contact-form:' . request()->ip();
+        $rateLimitKey = 'contact-form:'.request()->ip();
 
         if (RateLimiter::tooManyAttempts($rateLimitKey, 5)) {
             $seconds = RateLimiter::availableIn($rateLimitKey);
             $minutes = ceil($seconds / 60);
-            $this->rateLimitError = "Zu viele Anfragen. Bitte versuchen Sie es in {$minutes} Minuten erneut.";
+            $this->rateLimitError = __('contact.rate_limit_error', ['minutes' => $minutes]);
 
             return null;
         }
@@ -271,7 +286,7 @@ class ContactModal extends Component
         $this->isSubmitting = false;
         $this->isOpen = false;
 
-        return $this->redirect(route('contact.thank-you'), navigate: true);
+        return $this->redirect(localized_route('contact.thank-you'), navigate: true);
     }
 
     public function render()

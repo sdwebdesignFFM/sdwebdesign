@@ -79,12 +79,11 @@ class AboutPageForm
 
                                 Repeater::make('expertise')
                                     ->label('Expertise-Bereiche')
-                                    ->schema([
+                                    ->simple(
                                         TextInput::make('area')
                                             ->label('Bereich')
-                                            ->required(),
-                                    ])
-                                    ->simple()
+                                            ->required()
+                                    )
                                     ->addActionLabel('Expertise hinzufügen')
                                     ->maxItems(6),
                             ])

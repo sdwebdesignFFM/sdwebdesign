@@ -122,7 +122,7 @@ class ContactModalTest extends TestCase
             ->set('phone', '+49 123 456789')
             ->set('projectDescription', 'Ein Testprojekt')
             ->call('submit')
-            ->assertRedirect(route('contact.thank-you'));
+            ->assertRedirect(localized_route('contact.thank-you'));
 
         Mail::assertSent(ContactRequestAdmin::class);
         Mail::assertSent(ContactRequestConfirmation::class, function ($mail) {

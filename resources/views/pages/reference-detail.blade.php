@@ -19,7 +19,7 @@
     {{-- Breadcrumb --}}
     <section class="pt-24 border-b border-border">
         <div class="max-w-[1400px] mx-auto px-6 py-6">
-            <a href="{{ route('references') }}" class="flex items-center gap-2 text-[0.875rem] text-muted-foreground hover:text-foreground transition-colors">
+            <a href="{{ localized_route('references') }}" class="flex items-center gap-2 text-[0.875rem] text-muted-foreground hover:text-foreground transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m15 18-6-6 6-6"/>
                 </svg>
@@ -410,12 +410,16 @@
                     <p class="mb-8 text-[1.0625rem] text-muted-foreground max-w-[700px] mx-auto">
                         {{ $cta['subtitle'] ?? 'Lassen Sie uns in einem unverbindlichen Gespräch besprechen, wie wir Ihr Projekt umsetzen können.' }}
                     </p>
-                    <a href="{{ route('contact') }}" class="inline-flex items-center gap-3 px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all">
+                    <button
+                        type="button"
+                        onclick="Livewire.dispatch('openContactModal')"
+                        class="inline-flex items-center gap-3 px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all"
+                    >
                         {{ $cta['button_text'] ?? 'Projekt besprechen' }}
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
                         </svg>
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -435,7 +439,7 @@
                 @php
                     $refHero = $reference->getSection('hero');
                 @endphp
-                <a href="{{ route('references.show', $reference->slug) }}"
+                <a href="{{ localized_route('references.show', ['slug' => $reference->slug]) }}"
                    class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} group block border border-border hover:border-foreground hover:shadow-lg transition-all bg-white">
                     <div class="p-6">
                         @if($refHero['category'] ?? false)

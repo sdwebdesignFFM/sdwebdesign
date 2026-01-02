@@ -56,14 +56,14 @@
 
                         {{-- Content --}}
                         <div class="flex-1">
-                            <p class="text-[0.75rem] font-semibold tracking-widest text-accent uppercase mb-2">Ihr Ansprechpartner</p>
+                            <p class="text-[0.75rem] font-semibold tracking-widest text-accent uppercase mb-2">{{ __('contact.your_contact_person') }}</p>
                             <h2 class="text-[1.5rem] font-medium mb-1">
                                 {{ $settings->cta_name ?? $settings->owner_name }}
                             </h2>
-                            <p class="text-[0.9375rem] text-muted-foreground mb-4">{{ $settings->cta_role ?? 'Geschäftsführer' }}</p>
+                            <p class="text-[0.9375rem] text-muted-foreground mb-4">{{ $settings->cta_role ?? __('contact.managing_director') }}</p>
 
                             <p class="text-[0.9375rem] text-muted-foreground leading-relaxed mb-6 max-w-[550px]">
-                                {{ $settings->cta_subtitle ?? 'Ich berate Sie persönlich zu Ihrem Projekt – ehrlich, technisch fundiert und ohne Verkaufsdruck. Gemeinsam finden wir heraus, ob und wie wir Ihre Anforderungen sinnvoll umsetzen können.' }}
+                                {{ $settings->cta_subtitle ?? __('contact.contact_person_intro') }}
                             </p>
 
                             {{-- Button --}}
@@ -88,13 +88,13 @@
         <div class="max-w-[1400px] mx-auto px-6">
             <div class="grid lg:grid-cols-2 gap-16">
                 {{-- Contact CTA Card --}}
-                <div class="motion motion-fade-up">
+                <div class="motion motion-fade-up" x-data x-intersect:leave="$dispatch('cta-hidden')" x-intersect:enter="$dispatch('cta-visible')">
                     <div class="border border-border bg-white overflow-hidden h-full">
                         {{-- Header --}}
                         <div class="bg-accent text-white p-8">
-                            <h2 class="text-[1.5rem] mb-2">{{ $form['title'] ?? 'Projekt anfragen' }}</h2>
+                            <h2 class="text-[1.5rem] mb-2">{{ $form['title'] ?? __('contact.modal_title') }}</h2>
                             <p class="text-white/70 text-[0.9375rem]">
-                                In nur 3 Schritten zu Ihrem individuellen Angebot
+                                {{ __('contact.form_subtitle') }}
                             </p>
                         </div>
 
@@ -105,22 +105,22 @@
                                 <div class="flex items-center gap-4">
                                     <div class="w-8 h-8 rounded-full bg-accent/10 text-accent flex items-center justify-center text-sm font-semibold">1</div>
                                     <div>
-                                        <p class="font-medium text-[0.9375rem]">Projekttyp wählen</p>
-                                        <p class="text-[0.8125rem] text-muted-foreground">Webdesign, E-Commerce, App, etc.</p>
+                                        <p class="font-medium text-[0.9375rem]">{{ __('contact.step1_name') }}</p>
+                                        <p class="text-[0.8125rem] text-muted-foreground">{{ __('contact.step1_desc') }}</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-4">
                                     <div class="w-8 h-8 rounded-full bg-accent/10 text-accent flex items-center justify-center text-sm font-semibold">2</div>
                                     <div>
-                                        <p class="font-medium text-[0.9375rem]">Budget & Zeitrahmen</p>
-                                        <p class="text-[0.8125rem] text-muted-foreground">Ihre Vorstellungen angeben</p>
+                                        <p class="font-medium text-[0.9375rem]">{{ __('contact.step2_name') }}</p>
+                                        <p class="text-[0.8125rem] text-muted-foreground">{{ __('contact.step2_desc') }}</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-4">
                                     <div class="w-8 h-8 rounded-full bg-accent/10 text-accent flex items-center justify-center text-sm font-semibold">3</div>
                                     <div>
-                                        <p class="font-medium text-[0.9375rem]">Kontaktdaten</p>
-                                        <p class="text-[0.8125rem] text-muted-foreground">Für unser persönliches Gespräch</p>
+                                        <p class="font-medium text-[0.9375rem]">{{ __('contact.step3_name') }}</p>
+                                        <p class="text-[0.8125rem] text-muted-foreground">{{ __('contact.step3_desc') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +131,7 @@
                                 onclick="Livewire.dispatch('openContactModal')"
                                 class="w-full flex items-center justify-center gap-3 px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all text-[0.9375rem] rounded-lg font-medium"
                             >
-                                Jetzt Projekt anfragen
+                                {{ __('contact.request_project_now') }}
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
                                 </svg>
@@ -167,7 +167,7 @@
                                     <x-frontend.icon name="mail" class="w-5 h-5 text-accent" />
                                 </div>
                                 <div>
-                                    <h3 class="text-[0.9375rem] font-medium mb-1">E-Mail</h3>
+                                    <h3 class="text-[0.9375rem] font-medium mb-1">{{ __('contact.label_email') }}</h3>
                                     <x-frontend.obfuscated-contact
                                         type="email"
                                         :value="$contactEmail"
@@ -186,7 +186,7 @@
                                     <x-frontend.icon name="phone" class="w-5 h-5 text-accent" />
                                 </div>
                                 <div>
-                                    <h3 class="text-[0.9375rem] font-medium mb-1">Telefon</h3>
+                                    <h3 class="text-[0.9375rem] font-medium mb-1">{{ __('contact.label_phone') }}</h3>
                                     <x-frontend.obfuscated-contact
                                         type="phone"
                                         :value="$contactPhone"
@@ -208,7 +208,7 @@
                                     <x-frontend.icon name="map-pin" class="w-5 h-5 text-accent" />
                                 </div>
                                 <div>
-                                    <h3 class="text-[0.9375rem] font-medium mb-1">Standort</h3>
+                                    <h3 class="text-[0.9375rem] font-medium mb-1">{{ __('contact.label_location') }}</h3>
                                     <p class="text-[0.9375rem] text-muted-foreground leading-relaxed whitespace-pre-line">{{ $contactLocation }}</p>
                                 </div>
                             </div>
@@ -344,6 +344,73 @@
     </section>
     @endif
 
-    {{-- Contact Modal --}}
-    <livewire:contact-modal />
+    {{-- Floating Mini CTA --}}
+    <div
+        x-data="{ visible: false, dismissed: false }"
+        x-on:cta-hidden.window="if (!dismissed) visible = true"
+        x-on:cta-visible.window="visible = false"
+        class="fixed bottom-6 right-6 z-40"
+    >
+        <div
+            x-show="visible && !dismissed"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+            x-transition:leave-end="opacity-0 translate-y-4 scale-95"
+            class="relative bg-white rounded-2xl shadow-2xl border border-border overflow-hidden w-[280px]"
+        >
+            {{-- Close Button --}}
+            <button
+                type="button"
+                x-on:click="dismissed = true"
+                class="absolute top-3 right-3 p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors z-10"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                </svg>
+            </button>
+
+            {{-- Content --}}
+            <div class="p-5">
+                <div class="flex items-start gap-4">
+                    {{-- Photo --}}
+                    @if($settings->cta_image)
+                    <img
+                        src="{{ \Illuminate\Support\Facades\Storage::url($settings->cta_image) }}"
+                        alt="{{ $settings->cta_name ?? $settings->owner_name }}"
+                        class="w-14 h-14 object-cover object-top border-2 border-black shrink-0"
+                    />
+                    @else
+                    <div class="w-14 h-14 bg-accent/10 flex items-center justify-center shrink-0 border-2 border-black">
+                        <x-frontend.icon name="user" class="w-6 h-6 text-accent" />
+                    </div>
+                    @endif
+
+                    {{-- Text --}}
+                    <div class="flex-1 min-w-0 pt-1">
+                        <p class="font-medium text-[0.9375rem] truncate">{{ $settings->cta_name ?? $settings->owner_name ?? __('contact.your_contact_person') }}</p>
+                        <p class="text-[0.8125rem] text-muted-foreground">{{ $settings->cta_role ?? __('contact.managing_director') }}</p>
+                    </div>
+                </div>
+
+                <p class="mt-4 text-[0.875rem] text-muted-foreground leading-relaxed">
+                    {{ __('contact.floating_cta_text') }}
+                </p>
+
+                {{-- CTA Button --}}
+                <button
+                    type="button"
+                    onclick="Livewire.dispatch('openContactModal')"
+                    class="mt-4 w-full flex items-center justify-center gap-2 px-5 py-3 bg-accent text-white rounded-xl hover:bg-accent/90 transition-all text-[0.875rem] font-medium"
+                >
+                    {{ __('contact.discuss_project') }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
 </x-layouts.frontend>

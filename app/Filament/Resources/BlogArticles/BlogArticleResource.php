@@ -13,12 +13,24 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
+use UnitEnum;
 
 class BlogArticleResource extends Resource
 {
+    use Translatable;
+
     protected static ?string $model = BlogArticle::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedNewspaper;
+
+    protected static UnitEnum|string|null $navigationGroup = 'Blog';
+
+    protected static ?string $navigationLabel = 'Artikel';
+
+    protected static ?string $modelLabel = 'Blog-Artikel';
+
+    protected static ?string $pluralModelLabel = 'Blog-Artikel';
 
     public static function form(Schema $schema): Schema
     {

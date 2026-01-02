@@ -5,11 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
 class BlogArticle extends Model
 {
     /** @use HasFactory<\Database\Factories\BlogArticleFactory> */
     use HasFactory;
+
+    use HasTranslations;
+
+    /**
+     * @var array<int, string>
+     */
+    public array $translatable = [
+        'title',
+        'slug',
+        'category',
+        'excerpt',
+        'intro',
+        'sections',
+        'conclusion',
+        'meta_title',
+        'meta_description',
+    ];
 
     protected $fillable = [
         'title',
@@ -32,7 +50,6 @@ class BlogArticle extends Model
     protected function casts(): array
     {
         return [
-            'sections' => 'array',
             'is_published' => 'boolean',
             'published_at' => 'datetime',
         ];
@@ -47,7 +64,16 @@ class BlogArticle extends Model
 
     public function scopeByCategory(Builder $query, string $category): Builder
     {
-        return $query->where('category', $category);
+        $locale = app()->getLocale();
+
+        return $query->where("category->{$locale}", $category);
+    }
+
+    public function scopeBySlug(Builder $query, string $slug): Builder
+    {
+        $locale = app()->getLocale();
+
+        return $query->where("slug->{$locale}", $slug);
     }
 
     public function getFormattedDateAttribute(): string
@@ -57,6 +83,6 @@ class BlogArticle extends Model
 
     public function getReadTimeTextAttribute(): string
     {
-        return $this->read_time . ' Min.';
+        return $this->read_time.' Min.';
     }
 }

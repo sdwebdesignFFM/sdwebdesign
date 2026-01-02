@@ -181,7 +181,7 @@
                     </p>
                     @endif
                     @if($cta['button_text'] ?? false)
-                    <a href="{{ $cta['button_link'] ?? route('contact') }}" class="inline-flex items-center gap-3 px-10 py-5 bg-foreground text-background hover:bg-foreground/90 transition-all">
+                    <a href="{{ $cta['button_link'] ?? localized_route('contact') }}" class="inline-flex items-center gap-3 px-10 py-5 bg-foreground text-background hover:bg-foreground/90 transition-all">
                         {{ $cta['button_text'] }}
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
