@@ -224,17 +224,39 @@
                     <p class="text-[1.0625rem] text-muted-foreground">Die wichtigsten Funktionen im Überblick</p>
                 </div>
 
+                @php
+                    $hasMockups = collect($features)->contains(fn($f) => isset($f['mockup']));
+                @endphp
+
                 <div class="space-y-20">
                     @foreach($features as $index => $feature)
                     <div class="motion motion-fade-up grid lg:grid-cols-2 gap-12 items-center {{ $index % 2 === 1 ? 'lg:flex-row-reverse' : '' }}">
-                        {{-- Image Placeholder --}}
+                        {{-- Image/Mockup --}}
                         <div class="{{ $index % 2 === 1 ? 'lg:order-2' : '' }}">
-                            @if($feature['image'] ?? false)
-                            <img src="{{ $feature['image'] }}" alt="{{ $feature['title'] }}" class="w-full border border-border">
+                            @if($feature['mockup'] ?? false)
+                                {{-- Stylized Mockup Component --}}
+                                <div class="flex items-center justify-center py-8">
+                                    @php
+                                        $mockupParts = explode(':', $feature['mockup']);
+                                        $mockupType = $mockupParts[0];
+                                        $mockupVariant = $mockupParts[1] ?? 'default';
+                                    @endphp
+                                    @if($mockupType === 'time-tracking')
+                                        <x-reference-mockups.time-tracking :variant="$mockupVariant" />
+                                    @elseif($mockupType === 'ecommerce-tablet')
+                                        <x-reference-mockups.ecommerce-tablet :variant="$mockupVariant" />
+                                    @elseif($mockupType === 'cosmetics-crm')
+                                        <x-reference-mockups.cosmetics-crm :variant="$mockupVariant" />
+                                    @elseif($mockupType === 'cosmetics-shop')
+                                        <x-reference-mockups.cosmetics-shop :variant="$mockupVariant" />
+                                    @endif
+                                </div>
+                            @elseif($feature['image'] ?? false)
+                                <img src="{{ $feature['image'] }}" alt="{{ $feature['title'] }}" class="w-full border border-border">
                             @else
-                            <div class="aspect-[4/3] bg-muted/20 border border-border flex items-center justify-center">
-                                <x-frontend.icon name="image" class="w-16 h-16 text-muted-foreground/30" />
-                            </div>
+                                <div class="aspect-[4/3] bg-muted/20 border border-border flex items-center justify-center">
+                                    <x-frontend.icon name="image" class="w-16 h-16 text-muted-foreground/30" />
+                                </div>
                             @endif
                         </div>
 
@@ -264,6 +286,24 @@
                     </div>
                     @endforeach
                 </div>
+
+                {{-- Confidentiality Notice --}}
+                @if($hasMockups)
+                <div class="motion motion-fade-up mt-16 p-6 bg-muted/10 border border-border">
+                    <div class="flex items-start gap-4">
+                        <x-frontend.icon name="shield" class="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
+                        <div>
+                            <p class="text-[0.875rem] text-muted-foreground leading-relaxed">
+                                {{ app()->getLocale() === 'en'
+                                    ? 'To protect our clients\' business processes, we display stylized representations instead of actual screenshots. For detailed information about this project, please '
+                                    : 'Zum Schutz der Geschäftsprozesse unserer Kunden zeigen wir stilisierte Darstellungen anstelle von echten Screenshots. Für detaillierte Informationen zu diesem Projekt nehmen Sie bitte ' }}
+                                <a href="{{ localized_route('contact') }}" class="text-foreground hover:text-accent underline underline-offset-2">
+                                    {{ app()->getLocale() === 'en' ? 'contact us' : 'Kontakt mit uns auf' }}</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </section>

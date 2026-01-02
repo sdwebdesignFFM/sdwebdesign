@@ -86,6 +86,7 @@ class PageController extends Controller
         // Get all reference detail pages for the listing
         $referencePages = Page::active()
             ->ofType(Page::TYPE_REFERENCE_DETAIL)
+            ->orderBy('sort_order')
             ->get();
 
         $this->setSeoMeta($page);
