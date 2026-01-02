@@ -117,13 +117,26 @@ class Page extends Model
     public static function findBySlug(string $slug): ?self
     {
         $locale = app()->getLocale();
+        $fallbackLocale = 'de';
 
         return Cache::remember(
             "page.{$locale}.{$slug}",
             now()->addHours(24),
-            fn () => self::active()
-                ->where("slug->{$locale}", $slug)
-                ->first()
+            function () use ($locale, $fallbackLocale, $slug) {
+                // Try current locale first
+                $page = self::active()
+                    ->where("slug->{$locale}", $slug)
+                    ->first();
+
+                // Fallback to default locale if not found
+                if (! $page && $locale !== $fallbackLocale) {
+                    $page = self::active()
+                        ->where("slug->{$fallbackLocale}", $slug)
+                        ->first();
+                }
+
+                return $page;
+            }
         );
     }
 
@@ -280,14 +293,24 @@ class Page extends Model
     {
         $segments = explode('/', trim($fullPath, '/'));
         $locale = app()->getLocale();
+        $fallbackLocale = 'de';
         $page = null;
         $parentId = null;
 
         foreach ($segments as $segment) {
+            // Try current locale first
             $page = self::active()
                 ->where("slug->{$locale}", $segment)
                 ->where('parent_id', $parentId)
                 ->first();
+
+            // Fallback to default locale if not found
+            if (! $page && $locale !== $fallbackLocale) {
+                $page = self::active()
+                    ->where("slug->{$fallbackLocale}", $segment)
+                    ->where('parent_id', $parentId)
+                    ->first();
+            }
 
             if (! $page) {
                 return null;
