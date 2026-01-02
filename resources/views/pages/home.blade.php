@@ -258,18 +258,48 @@
                 ];
             @endphp
 
-            <div class="space-y-4 mb-16" x-data="{ openAccordion: 0 }" role="region" aria-label="{{ app()->getLocale() === 'en' ? 'Solution areas' : 'Lösungsbereiche' }}">
+            <div
+                class="space-y-4 mb-16"
+                x-data="{
+                    openAccordion: 0,
+                    accordionCount: {{ count($solutionAccordions) }},
+                    focusAccordion(index) {
+                        const button = document.getElementById('accordion-header-' + index);
+                        if (button) button.focus();
+                    },
+                    nextAccordion(currentIndex) {
+                        const next = (currentIndex + 1) % this.accordionCount;
+                        this.focusAccordion(next);
+                    },
+                    prevAccordion(currentIndex) {
+                        const prev = currentIndex <= 0 ? this.accordionCount - 1 : currentIndex - 1;
+                        this.focusAccordion(prev);
+                    },
+                    firstAccordion() {
+                        this.focusAccordion(0);
+                    },
+                    lastAccordion() {
+                        this.focusAccordion(this.accordionCount - 1);
+                    }
+                }"
+                role="region"
+                aria-label="{{ app()->getLocale() === 'en' ? 'Solution areas' : 'Lösungsbereiche' }}"
+            >
                 @foreach($solutionAccordions as $index => $accordion)
                 <div class="motion motion-fade-up motion-delay-{{ $index + 1 }}">
                     <div class="border-2 border-border bg-white transition-all" :class="openAccordion === {{ $index }} ? 'border-foreground shadow-xl' : 'hover:border-foreground/50'">
                         {{-- Accordion Header --}}
                         <button
                             type="button"
-                            class="w-full p-6 md:p-8 text-left"
+                            class="w-full p-6 md:p-8 text-left focus:outline-none focus:ring-2 focus:ring-accent focus:ring-inset"
                             @click="openAccordion = openAccordion === {{ $index }} ? null : {{ $index }}"
+                            @keydown.arrow-down.prevent="nextAccordion({{ $index }})"
+                            @keydown.arrow-up.prevent="prevAccordion({{ $index }})"
+                            @keydown.home.prevent="firstAccordion()"
+                            @keydown.end.prevent="lastAccordion()"
                             :aria-expanded="openAccordion === {{ $index }} ? 'true' : 'false'"
                             aria-controls="accordion-content-{{ $index }}"
-                            :id="'accordion-header-{{ $index }}'"
+                            id="accordion-header-{{ $index }}"
                         >
                             <div class="flex items-start gap-4 md:gap-6">
                                 {{-- Icon Box --}}

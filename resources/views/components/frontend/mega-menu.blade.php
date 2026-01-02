@@ -3,16 +3,50 @@
 @endphp
 
 <div
-    x-data="{ open: false }"
+    x-data="{
+        open: false,
+        focusedIndex: -1,
+        menuItems: [],
+        init() {
+            this.$watch('open', (value) => {
+                if (value) {
+                    this.$nextTick(() => {
+                        this.menuItems = [...this.$refs.menuContent.querySelectorAll('a[role=menuitem]')];
+                        this.focusedIndex = -1;
+                    });
+                }
+            });
+        },
+        focusNext() {
+            if (this.menuItems.length === 0) return;
+            this.focusedIndex = (this.focusedIndex + 1) % this.menuItems.length;
+            this.menuItems[this.focusedIndex]?.focus();
+        },
+        focusPrev() {
+            if (this.menuItems.length === 0) return;
+            this.focusedIndex = this.focusedIndex <= 0 ? this.menuItems.length - 1 : this.focusedIndex - 1;
+            this.menuItems[this.focusedIndex]?.focus();
+        },
+        closeAndFocusTrigger() {
+            this.open = false;
+            this.$refs.trigger.focus();
+        }
+    }"
     @mouseenter="open = true"
     @mouseleave="open = false"
+    @keydown.escape.prevent="closeAndFocusTrigger()"
     class="relative"
 >
     {{-- Trigger --}}
     <button
         type="button"
+        x-ref="trigger"
         class="text-sm hover:text-accent transition-colors flex items-center gap-1 {{ request()->routeIs('*.solutions*') ? 'text-accent' : '' }}"
         @click="open = !open"
+        @keydown.arrow-down.prevent="open = true; $nextTick(() => focusNext())"
+        @keydown.arrow-up.prevent="open = true; $nextTick(() => focusPrev())"
+        @keydown.enter.prevent="open = !open"
+        @keydown.space.prevent="open = !open"
         :aria-expanded="open.toString()"
         aria-haspopup="true"
         aria-controls="solutions-menu"
@@ -48,14 +82,20 @@
         id="solutions-menu"
         role="menu"
         aria-label="{{ __('accessibility.solutions_menu') }}"
+        @keydown.arrow-down.prevent="focusNext()"
+        @keydown.arrow-up.prevent="focusPrev()"
+        @keydown.home.prevent="focusedIndex = 0; menuItems[0]?.focus()"
+        @keydown.end.prevent="focusedIndex = menuItems.length - 1; menuItems[focusedIndex]?.focus()"
+        @keydown.tab="closeAndFocusTrigger()"
     >
-        <div class="bg-white border border-border shadow-xl rounded-lg p-8 w-[720px]">
+        <div x-ref="menuContent" class="bg-white border border-border shadow-xl rounded-lg p-8 w-[720px]">
             {{-- Header with link to overview --}}
             <div class="flex items-center justify-between mb-6 pb-4 border-b border-border">
                 <span class="text-sm font-medium text-muted-foreground">{{ __('navigation.solutions') }}</span>
                 <a
                     href="{{ localized_route('solutions') }}"
                     class="text-xs text-accent hover:underline flex items-center gap-1"
+                    role="menuitem"
                 >
                     {{ app()->getLocale() === 'en' ? 'View all' : 'Alle ansehen' }}
                     <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -73,6 +113,7 @@
                             <a
                                 href="{{ $hub->getUrl() }}"
                                 class="font-semibold text-sm hover:text-accent transition-colors flex items-center gap-3 mb-3"
+                                role="menuitem"
                             >
                                 @if($hub->getSection('hero.icon'))
                                     <span class="text-accent flex-shrink-0">
@@ -89,6 +130,7 @@
                                             <a
                                                 href="{{ $child->getUrl() }}"
                                                 class="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                                                role="menuitem"
                                             >
                                                 {{ $child->title }}
                                             </a>
@@ -102,7 +144,7 @@
             @else
                 {{-- Fallback if no hub pages exist yet --}}
                 <div class="text-sm text-muted-foreground">
-                    <a href="{{ localized_route('solutions') }}" class="hover:text-accent transition-colors">
+                    <a href="{{ localized_route('solutions') }}" class="hover:text-accent transition-colors" role="menuitem">
                         {{ app()->getLocale() === 'en' ? 'View our solutions' : 'Unsere Lösungen ansehen' }}
                     </a>
                 </div>
@@ -114,6 +156,7 @@
                 <a
                     href="{{ localized_route('guides') }}"
                     class="flex items-center gap-2 text-sm font-medium hover:text-accent transition-colors"
+                    role="menuitem"
                 >
                     <x-frontend.icon name="book-open" class="w-4 h-4 text-accent" />
                     {{ app()->getLocale() === 'en' ? 'Guides' : 'Ratgeber' }}
@@ -126,6 +169,7 @@
                 <a
                     href="{{ localized_route('maintenance') }}"
                     class="flex items-center gap-2 text-sm font-medium hover:text-accent transition-colors"
+                    role="menuitem"
                 >
                     <x-frontend.icon name="server-stack" class="w-4 h-4 text-accent" />
                     {{ app()->getLocale() === 'en' ? 'Hosting & Maintenance' : 'Betrieb & Wartung' }}

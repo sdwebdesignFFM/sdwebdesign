@@ -1,5 +1,30 @@
 <header
-    x-data="{ mobileMenuOpen: false, scrolled: false }"
+    x-data="{
+        mobileMenuOpen: false,
+        scrolled: false,
+        mobileFocusIndex: -1,
+        mobileMenuItems: [],
+        initMobileMenu() {
+            this.$nextTick(() => {
+                this.mobileMenuItems = [...this.$refs.mobileMenuContent.querySelectorAll('a')];
+                this.mobileFocusIndex = -1;
+            });
+        },
+        focusMobileNext() {
+            if (this.mobileMenuItems.length === 0) return;
+            this.mobileFocusIndex = (this.mobileFocusIndex + 1) % this.mobileMenuItems.length;
+            this.mobileMenuItems[this.mobileFocusIndex]?.focus();
+        },
+        focusMobilePrev() {
+            if (this.mobileMenuItems.length === 0) return;
+            this.mobileFocusIndex = this.mobileFocusIndex <= 0 ? this.mobileMenuItems.length - 1 : this.mobileFocusIndex - 1;
+            this.mobileMenuItems[this.mobileFocusIndex]?.focus();
+        },
+        closeMobileMenu() {
+            this.mobileMenuOpen = false;
+            this.$refs.mobileMenuButton.focus();
+        }
+    }"
     x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 })"
     :class="{ 'bg-white/95 backdrop-blur-md shadow-sm': scrolled, 'bg-transparent': !scrolled }"
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
@@ -47,7 +72,9 @@
 
             {{-- Mobile Menu Button --}}
             <button
-                @click="mobileMenuOpen = !mobileMenuOpen"
+                x-ref="mobileMenuButton"
+                @click="mobileMenuOpen = !mobileMenuOpen; if(mobileMenuOpen) initMobileMenu()"
+                @keydown.arrow-down.prevent="mobileMenuOpen = true; initMobileMenu(); $nextTick(() => focusMobileNext())"
                 class="lg:hidden p-2 -mr-2"
                 :aria-expanded="mobileMenuOpen.toString()"
                 :aria-label="mobileMenuOpen ? '{{ __('accessibility.close_menu') }}' : '{{ __('accessibility.open_menu') }}'"
@@ -79,8 +106,13 @@
         id="mobile-menu"
         class="lg:hidden border-t border-border bg-white"
         aria-label="{{ app()->getLocale() === 'de' ? 'Mobile Navigation' : 'Mobile navigation' }}"
+        @keydown.arrow-down.prevent="focusMobileNext()"
+        @keydown.arrow-up.prevent="focusMobilePrev()"
+        @keydown.escape.prevent="closeMobileMenu()"
+        @keydown.home.prevent="mobileFocusIndex = 0; mobileMenuItems[0]?.focus()"
+        @keydown.end.prevent="mobileFocusIndex = mobileMenuItems.length - 1; mobileMenuItems[mobileFocusIndex]?.focus()"
     >
-        <div class="max-w-8xl mx-auto px-6 py-6 space-y-4">
+        <div x-ref="mobileMenuContent" class="max-w-8xl mx-auto px-6 py-6 space-y-4">
             <a href="{{ localized_route('solutions') }}" class="block py-3 text-lg border-b border-border hover:text-accent transition-colors">
                 {{ __('navigation.solutions') }}
             </a>
