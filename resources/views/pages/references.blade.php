@@ -70,7 +70,7 @@
             @if(($project['challenge'] ?? false) || ($project['solution'] ?? false))
             <div class="grid md:grid-cols-2 gap-8 mb-16">
                 @if($project['challenge'] ?? false)
-                <div class="motion motion-fade-up motion-delay-1 p-8 border-l-4 border-red-500 bg-white">
+                <div class="motion motion-fade-up motion-delay-1 p-8 border-l-4 border-red-500 bg-background">
                     <h3 class="mb-4 text-[1.125rem] flex items-center gap-2">
                         <span class="text-red-500">⚠</span>
                         {{ $project['challenge']['title'] ?? 'Die Ausgangssituation' }}
@@ -92,7 +92,7 @@
                 @endif
 
                 @if($project['solution'] ?? false)
-                <div class="motion motion-fade-up motion-delay-2 p-8 border-l-4 border-green-500 bg-white">
+                <div class="motion motion-fade-up motion-delay-2 p-8 border-l-4 border-green-500 bg-background">
                     <h3 class="mb-4 text-[1.125rem] flex items-center gap-2">
                         <x-frontend.icon name="check-circle" class="w-5 h-5 text-green-500" />
                         {{ $project['solution']['title'] ?? 'Die entwickelte Lösung' }}
@@ -124,7 +124,7 @@
                 </h3>
                 <div class="grid md:grid-cols-2 gap-6">
                     @foreach($project['features'] as $fIndex => $feature)
-                    <div class="motion motion-fade-up motion-delay-{{ ($fIndex % 4) + 1 }} p-6 border border-border bg-white">
+                    <div class="motion motion-fade-up motion-delay-{{ ($fIndex % 4) + 1 }} p-6 border border-border bg-background">
                         <h4 class="mb-4 text-[1rem] font-medium">{{ $feature['title'] }}</h4>
                         <ul class="space-y-2">
                             @foreach($feature['items'] as $item)
@@ -161,7 +161,7 @@
     <section class="py-20 lg:py-28 border-t border-border">
         <div class="max-w-[1400px] mx-auto px-6">
             <div class="motion motion-fade-up max-w-[800px] mx-auto">
-                <div class="p-12 border border-border bg-white text-center">
+                <div class="p-12 border border-border bg-background text-center">
                     <h2 class="mb-4 text-[1.75rem]">{{ $cta['title'] }}</h2>
                     @if($cta['subtitle'] ?? false)
                     <p class="text-[1.0625rem] text-muted-foreground mb-8 leading-relaxed">

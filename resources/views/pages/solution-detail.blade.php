@@ -183,7 +183,7 @@
                     @if($features['items'] ?? false)
                     <div class="grid md:grid-cols-2 gap-3">
                         @foreach($features['items'] as $index => $item)
-                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex items-start gap-3 p-4 border border-border bg-white">
+                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex items-start gap-3 p-4 border border-border bg-background">
                             <x-frontend.icon name="check-circle" class="w-5 h-5 text-accent shrink-0 mt-0.5" />
                             <span class="text-[0.9375rem]">{{ $item }}</span>
                         </div>
@@ -214,7 +214,7 @@
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach($scenarioCategories as $index => $category)
                     <div class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }}">
-                        <div class="p-6 border border-border bg-white h-full">
+                        <div class="p-6 border border-border bg-background h-full">
                             <h3 class="text-[1.125rem] font-medium mb-4">{{ $category['title'] }}</h3>
 
                             @if($category['items'] ?? false)
@@ -286,7 +286,7 @@
                     @if($integration['items'] ?? false)
                     <div class="grid md:grid-cols-2 gap-3">
                         @foreach($integration['items'] as $index => $item)
-                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex items-start gap-3 p-4 border border-border bg-white">
+                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex items-start gap-3 p-4 border border-border bg-background">
                             <x-frontend.icon name="link" class="w-5 h-5 text-accent shrink-0 mt-0.5" />
                             <span class="text-[0.9375rem]">{{ $item }}</span>
                         </div>
@@ -352,7 +352,7 @@
                     @if($process['steps'] ?? false)
                     <div class="space-y-6">
                         @foreach($process['steps'] as $index => $step)
-                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex gap-6 p-6 border border-border bg-white">
+                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex gap-6 p-6 border border-border bg-background">
                             <div class="shrink-0 w-10 h-10 flex items-center justify-center border-2 border-foreground text-[0.875rem] font-mono font-medium">
                                 {{ $index + 1 }}
                             </div>
@@ -384,7 +384,7 @@
 
                     <div class="grid md:grid-cols-2 gap-4">
                         @foreach($benefits as $index => $benefit)
-                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex items-start gap-3 p-4 border border-border bg-white">
+                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex items-start gap-3 p-4 border border-border bg-background">
                             <x-frontend.icon name="zap" class="w-5 h-5 text-accent shrink-0 mt-0.5" />
                             <span class="text-[0.9375rem]">{{ $benefit }}</span>
                         </div>
@@ -572,7 +572,7 @@
                     @if($capabilities['items'] ?? false)
                     <div class="grid md:grid-cols-2 gap-3">
                         @foreach($capabilities['items'] as $index => $item)
-                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex items-start gap-3 p-4 border border-border bg-white">
+                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex items-start gap-3 p-4 border border-border bg-background">
                             <x-frontend.icon name="check-circle" class="w-5 h-5 text-accent shrink-0 mt-0.5" />
                             @if(is_array($item) && isset($item['title']))
                             <div class="text-[0.9375rem]">
@@ -601,7 +601,7 @@
                     <h2 class="text-[1.375rem] mb-6">{{ app()->getLocale() === 'en' ? 'Capabilities' : 'Systemfähigkeiten' }}</h2>
                     <div class="grid md:grid-cols-2 gap-3">
                         @foreach($capabilities as $index => $capability)
-                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex items-start gap-3 p-4 border border-border bg-white">
+                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex items-start gap-3 p-4 border border-border bg-background">
                             <x-frontend.icon name="check-circle" class="w-5 h-5 text-accent shrink-0 mt-0.5" />
                             <span class="text-[0.9375rem]">{{ $capability }}</span>
                         </div>
@@ -738,7 +738,7 @@
     <section class="py-20 border-b border-border bg-accent/5">
         <div class="max-w-[1400px] mx-auto px-6">
             <div class="max-w-[1100px]">
-                <div class="motion motion-fade-up border border-border bg-white overflow-hidden">
+                <div class="motion motion-fade-up border border-border bg-background overflow-hidden">
                     <div class="p-8 md:p-10 flex flex-col md:flex-row gap-8">
                         {{-- Photo --}}
                         @if($settings->cta_image)
@@ -810,7 +810,7 @@
                     $solutionHero = $solution->getSection('hero');
                 @endphp
                 <a href="{{ $solution->getUrl() }}"
-                   class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} group block border border-border hover:border-foreground hover:shadow-lg transition-all bg-white">
+                   class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} group block border border-border hover:border-foreground hover:shadow-lg transition-all bg-background">
                     <div class="p-6">
                         <div class="flex items-start gap-4 mb-4">
                             <div class="flex-1">

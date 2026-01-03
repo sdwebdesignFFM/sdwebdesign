@@ -151,6 +151,11 @@
                             {{ app()->getLocale() === 'de' ? 'AGB' : 'Terms' }}
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ localized_route('accessibility') }}" class="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                            {{ app()->getLocale() === 'de' ? 'Barrierefreiheit' : 'Accessibility' }}
+                        </a>
+                    </li>
                 </ul>
 
                 {{-- Lokale Expertise --}}
@@ -160,14 +165,6 @@
                         <x-frontend.icon name="map-pin" class="w-4 h-4" />
                         Lokale Expertise im Rhein-Main-Gebiet
                     </a>
-                </div>
-                @endif
-
-                {{-- Öffnungszeiten / Business Hours --}}
-                @if($settings->business_hours ?? false)
-                <div class="mt-8">
-                    <h4 class="text-sm font-medium uppercase tracking-wider mb-3">{{ app()->getLocale() === 'de' ? 'Erreichbarkeit' : 'Availability' }}</h4>
-                    <p class="text-sm text-muted-foreground">{{ $settings->business_hours }}</p>
                 </div>
                 @endif
             </div>

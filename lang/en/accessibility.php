@@ -15,4 +15,6 @@ return [
     'collapse_section' => 'Collapse section',
     'solutions_menu' => 'Solutions submenu',
     'loading' => 'Loading...',
+    'switch_to_dark_mode' => 'Switch to dark mode',
+    'switch_to_light_mode' => 'Switch to light mode',
 ];

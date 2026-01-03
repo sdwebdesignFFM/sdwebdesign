@@ -1,8 +1,8 @@
 {{-- Stylized Time Tracking App Mockup --}}
 @props(['variant' => 'timer'])
 
-<div class="bg-gray-900 rounded-[2.5rem] p-3 shadow-2xl max-w-[320px] mx-auto">
-    <div class="bg-white rounded-[2rem] overflow-hidden flex flex-col" style="height: 480px;">
+<div class="bg-gray-900 rounded-[2.5rem] p-3 shadow-2xl max-w-[320px] mx-auto border border-border dark:border-foreground/20">
+    <div class="bg-background rounded-[2rem] overflow-hidden flex flex-col" style="height: 480px;">
         {{-- Phone Notch --}}
         <div class="bg-gray-900 h-6 flex items-center justify-center flex-shrink-0">
             <div class="w-20 h-4 bg-gray-900 rounded-b-xl"></div>
@@ -112,7 +112,7 @@
                     </div>
                     <div class="flex gap-2 mt-2">
                         <button class="flex-1 text-[10px] bg-green-500 text-white py-1.5 rounded-lg font-medium">Freigeben</button>
-                        <button class="flex-1 text-[10px] bg-white border border-gray-200 py-1.5 rounded-lg font-medium">Ablehnen</button>
+                        <button class="flex-1 text-[10px] bg-background border border-gray-200 py-1.5 rounded-lg font-medium">Ablehnen</button>
                     </div>
                 </div>
 
@@ -137,7 +137,7 @@
                     </div>
                     <div class="flex gap-2 mt-2">
                         <button class="flex-1 text-[10px] bg-green-500 text-white py-1.5 rounded-lg font-medium">Freigeben</button>
-                        <button class="flex-1 text-[10px] bg-white border border-gray-200 py-1.5 rounded-lg font-medium">Ablehnen</button>
+                        <button class="flex-1 text-[10px] bg-background border border-gray-200 py-1.5 rounded-lg font-medium">Ablehnen</button>
                     </div>
                 </div>
             </div>
@@ -279,7 +279,7 @@
         @endif
 
         {{-- Bottom Navigation --}}
-        <div class="bg-white border-t border-gray-100 px-6 py-3 flex-shrink-0">
+        <div class="bg-background border-t border-gray-100 px-6 py-3 flex-shrink-0">
             <div class="flex items-center justify-around">
                 <button class="{{ $variant === 'timer' ? 'text-accent' : 'text-gray-400' }}">
                     <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">

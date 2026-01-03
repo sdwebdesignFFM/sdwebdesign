@@ -39,12 +39,12 @@
                     {{-- Category Filter --}}
                     <div class="flex flex-wrap gap-2">
                         <a href="{{ localized_route('blog') }}"
-                           class="px-4 py-2 text-xs border transition-all {{ !$category ? 'bg-foreground text-background border-foreground' : 'bg-white text-foreground border-border hover:border-foreground' }}">
+                           class="px-4 py-2 text-xs border transition-all {{ !$category ? 'bg-foreground text-background border-foreground' : 'bg-background text-foreground border-border hover:border-foreground' }}">
                             Alle Artikel
                         </a>
                         @foreach($categories as $cat)
                         <a href="{{ localized_route('blog', ['category' => $cat]) }}"
-                           class="px-4 py-2 text-xs border transition-all {{ $category === $cat ? 'bg-foreground text-background border-foreground' : 'bg-white text-foreground border-border hover:border-foreground' }}">
+                           class="px-4 py-2 text-xs border transition-all {{ $category === $cat ? 'bg-foreground text-background border-foreground' : 'bg-background text-foreground border-border hover:border-foreground' }}">
                             {{ $cat }}
                         </a>
                         @endforeach
@@ -66,7 +66,7 @@
                 @if($articles->count() > 0)
                 <div class="grid lg:grid-cols-2 gap-8">
                     @foreach($articles as $article)
-                    <article class="group border-2 border-border hover:border-foreground hover:shadow-2xl transition-all bg-white">
+                    <article class="group border-2 border-border hover:border-foreground hover:shadow-2xl transition-all bg-background">
                         <a href="{{ localized_route('blog.show', ['slug' => $article->slug]) }}" class="block p-8">
                             {{-- Category & Meta --}}
                             <div class="flex items-center gap-4 mb-6">

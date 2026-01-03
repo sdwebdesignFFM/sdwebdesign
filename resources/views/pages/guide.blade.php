@@ -94,7 +94,7 @@
 
                 <div class="grid md:grid-cols-{{ min(count($comparison['items']), 3) }} gap-6">
                     @foreach($comparison['items'] as $index => $item)
-                    <div class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} bg-white border border-border p-6">
+                    <div class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} bg-background border border-border p-6">
                         <h3 class="text-[1.125rem] font-medium mb-4 pb-4 border-b border-border">
                             {{ $item['name'] }}
                         </h3>
@@ -170,7 +170,7 @@
                     $solutionHero = $solution->getSection('hero');
                 @endphp
                 <a href="{{ $solution->getUrl() }}"
-                   class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} group block border border-border hover:border-foreground hover:shadow-lg transition-all bg-white">
+                   class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} group block border border-border hover:border-foreground hover:shadow-lg transition-all bg-background">
                     <div class="p-6">
                         <div class="flex items-start gap-4 mb-4">
                             @if($solutionHero['icon'] ?? false)
@@ -219,7 +219,7 @@
                     $guideHero = $guide->getSection('hero');
                 @endphp
                 <a href="{{ $guide->getUrl() }}"
-                   class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} group block border border-border hover:border-foreground transition-all bg-white p-6">
+                   class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} group block border border-border hover:border-foreground transition-all bg-background p-6">
                     @if($guideHero['badge'] ?? false)
                     <span class="inline-block text-[0.75rem] font-semibold tracking-widest text-accent uppercase mb-2">
                         {{ $guideHero['badge'] }}
@@ -245,7 +245,7 @@
     <section class="py-20 border-t border-border">
         <div class="max-w-[1400px] mx-auto px-6">
             <div class="max-w-[1100px]">
-                <div class="motion motion-fade-up border border-border bg-white overflow-hidden">
+                <div class="motion motion-fade-up border border-border bg-background overflow-hidden">
                     <div class="p-8 md:p-10 flex flex-col md:flex-row gap-8">
                         {{-- Photo --}}
                         @if($settings->cta_image)

@@ -1,7 +1,7 @@
 {{-- Stylized B2B Cosmetics Shop Mockup (Browser Style) --}}
 @props(['variant' => 'catalog'])
 
-<div class="bg-gray-100 rounded-lg shadow-2xl max-w-[480px] mx-auto overflow-hidden">
+<div class="bg-gray-100 rounded-lg shadow-2xl max-w-[480px] mx-auto overflow-hidden border border-border dark:border-foreground/20">
     {{-- Browser Chrome --}}
     <div class="bg-gray-200 px-3 py-2 flex items-center gap-2">
         <div class="flex items-center gap-1.5">
@@ -18,7 +18,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
             </div>
-            <div class="flex-1 bg-white rounded-md px-3 py-1 flex items-center gap-2">
+            <div class="flex-1 bg-background rounded-md px-3 py-1 flex items-center gap-2">
                 <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
                 </svg>
@@ -28,11 +28,11 @@
     </div>
 
     {{-- Website Content --}}
-    <div class="bg-white" style="height: 380px; overflow-y: auto;">
+    <div class="bg-background" style="height: 380px; overflow-y: auto;">
         {{-- Shop Header --}}
         <div class="bg-gradient-to-r from-pink-600 to-rose-500 px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                <div class="w-8 h-8 bg-background rounded-lg flex items-center justify-center">
                     <span class="text-pink-600 font-bold text-xs">K</span>
                 </div>
                 <span class="text-white font-semibold text-sm">Kosmetikerin Shop</span>
@@ -47,7 +47,7 @@
                     </svg>
                     <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-amber-400 text-[8px] text-gray-900 rounded-full flex items-center justify-center font-bold">3</span>
                 </div>
-                <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-medium">SM</div>
+                <div class="w-6 h-6 rounded-full bg-background/20 flex items-center justify-center text-[10px] font-medium">SM</div>
             </div>
         </div>
 

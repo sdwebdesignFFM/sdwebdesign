@@ -74,7 +74,7 @@
 
                     @foreach($layers as $index => $layer)
                     <div class="group relative motion motion-fade-left motion-delay-{{ $index + 1 }}">
-                        <div class="p-6 border-2 border-border hover:border-foreground transition-all duration-300 bg-white hover:shadow-lg">
+                        <div class="p-6 border-2 border-border hover:border-foreground transition-all duration-300 bg-background hover:shadow-lg">
                             <div class="flex items-start gap-4">
                                 <div class="p-3 border border-border group-hover:border-foreground transition-colors">
                                     <x-frontend.icon :name="$layer['icon']" class="w-6 h-6" />
@@ -130,7 +130,7 @@
                     <div class="space-y-4">
                         @foreach($problem['items'] as $i => $item)
                         <div class="motion motion-fade-up motion-delay-{{ $i + 3 }}">
-                            <div class="group flex items-start justify-between gap-4 p-4 border border-border hover:border-foreground transition-all hover:shadow-md bg-white">
+                            <div class="group flex items-start justify-between gap-4 p-4 border border-border hover:border-foreground transition-all hover:shadow-md bg-background">
                                 <span class="flex-1 text-[0.9375rem]">{{ $item['label'] }}</span>
                                 <span class="font-mono text-[1.25rem] text-muted-foreground group-hover:text-foreground transition-colors">
                                     {{ $item['value'] }}
@@ -155,7 +155,7 @@
                     <div class="space-y-3">
                         @foreach($problem['results'] as $i => $result)
                         <div class="motion motion-fade-up motion-delay-{{ $i + 5 }}">
-                            <div class="flex items-start gap-3 p-4 bg-red-50/30 border border-red-100 hover:border-red-200 transition-colors">
+                            <div class="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/20 hover:border-red-500/30 transition-colors">
                                 <span class="text-red-400 mt-1">×</span>
                                 <span class="text-[0.9375rem]">{{ $result }}</span>
                             </div>
@@ -170,7 +170,7 @@
             @if($problem['approach'] ?? false)
             <div class="motion motion-fade-up motion-delay-8">
                 <div class="relative mt-20 p-8 border-2 border-foreground bg-foreground/[0.02]">
-                    <div class="absolute -top-3 left-8 px-3 bg-white">
+                    <div class="absolute -top-3 left-8 px-3 bg-background">
                         <span class="text-[0.75rem] uppercase tracking-wider text-muted-foreground">
                             {{ app()->getLocale() === 'en' ? 'Our Approach' : 'Unser Ansatz' }}
                         </span>
@@ -287,7 +287,7 @@
             >
                 @foreach($solutionAccordions as $index => $accordion)
                 <div class="motion motion-fade-up motion-delay-{{ $index + 1 }}">
-                    <div class="border-2 border-border bg-white transition-all" :class="openAccordion === {{ $index }} ? 'border-foreground shadow-xl' : 'hover:border-foreground/50'">
+                    <div class="border-2 border-border bg-background transition-all" :class="openAccordion === {{ $index }} ? 'border-foreground shadow-xl' : 'hover:border-foreground/50'">
                         {{-- Accordion Header --}}
                         <button
                             type="button"
@@ -421,7 +421,7 @@
 
                 <div class="grid md:grid-cols-2 gap-6">
                     {{-- SEO Card --}}
-                    <a href="{{ route('de.seo') }}" class="group block p-6 border border-border hover:border-foreground bg-muted/5 hover:bg-white transition-all">
+                    <a href="{{ route('de.seo') }}" class="group block p-6 border border-border hover:border-foreground bg-muted/5 hover:bg-background transition-all">
                         <div class="flex items-start gap-4">
                             <div class="p-2 border border-border group-hover:border-foreground transition-colors">
                                 <x-frontend.icon name="search" class="w-5 h-5" />
@@ -442,7 +442,7 @@
                     </a>
 
                     {{-- SEA Card --}}
-                    <a href="{{ route('de.sea') }}" class="group block p-6 border border-border hover:border-foreground bg-muted/5 hover:bg-white transition-all">
+                    <a href="{{ route('de.sea') }}" class="group block p-6 border border-border hover:border-foreground bg-muted/5 hover:bg-background transition-all">
                         <div class="flex items-start gap-4">
                             <div class="p-2 border border-border group-hover:border-foreground transition-colors">
                                 <x-frontend.icon name="megaphone" class="w-5 h-5" />
@@ -471,7 +471,7 @@
                     {{ app()->getLocale() === 'en' ? 'To keep your digital solution stable, secure and up-to-date – we handle the technical operations.' : 'Damit Ihre digitale Lösung dauerhaft stabil, sicher und aktuell bleibt – übernehmen wir den technischen Betrieb.' }}
                 </p>
 
-                <a href="{{ localized_route('maintenance') }}" class="group block p-6 border border-border hover:border-foreground bg-muted/5 hover:bg-white transition-all">
+                <a href="{{ localized_route('maintenance') }}" class="group block p-6 border border-border hover:border-foreground bg-muted/5 hover:bg-background transition-all">
                     <div class="flex items-start gap-4">
                         <div class="p-3 border border-border group-hover:border-foreground transition-colors">
                             <x-frontend.icon name="server-stack" class="w-6 h-6" />
@@ -554,7 +554,7 @@
                 <div class="motion motion-fade-up motion-delay-{{ $index + 1 }}">
                     <div class="group relative h-full">
                         <div class="absolute inset-0 bg-gradient-to-br from-muted/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="relative p-8 border-2 border-border group-hover:border-foreground transition-all bg-white h-full">
+                        <div class="relative p-8 border-2 border-border group-hover:border-foreground transition-all bg-background h-full">
                             <div class="flex items-start gap-4 mb-4">
                                 @if($principle['icon'] ?? false)
                                 <div class="p-3 border-2 border-border group-hover:border-foreground transition-colors">
@@ -586,7 +586,7 @@
                     @foreach($principles['tech_stack'] as $index => $stack)
                     <div class="motion motion-scale motion-delay-{{ $index + 1 }}">
                         <div class="group relative overflow-hidden h-full">
-                            <div class="relative p-6 border border-border group-hover:border-foreground transition-all bg-white h-full">
+                            <div class="relative p-6 border border-border group-hover:border-foreground transition-all bg-background h-full">
                                 <h4 class="mb-4 font-mono text-[0.875rem] text-foreground uppercase tracking-wider">{{ $stack['category'] }}</h4>
                                 <ul class="space-y-2">
                                     @foreach($stack['items'] as $item)
@@ -632,7 +632,7 @@
                     <div class="group relative h-full">
                         <div class="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-                        <div class="relative h-full p-8 border-2 border-border group-hover:border-foreground transition-all bg-white">
+                        <div class="relative h-full p-8 border-2 border-border group-hover:border-foreground transition-all bg-background">
                             @if($item['icon'] ?? false)
                             <div class="mb-6">
                                 <div class="inline-flex p-4 border-2 border-border group-hover:border-foreground transition-colors">
@@ -656,7 +656,7 @@
 
             @if($whyUs['promise'] ?? false)
             <div class="motion motion-fade-up motion-delay-4">
-                <div class="relative p-10 border-2 border-foreground bg-white shadow-lg">
+                <div class="relative p-10 border-2 border-foreground bg-background shadow-lg">
                     <div class="absolute -top-4 left-10 px-4 py-1 bg-foreground text-background text-[0.75rem] uppercase tracking-wider">
                         {{ app()->getLocale() === 'en' ? 'Our Promise' : 'Unser Versprechen' }}
                     </div>
@@ -699,7 +699,7 @@
                     <div class="motion motion-fade-left motion-delay-{{ $index + 1 }} relative">
                         <div class="flex gap-8">
                             <div class="relative flex-shrink-0">
-                                <div class="relative z-10 w-24 h-24 border-4 border-background bg-white shadow-lg flex items-center justify-center">
+                                <div class="relative z-10 w-24 h-24 border-4 border-background bg-background shadow-lg flex items-center justify-center">
                                     <div class="absolute inset-2 border-2 border-foreground flex items-center justify-center">
                                         @if($step['icon'] ?? false)
                                         <x-frontend.icon :name="$step['icon']" class="w-8 h-8" />
@@ -711,7 +711,7 @@
                             </div>
 
                             <div class="flex-1 pb-8">
-                                <div class="group p-8 border-2 border-border hover:border-foreground transition-all bg-white hover:shadow-xl">
+                                <div class="group p-8 border-2 border-border hover:border-foreground transition-all bg-background hover:shadow-xl">
                                     <div class="flex items-center gap-4 mb-4">
                                         <span class="text-[0.875rem] font-mono text-muted-foreground">{{ $step['number'] ?? str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
                                         <h3 class="text-[1.5rem]">{{ $step['title'] }}</h3>
@@ -769,7 +769,7 @@
         <div class="absolute inset-0 bg-gradient-to-br from-muted/10 via-transparent to-accent/5"></div>
 
         <div class="motion motion-fade-up relative max-w-[1000px] mx-auto text-center">
-            <div class="inline-flex items-center gap-3 px-4 py-2 mb-8 border border-border bg-white">
+            <div class="inline-flex items-center gap-3 px-4 py-2 mb-8 border border-border bg-background">
                 <x-frontend.icon name="mail" class="w-4 h-4 text-muted-foreground" />
                 <span class="text-[0.8125rem] uppercase tracking-wider text-muted-foreground">{{ app()->getLocale() === 'en' ? 'Get in touch' : 'Kontakt aufnehmen' }}</span>
             </div>
@@ -794,7 +794,7 @@
                 </button>
 
                 @if($settings->phone ?? false)
-                <a href="tel:{{ preg_replace('/\s+/', '', $settings->phone) }}" class="inline-flex items-center gap-2 px-8 py-5 border-2 border-border hover:border-foreground transition-all text-[1.0625rem] bg-white">
+                <a href="tel:{{ preg_replace('/\s+/', '', $settings->phone) }}" class="inline-flex items-center gap-2 px-8 py-5 border-2 border-border hover:border-foreground transition-all text-[1.0625rem] bg-background">
                     {{ app()->getLocale() === 'en' ? 'Or call directly' : 'Oder direkt anrufen' }}
                 </a>
                 @endif

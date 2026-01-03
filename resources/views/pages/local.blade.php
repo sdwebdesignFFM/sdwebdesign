@@ -146,7 +146,7 @@
                 @foreach($solutionLinks as $index => $solution)
                 <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }}">
                     <a href="{{ $solution['url'] }}"
-                       class="group block h-full p-6 border-2 border-border hover:border-foreground transition-all bg-white hover:shadow-lg">
+                       class="group block h-full p-6 border-2 border-border hover:border-foreground transition-all bg-background hover:shadow-lg">
                         <div class="flex items-start gap-4 mb-4">
                             <div class="p-3 border border-border group-hover:border-foreground transition-colors shrink-0">
                                 <x-frontend.icon :name="$solution['icon']" class="w-6 h-6" />
@@ -223,7 +223,7 @@
     {{-- CTA Section --}}
     <section class="max-w-[1400px] mx-auto px-6 py-20 border-t border-border">
         <div class="max-w-[1100px]">
-            <div class="motion motion-fade-up p-12 border-2 border-foreground text-center bg-white">
+            <div class="motion motion-fade-up p-12 border-2 border-foreground text-center bg-background">
                 <h2 class="text-[1.5rem] mb-4">
                     Projekt besprechen?
                 </h2>

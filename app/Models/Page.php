@@ -81,6 +81,8 @@ class Page extends Model
 
     public const TYPE_MAINTENANCE = 'maintenance';
 
+    public const TYPE_ACCESSIBILITY = 'accessibility';
+
     public static function getTypes(): array
     {
         return [
@@ -101,6 +103,7 @@ class Page extends Model
             self::TYPE_LOCAL => 'Lokale Landingpage',
             self::TYPE_LOCAL_HUB => 'Lokale Expertise Hub',
             self::TYPE_MAINTENANCE => 'Betrieb & Wartung',
+            self::TYPE_ACCESSIBILITY => 'Barrierefreiheit',
         ];
     }
 
@@ -280,6 +283,7 @@ class Page extends Model
             self::TYPE_SEO => $prefix.($locale === 'en' ? '/search-engine-optimization' : '/suchmaschinenoptimierung'),
             self::TYPE_SEA => $prefix.($locale === 'en' ? '/search-engine-advertising' : '/suchmaschinenwerbung'),
             self::TYPE_MAINTENANCE => $prefix.($locale === 'en' ? '/hosting-maintenance' : '/betrieb-hosting-wartung'),
+            self::TYPE_ACCESSIBILITY => $prefix.($locale === 'en' ? '/accessibility' : '/barrierefreiheit'),
             self::TYPE_LOCAL_HUB => '/in/',
             self::TYPE_LOCAL => '/in/'.$this->slug.'/',
             default => $prefix.'/'.$this->slug,

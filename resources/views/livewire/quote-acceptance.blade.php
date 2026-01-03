@@ -1,6 +1,6 @@
 <div>
     {{-- Price Summary Sticky (top-20 to account for fixed navigation header) --}}
-    <div class="bg-white border-b border-gray-200 sticky top-20 z-10 shadow-sm">
+    <div class="bg-background border-b border-gray-200 sticky top-20 z-10 shadow-sm">
         <div class="max-w-4xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-6">
@@ -32,7 +32,7 @@
     <div class="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
 
         {{-- Quote Header --}}
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+        <div class="bg-background rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
             <div class="flex justify-between items-start">
                 <div>
                     <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ $quote->title }}</h1>
@@ -60,7 +60,7 @@
         @endif
 
         {{-- Quote Items --}}
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-8">
+        <div class="bg-background rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-8">
             <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
                 <h2 class="text-lg font-semibold text-gray-900">Leistungen</h2>
             </div>
@@ -116,7 +116,7 @@
                                     <button
                                         type="button"
                                         wire:click="toggleOption({{ $item->id }})"
-                                        class="mt-0.5 flex-shrink-0 w-5 h-5 rounded border-2 {{ ($selectedOptions[$item->id] ?? false) ? 'bg-green-600 border-green-600' : 'border-gray-300 bg-white hover:border-gray-400' }} flex items-center justify-center transition-colors cursor-pointer"
+                                        class="mt-0.5 flex-shrink-0 w-5 h-5 rounded border-2 {{ ($selectedOptions[$item->id] ?? false) ? 'bg-green-600 border-green-600' : 'border-gray-300 bg-background hover:border-gray-400' }} flex items-center justify-center transition-colors cursor-pointer"
                                     >
                                         @if($selectedOptions[$item->id] ?? false)
                                             <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 12 12">
@@ -181,7 +181,7 @@
                                     <button
                                         type="button"
                                         wire:click="selectOptionGroup('{{ $group }}', {{ $item->id }})"
-                                        class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full border-2 {{ ($optionGroupSelections[$group] ?? null) === $item->id ? 'border-green-600' : 'border-gray-300 bg-white hover:border-gray-400' }} flex items-center justify-center transition-colors cursor-pointer"
+                                        class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full border-2 {{ ($optionGroupSelections[$group] ?? null) === $item->id ? 'border-green-600' : 'border-gray-300 bg-background hover:border-gray-400' }} flex items-center justify-center transition-colors cursor-pointer"
                                     >
                                         @if(($optionGroupSelections[$group] ?? null) === $item->id)
                                             <div class="w-2.5 h-2.5 rounded-full bg-green-600"></div>
@@ -331,7 +331,7 @@
                 ></div>
 
                 {{-- Modal panel --}}
-                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full">
+                <div class="inline-block align-bottom bg-background rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full">
                     {{-- Header with Steps --}}
                     <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
                         <div class="flex items-center justify-between">
@@ -600,7 +600,7 @@
                                                 <label class="block text-sm font-medium text-gray-700 mb-2">
                                                     Unterschrift *
                                                 </label>
-                                                <div class="relative border-2 border-dashed border-gray-300 rounded-lg bg-white">
+                                                <div class="relative border-2 border-dashed border-gray-300 rounded-lg bg-background">
                                                     <canvas
                                                         x-ref="signatureCanvas"
                                                         class="w-full rounded-lg touch-none cursor-crosshair"
@@ -790,7 +790,7 @@
                 ></div>
 
                 {{-- Modal panel --}}
-                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                <div class="inline-block align-bottom bg-background rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
                     {{-- Header --}}
                     <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
                         <div class="flex items-center justify-between">
@@ -853,7 +853,7 @@
                 ></div>
 
                 {{-- Modal panel --}}
-                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                <div class="inline-block align-bottom bg-background rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
                     {{-- Header --}}
                     <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
                         <div class="flex items-center justify-between">

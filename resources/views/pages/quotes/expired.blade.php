@@ -5,7 +5,7 @@
         {{-- Warning Banner --}}
         <div class="bg-gradient-to-r from-amber-500 to-amber-700 text-white">
             <div class="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center">
-                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-white/20 mb-6">
+                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-background/20 mb-6">
                     <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -18,7 +18,7 @@
         {{-- Content --}}
         <div class="max-w-2xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
             {{-- Quote Details --}}
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <div class="bg-background rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Angebotsdetails</h2>
 
                 <dl class="divide-y divide-gray-200">

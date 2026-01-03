@@ -53,7 +53,7 @@
 
                     {{-- Meta Grid --}}
                     @if(count($meta) > 0)
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 p-8 border border-border bg-white">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 p-8 border border-border bg-background">
                         @foreach($meta as $item)
                         <div>
                             <p class="text-[0.75rem] uppercase tracking-wider text-muted-foreground mb-2">{{ $item['label'] }}</p>
@@ -97,7 +97,7 @@
             <div class="max-w-[1100px]">
                 <div class="grid md:grid-cols-2 gap-8">
                     @if($challenge ?? false)
-                    <div class="motion motion-fade-up p-8 border-l-4 border-red-500 bg-white">
+                    <div class="motion motion-fade-up p-8 border-l-4 border-red-500 bg-background">
                         <h3 class="mb-4 text-[1.125rem] flex items-center gap-2">
                             <span class="text-red-500">⚠</span>
                             {{ $challenge['title'] ?? 'Herausforderung' }}
@@ -121,7 +121,7 @@
                     @endif
 
                     @if($solution ?? false)
-                    <div class="motion motion-fade-up motion-delay-1 p-8 border-l-4 border-green-500 bg-white">
+                    <div class="motion motion-fade-up motion-delay-1 p-8 border-l-4 border-green-500 bg-background">
                         <h3 class="mb-4 text-[1.125rem] flex items-center gap-2">
                             <x-frontend.icon name="check-circle" class="w-5 h-5 text-green-500" />
                             {{ $solution['title'] ?? 'Unsere Lösung' }}
@@ -180,7 +180,7 @@
                         </h3>
                         <div class="space-y-3">
                             @foreach($impactResults as $result)
-                            <div class="flex items-start gap-3 p-4 border border-border bg-white">
+                            <div class="flex items-start gap-3 p-4 border border-border bg-background">
                                 <x-frontend.icon name="check-circle" class="w-5 h-5 text-accent shrink-0 mt-0.5" />
                                 <span class="text-[0.9375rem]">{{ $result }}</span>
                             </div>
@@ -203,7 +203,7 @@
                     <h3 class="mb-6 text-[1rem] uppercase tracking-wider text-muted-foreground">Eingesetzte Technologien</h3>
                     <div class="flex flex-wrap gap-3">
                         @foreach($technologies as $tech)
-                        <span class="px-4 py-2 text-[0.875rem] font-mono border border-border bg-white hover:border-foreground transition-colors">
+                        <span class="px-4 py-2 text-[0.875rem] font-mono border border-border bg-background hover:border-foreground transition-colors">
                             {{ $tech }}
                         </span>
                         @endforeach
@@ -321,7 +321,7 @@
 
                 <div class="grid md:grid-cols-3 gap-6">
                     @foreach($technicalDetails as $index => $detail)
-                    <div class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} p-8 border border-border bg-white hover:border-foreground hover:shadow-lg transition-all">
+                    <div class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} p-8 border border-border bg-background hover:border-foreground hover:shadow-lg transition-all">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="p-3 border border-border">
                                 <x-frontend.icon :name="$detail['icon'] ?? 'code'" class="w-6 h-6" />
@@ -361,7 +361,7 @@
 
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach($results as $index => $result)
-                    <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} p-8 border border-border bg-white text-center">
+                    <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} p-8 border border-border bg-background text-center">
                         <p class="text-[2.5rem] lg:text-[3rem] font-bold text-accent mb-2">{{ $result['value'] }}</p>
                         <p class="text-[0.9375rem] text-muted-foreground">{{ $result['label'] }}</p>
                     </div>
@@ -414,11 +414,11 @@
                         @foreach($timeline as $index => $step)
                         <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} relative pl-0 md:pl-16">
                             {{-- Timeline Dot --}}
-                            <div class="absolute left-4 top-8 w-5 h-5 rounded-full border-2 border-foreground bg-white hidden md:flex items-center justify-center">
+                            <div class="absolute left-4 top-8 w-5 h-5 rounded-full border-2 border-foreground bg-background hidden md:flex items-center justify-center">
                                 <div class="w-2 h-2 rounded-full bg-accent"></div>
                             </div>
 
-                            <div class="p-8 border border-border bg-white hover:border-foreground transition-colors">
+                            <div class="p-8 border border-border bg-background hover:border-foreground transition-colors">
                                 <div class="flex items-center gap-4 mb-4">
                                     <span class="text-[0.875rem] font-mono text-accent">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
                                     <h3 class="text-[1.125rem]">{{ $step['title'] }}</h3>
@@ -480,7 +480,7 @@
                     $refHero = $reference->getSection('hero');
                 @endphp
                 <a href="{{ localized_route('references.show', ['slug' => $reference->slug]) }}"
-                   class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} group block border border-border hover:border-foreground hover:shadow-lg transition-all bg-white">
+                   class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} group block border border-border hover:border-foreground hover:shadow-lg transition-all bg-background">
                     <div class="p-6">
                         @if($refHero['category'] ?? false)
                         <div class="inline-flex items-center gap-1.5 px-2.5 py-1 mb-4 bg-accent/5 border border-accent/20">

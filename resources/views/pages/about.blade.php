@@ -68,7 +68,7 @@
         @if($arbeitsweise['principles'] ?? false)
         <div class="grid md:grid-cols-3 gap-6">
             @foreach($arbeitsweise['principles'] as $index => $principle)
-            <div class="motion motion-fade-up motion-delay-{{ $index + 1 }} p-8 border border-border bg-white">
+            <div class="motion motion-fade-up motion-delay-{{ $index + 1 }} p-8 border border-border bg-background">
                 <p class="text-[2.5rem] font-light text-accent mb-6">{{ $principle['number'] }}</p>
                 <h3 class="text-[1.125rem] mb-4">{{ $principle['title'] }}</h3>
                 <p class="text-[0.9375rem] text-muted-foreground leading-relaxed">{{ $principle['description'] }}</p>
@@ -91,7 +91,7 @@
             @if($auszeichnet['items'] ?? false)
             <div class="space-y-4">
                 @foreach($auszeichnet['items'] as $index => $item)
-                <div class="motion motion-fade-up motion-delay-{{ $index + 1 }} p-6 border border-border bg-white">
+                <div class="motion motion-fade-up motion-delay-{{ $index + 1 }} p-6 border border-border bg-background">
                     <div class="flex items-start gap-5">
                         <div class="p-3 border border-border">
                             <x-frontend.icon :name="$item['icon']" class="w-5 h-5 text-accent" />
@@ -130,7 +130,7 @@
         @if($team['members'] ?? false)
         <div class="grid md:grid-cols-2 gap-6">
             @foreach($team['members'] as $index => $member)
-            <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} p-6 border border-border bg-white">
+            <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} p-6 border border-border bg-background">
                 <div class="flex items-start gap-5">
                     <div class="p-4 border border-border">
                         <x-frontend.icon :name="$member['icon']" class="w-6 h-6 text-muted-foreground" />
@@ -173,7 +173,7 @@
     <section class="py-20 lg:py-28 border-t border-border">
         <div class="max-w-[1400px] mx-auto px-6">
             <div class="motion motion-fade-up max-w-[800px] mx-auto">
-                <div class="p-12 border border-border bg-white text-center">
+                <div class="p-12 border border-border bg-background text-center">
                     <h2 class="mb-4 text-[1.75rem]">{{ $cta['title'] }}</h2>
                     @if($cta['subtitle'] ?? false)
                     <p class="text-[1.0625rem] text-muted-foreground mb-8 leading-relaxed">

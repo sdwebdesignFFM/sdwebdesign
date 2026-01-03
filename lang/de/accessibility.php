@@ -15,4 +15,6 @@ return [
     'collapse_section' => 'Abschnitt einklappen',
     'solutions_menu' => 'Lösungen Untermenü',
     'loading' => 'Wird geladen...',
+    'switch_to_dark_mode' => 'Zum Dunkelmodus wechseln',
+    'switch_to_light_mode' => 'Zum Hellmodus wechseln',
 ];

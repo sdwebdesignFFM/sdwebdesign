@@ -35,7 +35,7 @@
                 @if($variant !== 'minimal')
                 {{-- Key Services --}}
                 <div class="grid md:grid-cols-3 gap-4 mb-8">
-                    <div class="p-4 border border-border bg-white">
+                    <div class="p-4 border border-border bg-background">
                         <h3 class="text-[0.9375rem] font-medium mb-2">
                             {{ $locale === 'en' ? 'Updates & Security' : 'Updates & Sicherheit' }}
                         </h3>
@@ -46,7 +46,7 @@
                             }}
                         </p>
                     </div>
-                    <div class="p-4 border border-border bg-white">
+                    <div class="p-4 border border-border bg-background">
                         <h3 class="text-[0.9375rem] font-medium mb-2">
                             {{ $locale === 'en' ? 'Monitoring & Backup' : 'Monitoring & Backup' }}
                         </h3>
@@ -57,7 +57,7 @@
                             }}
                         </p>
                     </div>
-                    <div class="p-4 border border-border bg-white">
+                    <div class="p-4 border border-border bg-background">
                         <h3 class="text-[0.9375rem] font-medium mb-2">
                             {{ $locale === 'en' ? 'Support' : 'Support' }}
                         </h3>
@@ -74,7 +74,7 @@
                 @if($showModels && $variant === 'default')
                 {{-- Service Models --}}
                 <div class="grid md:grid-cols-3 gap-4 mb-8">
-                    <div class="p-4 border border-border bg-white">
+                    <div class="p-4 border border-border bg-background">
                         <span class="text-[0.75rem] font-mono text-muted-foreground">Basis</span>
                         <p class="text-[0.8125rem] text-muted-foreground mt-1">
                             {{ $locale === 'en'
@@ -83,7 +83,7 @@
                             }}
                         </p>
                     </div>
-                    <div class="p-4 border-2 border-foreground bg-white">
+                    <div class="p-4 border-2 border-foreground bg-background">
                         <span class="text-[0.75rem] font-mono text-foreground font-medium">Pro</span>
                         <p class="text-[0.8125rem] text-muted-foreground mt-1">
                             {{ $locale === 'en'
@@ -92,7 +92,7 @@
                             }}
                         </p>
                     </div>
-                    <div class="p-4 border border-border bg-white">
+                    <div class="p-4 border border-border bg-background">
                         <span class="text-[0.75rem] font-mono text-muted-foreground">{{ $locale === 'en' ? 'Enterprise' : 'Systembetrieb' }}</span>
                         <p class="text-[0.8125rem] text-muted-foreground mt-1">
                             {{ $locale === 'en'

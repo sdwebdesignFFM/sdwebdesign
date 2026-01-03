@@ -216,6 +216,19 @@ class PageController extends Controller
         return view('pages.agb', compact('settings'));
     }
 
+    public function accessibility(): View
+    {
+        $page = Page::findByType(Page::TYPE_ACCESSIBILITY);
+
+        if (! $page) {
+            abort(404);
+        }
+
+        $this->setSeoMeta($page);
+
+        return view('pages.accessibility', compact('page'));
+    }
+
     public function solutionHierarchy(string $path): View
     {
         $page = Page::findByHierarchicalSlug($path);

@@ -90,7 +90,7 @@
         @keydown.end.prevent="focusedIndex = menuItems.length - 1; menuItems[focusedIndex]?.focus()"
         @keydown.tab="closeAndFocusTrigger()"
     >
-        <div x-ref="menuContent" class="bg-white border border-border shadow-xl rounded-lg p-8 w-[720px]">
+        <div x-ref="menuContent" class="bg-background border border-border shadow-xl rounded-lg p-8 w-[720px]">
             {{-- Header with link to overview --}}
             <div class="flex items-center justify-between mb-6 pb-4 border-b border-border">
                 <span class="text-sm font-medium text-muted-foreground">{{ __('navigation.solutions') }}</span>

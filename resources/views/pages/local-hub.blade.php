@@ -61,7 +61,7 @@
                     @endphp
                     @if($citiesInRegion->count() > 0)
                     <div class="motion motion-fade-up">
-                        <div class="p-6 border border-border bg-white h-full">
+                        <div class="p-6 border border-border bg-background h-full">
                             <h3 class="text-[1.125rem] font-medium mb-4 flex items-center gap-2">
                                 <x-frontend.icon name="map-pin" class="w-5 h-5 text-accent" />
                                 {{ $regionName }}
@@ -132,7 +132,7 @@
     {{-- CTA Section --}}
     <section class="max-w-[1400px] mx-auto px-6 py-20 border-t border-border">
         <div class="max-w-[1100px]">
-            <div class="motion motion-fade-up p-12 border-2 border-foreground text-center bg-white">
+            <div class="motion motion-fade-up p-12 border-2 border-foreground text-center bg-background">
                 <h2 class="text-[1.5rem] mb-4">
                     {{ $cta['title'] ?? 'Projekt besprechen?' }}
                 </h2>

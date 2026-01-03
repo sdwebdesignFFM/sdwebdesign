@@ -72,7 +72,7 @@
                                 <x-frontend.obfuscated-contact
                                     type="phone"
                                     :value="$settings->mobile"
-                                    class="inline-flex items-center gap-2 px-5 py-3 border border-border bg-white hover:border-foreground transition-all text-[0.875rem]"
+                                    class="inline-flex items-center gap-2 px-5 py-3 border border-border bg-background hover:border-foreground transition-all text-[0.875rem]"
                                 />
                                 @endif
                             </div>
@@ -89,7 +89,7 @@
             <div class="grid lg:grid-cols-2 gap-16">
                 {{-- Contact CTA Card --}}
                 <div class="motion motion-fade-up" x-data x-intersect:leave="$dispatch('cta-hidden')" x-intersect:enter="$dispatch('cta-visible')">
-                    <div class="border border-border bg-white overflow-hidden h-full">
+                    <div class="border border-border bg-background overflow-hidden h-full">
                         {{-- Header --}}
                         <div class="bg-accent text-white p-8">
                             <h2 class="text-[1.5rem] mb-2">{{ $form['title'] ?? __('contact.modal_title') }}</h2>
@@ -161,7 +161,7 @@
 
                     <div class="space-y-6">
                         @if($contactEmail)
-                        <div class="p-6 border border-border bg-white">
+                        <div class="p-6 border border-border bg-background">
                             <div class="flex items-start gap-4">
                                 <div class="p-3 border border-border">
                                     <x-frontend.icon name="mail" class="w-5 h-5 text-accent" />
@@ -180,7 +180,7 @@
                         @endif
 
                         @if($contactPhone)
-                        <div class="p-6 border border-border bg-white">
+                        <div class="p-6 border border-border bg-background">
                             <div class="flex items-start gap-4">
                                 <div class="p-3 border border-border">
                                     <x-frontend.icon name="phone" class="w-5 h-5 text-accent" />
@@ -202,7 +202,7 @@
                         @endif
 
                         @if($contactLocation)
-                        <div class="p-6 border border-border bg-white">
+                        <div class="p-6 border border-border bg-background">
                             <div class="flex items-start gap-4">
                                 <div class="p-3 border border-border">
                                     <x-frontend.icon name="map-pin" class="w-5 h-5 text-accent" />
@@ -236,7 +236,7 @@
                 @if($process['steps'] ?? false)
                 <div class="space-y-6">
                     @foreach($process['steps'] as $index => $step)
-                    <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} p-8 border border-border bg-white">
+                    <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} p-8 border border-border bg-background">
                         <div class="flex items-start gap-6">
                             <div class="p-3 border border-border shrink-0">
                                 <x-frontend.icon :name="$step['icon'] ?? 'message-square'" class="w-5 h-5 text-accent" />
@@ -296,7 +296,7 @@
                 @if($nicht['items'] ?? false)
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                     @foreach($nicht['items'] as $index => $item)
-                    <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} p-5 border border-border bg-white">
+                    <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} p-5 border border-border bg-background">
                         <div class="flex items-start gap-3">
                             <x-frontend.icon name="x-circle" class="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
                             <span class="text-[0.9375rem]">{{ $item }}</span>
@@ -332,7 +332,7 @@
                             <x-frontend.icon name="send" class="w-4 h-4" />
                         </button>
                         @if($info['email'] ?? false)
-                        <a href="mailto:{{ $info['email'] }}" class="inline-flex items-center gap-3 px-8 py-4 border border-border bg-white hover:border-foreground transition-all">
+                        <a href="mailto:{{ $info['email'] }}" class="inline-flex items-center gap-3 px-8 py-4 border border-border bg-background hover:border-foreground transition-all">
                             <x-frontend.icon name="mail" class="w-4 h-4" />
                             {{ $cta['secondary_button'] ?? 'E-Mail schreiben' }}
                         </a>
@@ -359,7 +359,7 @@
             x-transition:leave="transition ease-in duration-200"
             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
             x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-            class="relative bg-white rounded-2xl shadow-2xl border border-border overflow-hidden w-[280px]"
+            class="relative bg-background rounded-2xl shadow-2xl border border-border overflow-hidden w-[280px]"
         >
             {{-- Close Button --}}
             <button

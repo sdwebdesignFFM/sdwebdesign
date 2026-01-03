@@ -14,7 +14,7 @@
             <div class="max-w-[900px]">
                 <div class="motion motion-fade-up">
                     @if($hero['badge'] ?? false)
-                    <div class="inline-block px-4 py-2 mb-8 border border-border bg-white">
+                    <div class="inline-block px-4 py-2 mb-8 border border-border bg-background">
                         <p class="text-[0.8125rem] uppercase tracking-wider text-muted-foreground">{{ $hero['badge'] }}</p>
                     </div>
                     @endif
@@ -60,7 +60,7 @@
                         $solutionCard = $solutionPage->getSection('card');
                         $useCases = $solutionCard['use_cases'] ?? [];
                     @endphp
-                    <article class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} group border-2 border-border hover:border-foreground transition-all bg-white hover:shadow-2xl">
+                    <article class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} group border-2 border-border hover:border-foreground transition-all bg-background hover:shadow-2xl">
                         <div class="p-10">
                             {{-- Header --}}
                             <div class="flex items-start gap-6 mb-6">
@@ -188,7 +188,7 @@
                 @if($approach['principles'] ?? false)
                 <div class="grid md:grid-cols-3 gap-8">
                     @foreach($approach['principles'] as $index => $principle)
-                    <div class="motion motion-fade-up motion-delay-{{ $index + 1 }} p-8 border border-border hover:border-foreground transition-all bg-white">
+                    <div class="motion motion-fade-up motion-delay-{{ $index + 1 }} p-8 border border-border hover:border-foreground transition-all bg-background">
                         <div class="mb-4 w-12 h-px bg-accent"></div>
                         <h3 class="mb-4 text-[1.125rem]">{{ $principle['title'] }}</h3>
                         <p class="text-[0.9375rem] text-muted-foreground leading-relaxed">

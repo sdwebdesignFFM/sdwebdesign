@@ -1,8 +1,8 @@
 {{-- Stylized iOS CRM App Mockup for Cosmeticians --}}
 @props(['variant' => 'dashboard'])
 
-<div class="bg-gray-900 rounded-[2.5rem] p-3 shadow-2xl max-w-[320px] mx-auto">
-    <div class="bg-white rounded-[2rem] overflow-hidden flex flex-col" style="height: 520px;">
+<div class="bg-gray-900 rounded-[2.5rem] p-3 shadow-2xl max-w-[320px] mx-auto border border-border dark:border-foreground/20">
+    <div class="bg-background rounded-[2rem] overflow-hidden flex flex-col" style="height: 520px;">
         {{-- Phone Notch --}}
         <div class="bg-gray-900 h-6 flex items-center justify-center flex-shrink-0">
             <div class="w-20 h-4 bg-gray-900 rounded-b-xl"></div>
@@ -360,7 +360,7 @@
             {{-- Notes Input --}}
             <div class="bg-gray-50 rounded-xl p-3 mb-3">
                 <p class="text-[10px] text-gray-500 uppercase tracking-wide mb-2">Notizen hinzufügen</p>
-                <div class="bg-white border border-gray-200 rounded-lg p-2 min-h-[60px]">
+                <div class="bg-background border border-gray-200 rounded-lg p-2 min-h-[60px]">
                     <p class="text-[10px] text-gray-400">Hautbild: leichte Trockenheit an Wangen, Verbesserung seit letztem Termin...</p>
                 </div>
             </div>
@@ -477,7 +477,7 @@
         @endif
 
         {{-- Bottom Navigation --}}
-        <div class="px-4 py-2 border-t border-gray-100 flex items-center justify-around flex-shrink-0 bg-white">
+        <div class="px-4 py-2 border-t border-gray-100 flex items-center justify-around flex-shrink-0 bg-background">
             <button class="flex flex-col items-center gap-0.5 {{ $variant === 'dashboard' ? 'text-pink-500' : 'text-gray-400' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>

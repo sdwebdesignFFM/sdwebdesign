@@ -91,9 +91,9 @@
             <div class="grid md:grid-cols-2 gap-8 max-w-[1100px]">
                 {{-- Challenge --}}
                 @if($challenge['title'] ?? false)
-                <div class="motion motion-fade-up p-6 bg-red-50/50 border-l-4 border-red-400">
+                <div class="motion motion-fade-up p-6 bg-red-500/10 border border-red-500/30 border-l-4 border-l-red-500">
                     <div class="flex items-center gap-2 mb-3">
-                        <x-frontend.icon name="alert-circle" class="w-5 h-5 text-red-500" />
+                        <x-frontend.icon name="x-circle" class="w-5 h-5 text-red-500" />
                         <h3 class="text-[1.125rem] font-medium">{{ $challenge['title'] }}</h3>
                     </div>
                     <p class="text-[0.9375rem] text-muted-foreground leading-relaxed">
@@ -104,9 +104,9 @@
 
                 {{-- Approach --}}
                 @if($approach['title'] ?? false)
-                <div class="motion motion-fade-up motion-delay-1 p-6 bg-green-50/50 border-l-4 border-green-500">
+                <div class="motion motion-fade-up motion-delay-1 p-6 bg-green-500/10 border border-green-500/30 border-l-4 border-l-green-500">
                     <div class="flex items-center gap-2 mb-3">
-                        <x-frontend.icon name="check-circle" class="w-5 h-5 text-green-600" />
+                        <x-frontend.icon name="check-circle" class="w-5 h-5 text-green-500" />
                         <h3 class="text-[1.125rem] font-medium">{{ $approach['title'] }}</h3>
                     </div>
                     <p class="text-[0.9375rem] text-muted-foreground leading-relaxed">
@@ -167,7 +167,7 @@
                 <div class="grid md:grid-cols-3 gap-8">
                     @foreach($useCaseCategories as $index => $category)
                     <div class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }}">
-                        <div class="p-6 border border-border bg-white h-full">
+                        <div class="p-6 border border-border bg-background h-full">
                             <h3 class="text-[1.125rem] font-medium mb-3">{{ $category['title'] }}</h3>
 
                             @if($category['description'] ?? false)
@@ -239,7 +239,7 @@
                         : (is_array($rawFeatures) && !isset($rawFeatures['title']) ? $rawFeatures : []);
                     $childIdealFor = $child->getSection('ideal_for');
                 @endphp
-                <a href="{{ $child->getUrl() }}" class="motion motion-fade-up block group border border-border hover:border-foreground hover:shadow-lg transition-all bg-white p-8">
+                <a href="{{ $child->getUrl() }}" class="motion motion-fade-up block group border border-border hover:border-foreground hover:shadow-lg transition-all bg-background p-8">
                     {{-- Header --}}
                     <div class="mb-6">
                         <span class="text-[1.25rem] font-mono text-muted-foreground">
@@ -319,7 +319,7 @@
                     @if($process['steps'] ?? false)
                     <div class="space-y-6">
                         @foreach($process['steps'] as $index => $step)
-                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex gap-6 p-6 border border-border bg-white">
+                        <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} flex gap-6 p-6 border border-border bg-background">
                             <div class="shrink-0 w-10 h-10 flex items-center justify-center border-2 border-foreground text-[0.875rem] font-mono font-medium">
                                 {{ $index + 1 }}
                             </div>
@@ -411,7 +411,7 @@
                         @endif
                         <div class="space-y-3">
                             @foreach($capabilities['items'] as $item)
-                            <div class="flex items-start gap-3 p-3 border border-border bg-white text-[0.875rem]">
+                            <div class="flex items-start gap-3 p-3 border border-border bg-background text-[0.875rem]">
                                 <x-frontend.icon name="check-circle" class="w-4 h-4 text-accent shrink-0 mt-0.5" />
                                 <span>{{ $item }}</span>
                             </div>
@@ -435,7 +435,7 @@
                         @endif
                         <div class="space-y-3">
                             @foreach($techStack['items'] as $item)
-                            <div class="flex items-start gap-3 p-3 border border-border bg-white text-[0.875rem] font-mono">
+                            <div class="flex items-start gap-3 p-3 border border-border bg-background text-[0.875rem] font-mono">
                                 <span class="text-muted-foreground">→</span>
                                 <span>{{ $item }}</span>
                             </div>
@@ -555,7 +555,7 @@
                         $guideIntro = $guide->getSection('intro');
                     @endphp
                     <a href="{{ $guide->getUrl() }}"
-                       class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} group block border border-border hover:border-foreground hover:shadow-lg transition-all bg-white p-6">
+                       class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }} group block border border-border hover:border-foreground hover:shadow-lg transition-all bg-background p-6">
                         @if($guideHero['badge'] ?? false)
                         <span class="inline-block text-[0.75rem] font-semibold tracking-widest text-accent uppercase mb-2">
                             {{ $guideHero['badge'] }}

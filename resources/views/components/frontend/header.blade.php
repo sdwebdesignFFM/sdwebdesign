@@ -43,7 +43,7 @@
         }
     }"
     x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 }); initDesktopNav()"
-    :class="{ 'bg-white/95 backdrop-blur-md shadow-sm': scrolled, 'bg-transparent': !scrolled }"
+    :class="{ 'bg-background/95 backdrop-blur-md shadow-sm': scrolled, 'bg-transparent': !scrolled }"
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
 >
     <div class="max-w-8xl mx-auto px-6">
@@ -98,6 +98,9 @@
 
                 {{-- Language Switcher --}}
                 <x-frontend.language-switcher />
+
+                {{-- Dark Mode Toggle --}}
+                <x-frontend.dark-mode-toggle />
             </div>
 
             {{-- CTA Button --}}
@@ -145,7 +148,7 @@
         x-transition:leave-end="opacity-0 -translate-y-4"
         x-cloak
         id="mobile-menu"
-        class="lg:hidden border-t border-border bg-white"
+        class="lg:hidden border-t border-border bg-background"
         aria-label="{{ app()->getLocale() === 'de' ? 'Mobile Navigation' : 'Mobile navigation' }}"
         @keydown.arrow-down.prevent="focusMobileNext()"
         @keydown.arrow-up.prevent="focusMobilePrev()"
@@ -167,16 +170,19 @@
                 {{ app()->getLocale() === 'de' ? 'Ratgeber' : 'Guides' }}
             </a>
 
-            {{-- Mobile Language Switcher --}}
-            <div class="flex items-center gap-4 py-3 border-b border-border">
-                @foreach (['de' => 'Deutsch', 'en' => 'English'] as $locale => $label)
-                    <a
-                        href="{{ alternate_locale_url($locale) }}"
-                        class="text-sm {{ app()->getLocale() === $locale ? 'font-bold text-accent' : 'text-muted-foreground hover:text-foreground' }}"
-                    >
-                        {{ $label }}
-                    </a>
-                @endforeach
+            {{-- Mobile Language & Dark Mode --}}
+            <div class="flex items-center justify-between py-3 border-b border-border">
+                <div class="flex items-center gap-4">
+                    @foreach (['de' => 'Deutsch', 'en' => 'English'] as $locale => $label)
+                        <a
+                            href="{{ alternate_locale_url($locale) }}"
+                            class="text-sm {{ app()->getLocale() === $locale ? 'font-bold text-accent' : 'text-muted-foreground hover:text-foreground' }}"
+                        >
+                            {{ $label }}
+                        </a>
+                    @endforeach
+                </div>
+                <x-frontend.dark-mode-toggle />
             </div>
 
             <a href="{{ localized_route('contact') }}" class="block w-full btn-primary text-center mt-6">

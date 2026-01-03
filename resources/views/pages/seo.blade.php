@@ -166,7 +166,7 @@
                 <div class="grid md:grid-cols-2 gap-6">
                     @foreach($focusAreas as $index => $area)
                     <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }}">
-                        <div class="p-6 border border-border bg-white h-full">
+                        <div class="p-6 border border-border bg-background h-full">
                             <div class="flex items-start gap-4 mb-4">
                                 @if($area['icon'] ?? false)
                                 <div class="p-3 border border-border shrink-0">

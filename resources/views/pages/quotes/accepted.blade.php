@@ -7,7 +7,7 @@
 
             {{-- Success Banner (contained) --}}
             <div class="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg p-8 mb-8 text-center">
-                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-white/20 mb-6">
+                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-background/20 mb-6">
                     <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
@@ -17,7 +17,7 @@
             </div>
 
             {{-- Confirmation Details --}}
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <div class="bg-background rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Vertragsdetails</h2>
 
                 <dl class="divide-y divide-gray-200">
@@ -100,7 +100,7 @@
             <div class="flex flex-wrap items-center justify-center gap-4">
                 <a
                     href="{{ route('quotes.pdf', ['token' => $quote->token]) }}"
-                    class="inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                    class="inline-flex items-center px-4 py-2 border border-gray-300 bg-background text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
                     target="_blank"
                 >
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

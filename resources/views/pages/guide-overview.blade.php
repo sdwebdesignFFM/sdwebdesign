@@ -54,7 +54,7 @@
                     $guideIntro = $guide->getSection('intro');
                 @endphp
                 <a href="{{ $guide->getUrl() }}"
-                   class="motion motion-fade-up motion-delay-{{ ($index % 2) + 1 }} group block border-2 border-border hover:border-foreground hover:shadow-xl transition-all bg-white">
+                   class="motion motion-fade-up motion-delay-{{ ($index % 2) + 1 }} group block border-2 border-border hover:border-foreground hover:shadow-xl transition-all bg-background">
                     <div class="p-8">
                         {{-- Badge --}}
                         @if($guideHero['badge'] ?? false)

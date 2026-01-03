@@ -119,7 +119,7 @@
                 @if($infrastructure['items'] ?? false)
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach($infrastructure['items'] as $item)
-                    <div class="p-5 border border-border bg-white">
+                    <div class="p-5 border border-border bg-background">
                         <h3 class="text-[0.9375rem] font-medium mb-2">{{ $item['title'] }}</h3>
                         <p class="text-[0.875rem] text-muted-foreground">{{ $item['text'] }}</p>
                     </div>
@@ -144,7 +144,7 @@
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($services['categories'] as $index => $category)
                     <div class="motion motion-fade-up motion-delay-{{ ($index % 3) + 1 }}">
-                        <div class="p-6 border border-border bg-white h-full">
+                        <div class="p-6 border border-border bg-background h-full">
                             <h3 class="text-[1.0625rem] font-medium mb-4">{{ $category['title'] }}</h3>
 
                             @if($category['items'] ?? false)
@@ -180,7 +180,7 @@
                 <div class="grid md:grid-cols-3 gap-6">
                     @foreach($models['items'] as $index => $model)
                     <div class="motion motion-fade-up motion-delay-{{ $index + 1 }}">
-                        <div class="p-6 border-2 {{ $index === 1 ? 'border-foreground' : 'border-border' }} bg-white h-full flex flex-col">
+                        <div class="p-6 border-2 {{ $index === 1 ? 'border-foreground' : 'border-border' }} bg-background h-full flex flex-col">
                             <h3 class="text-[1.125rem] font-medium mb-2">{{ $model['title'] }}</h3>
                             <p class="text-[0.875rem] text-muted-foreground mb-6">{{ $model['description'] }}</p>
 

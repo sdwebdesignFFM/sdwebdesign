@@ -93,7 +93,7 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($relatedArticles as $related)
                 <a href="{{ localized_route('blog.show', ['slug' => $related->slug]) }}"
-                   class="group border border-border hover:border-foreground hover:shadow-lg transition-all bg-white">
+                   class="group border border-border hover:border-foreground hover:shadow-lg transition-all bg-background">
                     <div class="p-6">
                         <div class="inline-flex items-center gap-1.5 mb-4 px-2.5 py-1 bg-accent/5 border border-accent/20 rounded-sm">
                             <x-frontend.icon name="tag" class="w-2.5 h-2.5 text-accent" />

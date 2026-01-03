@@ -1,8 +1,8 @@
 {{-- Stylized E-Commerce iPad Mockup --}}
 @props(['variant' => 'catalog'])
 
-<div class="bg-gray-800 rounded-[1.5rem] p-3 shadow-2xl max-w-[580px] mx-auto">
-    <div class="bg-white rounded-[1rem] overflow-hidden flex flex-col" style="height: 420px;">
+<div class="bg-gray-800 rounded-[1.5rem] p-3 shadow-2xl max-w-[580px] mx-auto border border-border dark:border-foreground/20">
+    <div class="bg-background rounded-[1rem] overflow-hidden flex flex-col" style="height: 420px;">
         {{-- Browser Chrome --}}
         <div class="bg-gray-100 px-4 py-2 flex items-center gap-3 border-b border-gray-200 flex-shrink-0">
             {{-- Window Controls --}}
@@ -13,7 +13,7 @@
             </div>
             {{-- URL Bar --}}
             <div class="flex-1 flex items-center justify-center">
-                <div class="bg-white rounded-md px-4 py-1 flex items-center gap-2 text-[10px] text-gray-500 border border-gray-200 w-64">
+                <div class="bg-background rounded-md px-4 py-1 flex items-center gap-2 text-[10px] text-gray-500 border border-gray-200 w-64">
                     <svg class="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
                     </svg>
@@ -29,7 +29,7 @@
             {{-- Shop Header --}}
             <div class="bg-sky-600 px-4 py-3 flex items-center justify-between flex-shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-white/20 rounded flex items-center justify-center">
+                    <div class="w-8 h-8 bg-background/20 rounded flex items-center justify-center">
                         <span class="text-white text-xs font-bold">GP</span>
                     </div>
                     <span class="text-white text-sm font-medium">GeWaPur</span>
@@ -66,7 +66,7 @@
                 </div>
                 <div class="grid grid-cols-3 gap-3">
                     {{-- Product Card 1 --}}
-                    <div class="bg-white border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
+                    <div class="bg-background border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
                         <div class="aspect-square bg-gradient-to-br from-sky-50 to-sky-100 rounded mb-2 flex items-center justify-center">
                             <svg class="w-10 h-10 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
@@ -85,7 +85,7 @@
                     </div>
 
                     {{-- Product Card 2 --}}
-                    <div class="bg-white border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
+                    <div class="bg-background border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
                         <div class="aspect-square bg-gradient-to-br from-sky-50 to-sky-100 rounded mb-2 flex items-center justify-center relative">
                             <span class="absolute top-1 left-1 bg-orange-500 text-white text-[8px] px-1.5 py-0.5 rounded">-15%</span>
                             <svg class="w-10 h-10 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,7 +108,7 @@
                     </div>
 
                     {{-- Product Card 3 - B2B --}}
-                    <div class="bg-white border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
+                    <div class="bg-background border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
                         <div class="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 rounded mb-2 flex items-center justify-center">
                             <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
@@ -125,7 +125,7 @@
                     </div>
 
                     {{-- Product Card 4 --}}
-                    <div class="bg-white border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
+                    <div class="bg-background border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
                         <div class="aspect-square bg-gradient-to-br from-sky-50 to-sky-100 rounded mb-2 flex items-center justify-center">
                             <svg class="w-10 h-10 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
@@ -144,7 +144,7 @@
                     </div>
 
                     {{-- Product Card 5 --}}
-                    <div class="bg-white border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
+                    <div class="bg-background border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
                         <div class="aspect-square bg-gradient-to-br from-sky-50 to-sky-100 rounded mb-2 flex items-center justify-center">
                             <svg class="w-10 h-10 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
@@ -163,7 +163,7 @@
                     </div>
 
                     {{-- Product Card 6 --}}
-                    <div class="bg-white border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
+                    <div class="bg-background border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
                         <div class="aspect-square bg-gradient-to-br from-sky-50 to-sky-100 rounded mb-2 flex items-center justify-center">
                             <svg class="w-10 h-10 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
@@ -190,7 +190,7 @@
             {{-- Shop Header --}}
             <div class="bg-sky-600 px-4 py-3 flex items-center justify-between flex-shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-white/20 rounded flex items-center justify-center">
+                    <div class="w-8 h-8 bg-background/20 rounded flex items-center justify-center">
                         <span class="text-white text-xs font-bold">GP</span>
                     </div>
                     <span class="text-white text-sm font-medium">GeWaPur</span>
@@ -303,7 +303,7 @@
             {{-- Shop Header --}}
             <div class="bg-sky-600 px-4 py-3 flex items-center justify-between flex-shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-white/20 rounded flex items-center justify-center">
+                    <div class="w-8 h-8 bg-background/20 rounded flex items-center justify-center">
                         <span class="text-white text-xs font-bold">GP</span>
                     </div>
                     <span class="text-white text-sm font-medium">GeWaPur</span>
@@ -322,7 +322,7 @@
                 <div class="mb-4">
                     <label class="text-xs font-medium text-gray-700 block mb-2">Patrone wählen:</label>
                     <div class="relative">
-                        <select class="w-full text-xs bg-white border border-gray-300 rounded px-3 py-2.5 appearance-none pr-8">
+                        <select class="w-full text-xs bg-background border border-gray-300 rounded px-3 py-2.5 appearance-none pr-8">
                             <option>Meladem 53 (17-20 Liter Patrone)</option>
                             <option>Meladem 53 C (13-15 Liter Patrone)</option>
                             <option>Miele VE P 2000</option>
@@ -390,7 +390,7 @@
             {{-- Shop Header --}}
             <div class="bg-sky-600 px-4 py-3 flex items-center justify-between flex-shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-white/20 rounded flex items-center justify-center">
+                    <div class="w-8 h-8 bg-background/20 rounded flex items-center justify-center">
                         <span class="text-white text-xs font-bold">GP</span>
                     </div>
                     <span class="text-white text-sm font-medium">GeWaPur</span>
@@ -418,33 +418,33 @@
                 <div class="space-y-3">
                     <div>
                         <label class="text-[10px] text-gray-600 block mb-1">Firma *</label>
-                        <input type="text" class="w-full text-xs bg-white border border-gray-200 rounded px-3 py-2" placeholder="Musterfirma GmbH">
+                        <input type="text" class="w-full text-xs bg-background border border-gray-200 rounded px-3 py-2" placeholder="Musterfirma GmbH">
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-[10px] text-gray-600 block mb-1">Ansprechpartner *</label>
-                            <input type="text" class="w-full text-xs bg-white border border-gray-200 rounded px-3 py-2" placeholder="Max Mustermann">
+                            <input type="text" class="w-full text-xs bg-background border border-gray-200 rounded px-3 py-2" placeholder="Max Mustermann">
                         </div>
                         <div>
                             <label class="text-[10px] text-gray-600 block mb-1">Telefon</label>
-                            <input type="text" class="w-full text-xs bg-white border border-gray-200 rounded px-3 py-2" placeholder="+49 89 123456">
+                            <input type="text" class="w-full text-xs bg-background border border-gray-200 rounded px-3 py-2" placeholder="+49 89 123456">
                         </div>
                     </div>
 
                     <div>
                         <label class="text-[10px] text-gray-600 block mb-1">E-Mail *</label>
-                        <input type="email" class="w-full text-xs bg-white border border-gray-200 rounded px-3 py-2" placeholder="max@musterfirma.de">
+                        <input type="email" class="w-full text-xs bg-background border border-gray-200 rounded px-3 py-2" placeholder="max@musterfirma.de">
                     </div>
 
                     <div>
                         <label class="text-[10px] text-gray-600 block mb-1">USt-IdNr. (optional)</label>
-                        <input type="text" class="w-full text-xs bg-white border border-gray-200 rounded px-3 py-2" placeholder="DE123456789">
+                        <input type="text" class="w-full text-xs bg-background border border-gray-200 rounded px-3 py-2" placeholder="DE123456789">
                     </div>
 
                     <div>
                         <label class="text-[10px] text-gray-600 block mb-1">Gewünschte Menge</label>
-                        <select class="w-full text-xs bg-white border border-gray-200 rounded px-3 py-2">
+                        <select class="w-full text-xs bg-background border border-gray-200 rounded px-3 py-2">
                             <option>1 Anlage</option>
                             <option>2-5 Anlagen</option>
                             <option>5+ Anlagen</option>
@@ -453,7 +453,7 @@
 
                     <div>
                         <label class="text-[10px] text-gray-600 block mb-1">Nachricht / Anforderungen</label>
-                        <textarea class="w-full text-xs bg-white border border-gray-200 rounded px-3 py-2 h-16 resize-none" placeholder="Beschreiben Sie Ihre Anforderungen..."></textarea>
+                        <textarea class="w-full text-xs bg-background border border-gray-200 rounded px-3 py-2 h-16 resize-none" placeholder="Beschreiben Sie Ihre Anforderungen..."></textarea>
                     </div>
 
                     <button class="w-full py-3 bg-sky-600 text-white rounded-lg text-xs font-medium">

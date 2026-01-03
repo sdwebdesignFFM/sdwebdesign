@@ -31,7 +31,7 @@
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="contact-modal-title"
-                class="relative w-full max-w-3xl bg-white shadow-2xl rounded-2xl overflow-hidden"
+                class="relative w-full max-w-3xl bg-background shadow-2xl rounded-2xl overflow-hidden"
             >
                 @if($isSubmitted)
                     {{-- Success State --}}
@@ -83,7 +83,7 @@
                             aria-label="{{ __('accessibility.step_progress', ['current' => $currentStep, 'total' => $totalSteps]) }}"
                         >
                             @for($i = 1; $i <= $totalSteps; $i++)
-                                <div class="flex-1 h-1 rounded-full {{ $i <= $currentStep ? 'bg-white' : 'bg-white/30' }}" aria-hidden="true"></div>
+                                <div class="flex-1 h-1 rounded-full {{ $i <= $currentStep ? 'bg-background' : 'bg-background/30' }}" aria-hidden="true"></div>
                             @endfor
                         </div>
                     </div>
