@@ -202,6 +202,20 @@ class PageController extends Controller
         return view('pages.privacy', compact('page'));
     }
 
+    public function agb(): View
+    {
+        $settings = \App\Models\Setting::instance();
+        $locale = app()->getLocale();
+
+        $title = $locale === 'de' ? 'Allgemeine Geschäftsbedingungen' : 'Terms and Conditions';
+        SEOMeta::setTitle($title);
+        SEOMeta::setDescription($locale === 'de'
+            ? 'Allgemeine Geschäftsbedingungen (AGB) von '.$settings->company_name
+            : 'Terms and Conditions of '.$settings->company_name);
+
+        return view('pages.agb', compact('settings'));
+    }
+
     public function solutionHierarchy(string $path): View
     {
         $page = Page::findByHierarchicalSlug($path);

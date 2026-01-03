@@ -3,6 +3,7 @@
     <div
         x-data="{ show: @entangle('isOpen') }"
         x-show="show"
+        x-effect="if (show) { $nextTick(() => { setTimeout(() => { const firstFocusable = document.getElementById('first-project-type'); if (firstFocusable) firstFocusable.focus(); }, 100); }); }"
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
@@ -19,12 +20,14 @@
         <div class="flex min-h-full items-center justify-center p-4">
             <div
                 x-show="show"
+                x-trap.inert.noscroll="show"
                 x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="opacity-0 scale-95"
                 x-transition:enter-end="opacity-100 scale-100"
                 x-transition:leave="transition ease-in duration-200"
                 x-transition:leave-start="opacity-100 scale-100"
                 x-transition:leave-end="opacity-0 scale-95"
+                @keydown.escape.window="$wire.close()"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="contact-modal-title"
@@ -94,9 +97,13 @@
 
                                 <div class="grid sm:grid-cols-2 gap-3">
                                     @foreach($this->projectTypes as $key => $type)
-                                        @php $isSelected = in_array($key, $selectedProjectTypes); @endphp
+                                        @php
+                                            $isSelected = in_array($key, $selectedProjectTypes);
+                                            $isFirst = $loop->first;
+                                        @endphp
                                         <button
                                             type="button"
+                                            @if($isFirst) id="first-project-type" @endif
                                             wire:click="toggleProjectType('{{ $key }}')"
                                             class="relative flex items-start gap-4 p-4 border-2 rounded-xl text-left transition-all {{ $isSelected ? 'border-accent bg-accent/5' : 'border-border hover:border-muted-foreground' }}"
                                         >

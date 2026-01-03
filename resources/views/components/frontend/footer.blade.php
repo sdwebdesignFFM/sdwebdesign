@@ -146,6 +146,11 @@
                             {{ __('navigation.privacy') }}
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ localized_route('agb') }}" class="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                            {{ app()->getLocale() === 'de' ? 'AGB' : 'Terms' }}
+                        </a>
+                    </li>
                 </ul>
 
                 {{-- Lokale Expertise --}}

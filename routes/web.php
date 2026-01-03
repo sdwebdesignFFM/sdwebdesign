@@ -24,6 +24,7 @@ Route::middleware('locale:de')->group(function () {
     Route::get('/anfrage-gesendet', [PageController::class, 'contactThankYou'])->name('de.contact.thank-you');
     Route::get('/impressum', [PageController::class, 'imprint'])->name('de.imprint');
     Route::get('/datenschutz', [PageController::class, 'privacy'])->name('de.privacy');
+    Route::get('/agb', [PageController::class, 'agb'])->name('de.agb');
     // Blog -> Ratgeber Redirect (301)
     Route::get('/blog', fn () => redirect('/ratgeber', 301))->name('de.blog');
     Route::get('/blog/{slug}', fn ($slug) => redirect("/ratgeber/{$slug}", 301))->name('de.blog.show');
@@ -70,6 +71,7 @@ Route::prefix('en')->middleware('locale:en')->group(function () {
     Route::get('/request-sent', [PageController::class, 'contactThankYou'])->name('en.contact.thank-you');
     Route::get('/imprint', [PageController::class, 'imprint'])->name('en.imprint');
     Route::get('/privacy', [PageController::class, 'privacy'])->name('en.privacy');
+    Route::get('/terms', [PageController::class, 'agb'])->name('en.agb');
     // Blog -> Guides Redirect (301)
     Route::get('/blog', fn () => redirect('/en/guides', 301))->name('en.blog');
     Route::get('/blog/{slug}', fn ($slug) => redirect("/en/guides/{$slug}", 301))->name('en.blog.show');

@@ -44,6 +44,7 @@ class Setting extends Model
         'vat_id',
         'tax_number',
         'imprint_extra',
+        'agb_content',
         'default_meta_title',
         'default_meta_description',
         'cta_image',
@@ -53,6 +54,9 @@ class Setting extends Model
         'cta_role',
         'cta_button_text',
         'cta_secondary_button_text',
+        'admin_signer_name',
+        'admin_signer_position',
+        'admin_signature_data',
     ];
 
     /**
@@ -85,5 +89,15 @@ class Setting extends Model
             "{$this->postal_code} {$this->city}",
             $this->country,
         ])->filter()->implode("\n");
+    }
+
+    /**
+     * Check if admin signature is configured for auto counter-signing.
+     */
+    public function hasAdminSignature(): bool
+    {
+        return ! empty($this->admin_signature_data)
+            && ! empty($this->admin_signer_name)
+            && ! empty($this->admin_signer_position);
     }
 }

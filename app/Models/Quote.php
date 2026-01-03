@@ -49,6 +49,9 @@ class Quote extends Model
         'accepted_at',
         'accepted_name',
         'accepted_ip',
+        'accepted_user_agent',
+        'accepted_documents',
+        'document_hash',
         'billing_company',
         'billing_name',
         'billing_street',
@@ -66,6 +69,7 @@ class Quote extends Model
         'token',
         'reminder_count',
         'last_reminder_at',
+        'requires_manual_review',
     ];
 
     protected function casts(): array
@@ -84,9 +88,11 @@ class Quote extends Model
             'sent_at' => 'datetime',
             'first_viewed_at' => 'datetime',
             'accepted_at' => 'datetime',
+            'accepted_documents' => 'array',
             'signature_at' => 'datetime',
             'admin_signed_at' => 'datetime',
             'last_reminder_at' => 'datetime',
+            'requires_manual_review' => 'boolean',
         ];
     }
 
@@ -156,6 +162,82 @@ class Quote extends Model
     public function isFullySigned(): bool
     {
         return $this->hasSignature() && $this->hasAdminSignature();
+    }
+
+    /**
+     * Automatically apply admin counter-signature from settings.
+     *
+     * @return bool True if counter-signed successfully, false otherwise
+     */
+    public function autoCounterSign(): bool
+    {
+        // Skip if manual review is required
+        if ($this->requires_manual_review) {
+            return false;
+        }
+
+        $settings = Setting::instance();
+
+        if (! $settings->hasAdminSignature()) {
+            return false;
+        }
+
+        $this->update([
+            'admin_signature_data' => $settings->admin_signature_data,
+            'admin_signature_name' => $settings->admin_signer_name,
+            'admin_signature_position' => $settings->admin_signer_position,
+            'admin_signed_at' => now(),
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Generate a unique hash of the quote document for legal verification.
+     *
+     * This hash represents the quote state at acceptance time and can be used
+     * to verify document integrity in case of disputes.
+     */
+    public function generateDocumentHash(): string
+    {
+        $data = [
+            'quote_number' => $this->quote_number,
+            'version' => $this->updated_at->toIso8601String(),
+            'title' => $this->title,
+            'total' => $this->total,
+            'terms_text' => $this->terms_text,
+            'items' => $this->items->map(fn ($item) => [
+                'name' => $item->name,
+                'description' => $item->description,
+                'quantity' => $item->quantity,
+                'unit_price' => $item->unit_price,
+                'total_price' => $item->total_price,
+                'detailed_terms' => $item->detailed_terms,
+                'is_selected' => $item->is_selected,
+            ])->toArray(),
+        ];
+
+        return hash('sha256', json_encode($data));
+    }
+
+    /**
+     * Build the accepted documents metadata for legal proof.
+     *
+     * @return array{agb: array{accepted: bool, version: string}, items: array<int, array{id: int, name: string, has_terms: bool}>}
+     */
+    public function buildAcceptedDocuments(): array
+    {
+        return [
+            'agb' => [
+                'accepted' => true,
+                'version' => $this->updated_at->toIso8601String(),
+            ],
+            'items' => $this->getSelectedItems()->map(fn ($item) => [
+                'id' => $item->id,
+                'name' => $item->name,
+                'has_terms' => $item->hasDetailedTerms(),
+            ])->toArray(),
+        ];
     }
 
     public function getBillingAddress(): string

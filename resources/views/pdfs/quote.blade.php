@@ -460,6 +460,22 @@
         <div class="acceptance-section">
             <div class="acceptance-title">{{ $quote->isFullySigned() ? 'Vertragsabschluss' : 'Vertragsannahme' }}</div>
 
+            {{-- Contract Status --}}
+            <div style="margin-bottom: 15px;">
+                <strong>Beauftragt am:</strong> {{ $quote->accepted_at->format('d.m.Y') }}
+            </div>
+
+            {{-- Electronic Acceptance Note --}}
+            <div style="margin-bottom: 15px; font-size: 9pt; color: #666;">
+                Annahme erfolgte elektronisch über das Angebotssystem von {{ config('app.name', 'SD Webdesign') }}.
+            </div>
+
+            {{-- Contract Components --}}
+            <div style="margin-bottom: 20px; font-size: 9pt; padding: 10px; background-color: #f8f8f8; border-left: 2px solid #22543d;">
+                <strong>Vertragsbestandteile:</strong><br>
+                Allgemeine Geschäftsbedingungen (AGB) sowie die zugehörigen Leistungsvereinbarungen in der bei Annahme gültigen Fassung.
+            </div>
+
             <div class="acceptance-row">
                 {{-- Billing Address --}}
                 @if($quote->hasBillingDetails())
@@ -486,36 +502,37 @@
                 <div class="acceptance-col">
                     <div class="acceptance-label">Angenommen von</div>
                     <div class="acceptance-value">
-                        {{ $quote->accepted_name }}<br>
-                        <small>{{ $quote->accepted_at->format('d.m.Y \u\m H:i') }} Uhr</small>
+                        {{ $quote->accepted_name }}
                     </div>
                 </div>
             </div>
 
-            {{-- Signatures --}}
+            {{-- Digital Signature Block --}}
             @if($quote->hasSignature())
                 <div class="signatures-row">
                     {{-- Customer Signature --}}
                     <div class="signature-col">
-                        <div class="signature-label">Auftraggeber</div>
+                        <div class="signature-label">Digitale Annahme - Auftraggeber</div>
                         <div class="signature-name">{{ $quote->accepted_name }}</div>
                         <img src="{{ $quote->signature_data }}" alt="Kundenunterschrift" class="signature-image">
                         <div class="signature-meta">
-                            {{ $quote->signature_at?->format('d.m.Y H:i') ?? $quote->accepted_at->format('d.m.Y H:i') }} Uhr
+                            Datum & Uhrzeit: {{ $quote->signature_at?->format('d.m.Y, H:i') ?? $quote->accepted_at->format('d.m.Y, H:i') }} Uhr<br>
+                            Art der Signatur: Elektronische Signatur
                         </div>
                     </div>
 
                     {{-- Admin Signature --}}
                     @if($quote->hasAdminSignature())
                         <div class="signature-col">
-                            <div class="signature-label">Auftragnehmer</div>
+                            <div class="signature-label">Digitale Bestätigung - Auftragnehmer</div>
                             <div class="signature-name">{{ $quote->admin_signature_name }}</div>
                             @if($quote->admin_signature_position)
                                 <div class="signature-position">{{ $quote->admin_signature_position }}</div>
                             @endif
                             <img src="{{ $quote->admin_signature_data }}" alt="Unterschrift Auftragnehmer" class="signature-image">
                             <div class="signature-meta">
-                                {{ $quote->admin_signed_at?->format('d.m.Y H:i') }} Uhr
+                                Datum & Uhrzeit: {{ $quote->admin_signed_at?->format('d.m.Y, H:i') }} Uhr<br>
+                                Art der Signatur: Elektronische Signatur
                             </div>
                         </div>
                     @else

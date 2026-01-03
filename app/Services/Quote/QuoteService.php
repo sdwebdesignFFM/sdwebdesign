@@ -6,6 +6,7 @@ use App\Enums\ContractStatus;
 use App\Enums\QuoteStatus;
 use App\Mail\QuoteAcceptedAdmin;
 use App\Mail\QuoteAcceptedClient;
+use App\Mail\QuoteFullySignedClient;
 use App\Mail\QuoteNotification;
 use App\Models\Contract;
 use App\Models\ContractItem;
@@ -123,8 +124,34 @@ class QuoteService
             // Generate service terms PDF if any items have detailed terms
             $serviceTermsPdf = $this->generateServiceTermsPdf($quote);
 
-            // Send confirmation email to client with PDF attachments
-            Mail::to($quote->client_email)->send(new QuoteAcceptedClient($quote, $contract, $serviceTermsPdf));
+            // Attempt auto counter-signing
+            $autoCounterSigned = $quote->autoCounterSign();
+
+            if ($autoCounterSigned) {
+                // Log auto counter-sign activity
+                $settings = Setting::instance();
+                QuoteActivity::logQuoteActivity(
+                    $quote,
+                    'counter_signed',
+                    "Angebot automatisch gegengezeichnet von: {$settings->admin_signer_name}",
+                    [
+                        'auto_signed' => true,
+                        'signer_name' => $settings->admin_signer_name,
+                        'signer_position' => $settings->admin_signer_position,
+                    ],
+                    null
+                );
+
+                // Send fully-signed email to client with complete PDF
+                Mail::to($quote->client_email)->send(
+                    new QuoteFullySignedClient($quote, $contract, $serviceTermsPdf)
+                );
+            } else {
+                // Send standard acceptance email (awaiting counter-signature)
+                Mail::to($quote->client_email)->send(
+                    new QuoteAcceptedClient($quote, $contract, $serviceTermsPdf)
+                );
+            }
 
             // Send notification email to admin
             $settings = Setting::instance();
@@ -195,7 +222,7 @@ class QuoteService
             'total' => $quote->total,
             'billing_cycle' => $quote->billing_cycle,
             'min_term_months' => $quote->min_term_months,
-            'auto_renewal' => $quote->auto_renewal,
+            'auto_renewal' => $quote->auto_renewal ?? false,
             'notice_period_days' => $quote->notice_period_days ?? 30,
             'start_date' => $quote->contract_start_date ?? now()->toDateString(),
             'min_term_end_date' => $quote->min_term_months

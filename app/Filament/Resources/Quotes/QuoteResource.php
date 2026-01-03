@@ -328,6 +328,14 @@ class QuoteResource extends Resource
                                     ->rows(5)
                                     ->columnSpanFull(),
 
+                                Section::make('Optionen')
+                                    ->schema([
+                                        Toggle::make('requires_manual_review')
+                                            ->label('Manuelle Prüfung erforderlich')
+                                            ->helperText('Wenn aktiviert, wird das Angebot nach Kundenannahme nicht automatisch gegengezeichnet, sondern erfordert eine manuelle Prüfung.')
+                                            ->default(false),
+                                    ]),
+
                                 Section::make('Status')
                                     ->columns(3)
                                     ->schema([

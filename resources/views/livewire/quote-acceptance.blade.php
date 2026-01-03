@@ -280,16 +280,6 @@
             </div>
         @endif
 
-        {{-- Terms Text --}}
-        @if($quote->terms_text)
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Vertragsbedingungen</h3>
-                <div class="prose prose-sm prose-gray max-w-none">
-                    {!! $quote->terms_text !!}
-                </div>
-            </div>
-        @endif
-
         {{-- Footer Text --}}
         @if($quote->footer_text)
             <div class="prose prose-gray max-w-none mb-8">
@@ -639,17 +629,31 @@
 
                                             {{-- Terms Checkbox --}}
                                             <div class="pt-2">
-                                                <label class="flex items-start gap-3">
+                                                <div class="flex items-start gap-3">
                                                     <input
                                                         type="checkbox"
-                                                        wire:model="termsAccepted"
+                                                        wire:model.live="termsAccepted"
+                                                        id="termsAccepted"
                                                         class="mt-0.5 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                                                         required
                                                     >
-                                                    <span class="text-sm text-gray-700">
-                                                        Ich habe die Vertragsbedingungen gelesen und akzeptiere diese. Mit Absenden dieses Formulars kommt ein rechtsverbindlicher Vertrag zustande. *
-                                                    </span>
-                                                </label>
+                                                    <label for="termsAccepted" class="text-sm text-gray-700">
+                                                        Ich habe die <button type="button" wire:click="$set('showAgbModal', true)" class="text-blue-600 hover:text-blue-700 underline">Allgemeinen Geschäftsbedingungen (AGB)</button>
+                                                        @php
+                                                            $termsItems = $quote->items->filter(fn($item) => $item->hasDetailedTerms() && (!$item->is_optional || ($selectedOptions[$item->id] ?? false)));
+                                                        @endphp
+                                                        @if($termsItems->isNotEmpty())
+                                                            sowie die Leistungsvereinbarungen für
+                                                            @foreach($termsItems as $index => $item)
+                                                                <button type="button" wire:click="showTerms({{ $item->id }})" class="text-blue-600 hover:text-blue-700 underline">{{ $item->name }}</button>@if(!$loop->last), @endif
+                                                            @endforeach
+                                                        @endif
+                                                        gelesen und akzeptiere diese als Vertragsbestandteil. *
+                                                    </label>
+                                                </div>
+                                                <p class="mt-2 ml-7 text-xs text-gray-500">
+                                                    Mit dem Absenden dieses Formulars kommt ein rechtsverbindlicher Vertrag zustande.
+                                                </p>
                                                 @error('termsAccepted')
                                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                                 @enderror
@@ -668,7 +672,8 @@
                                             <button
                                                 type="submit"
                                                 wire:loading.attr="disabled"
-                                                class="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                                                @if(!$termsAccepted) disabled @endif
+                                                class="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
                                                 <span wire:loading.remove wire:target="accept">Verbindlich annehmen</span>
                                                 <span wire:loading wire:target="accept">Wird verarbeitet...</span>
@@ -710,16 +715,27 @@
 
                                         {{-- Terms Checkbox for PDF --}}
                                         <div>
-                                            <label class="flex items-start gap-3">
+                                            <div class="flex items-start gap-3">
                                                 <input
                                                     type="checkbox"
-                                                    wire:model="termsAccepted"
+                                                    wire:model.live="termsAccepted"
+                                                    id="termsAcceptedPdf"
                                                     class="mt-0.5 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                                                 >
-                                                <span class="text-sm text-gray-700">
-                                                    Ich habe die Vertragsbedingungen gelesen und stimme diesen zu. *
-                                                </span>
-                                            </label>
+                                                <label for="termsAcceptedPdf" class="text-sm text-gray-700">
+                                                    Ich habe die <button type="button" wire:click="$set('showAgbModal', true)" class="text-blue-600 hover:text-blue-700 underline">Allgemeinen Geschäftsbedingungen (AGB)</button>
+                                                    @php
+                                                        $termsItemsPdf = $quote->items->filter(fn($item) => $item->hasDetailedTerms() && (!$item->is_optional || ($selectedOptions[$item->id] ?? false)));
+                                                    @endphp
+                                                    @if($termsItemsPdf->isNotEmpty())
+                                                        sowie die Leistungsvereinbarungen für
+                                                        @foreach($termsItemsPdf as $index => $item)
+                                                            <button type="button" wire:click="showTerms({{ $item->id }})" class="text-blue-600 hover:text-blue-700 underline">{{ $item->name }}</button>@if(!$loop->last), @endif
+                                                        @endforeach
+                                                    @endif
+                                                    gelesen und akzeptiere diese als Vertragsbestandteil. *
+                                                </label>
+                                            </div>
                                             @error('termsAccepted')
                                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
@@ -739,7 +755,8 @@
                                             type="button"
                                             wire:click="downloadForSigning"
                                             wire:loading.attr="disabled"
-                                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                                            @if(!$termsAccepted) disabled @endif
+                                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -794,7 +811,13 @@
 
                     {{-- Content --}}
                     <div class="px-6 py-5 max-h-[60vh] overflow-y-auto">
-                        <div class="prose prose-sm prose-gray max-w-none">
+                        <div class="prose prose-sm prose-gray max-w-none
+                            [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3
+                            [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
+                            [&_p]:text-sm [&_p]:leading-relaxed [&_p]:mb-3
+                            [&_ul]:text-sm [&_ul]:my-2 [&_ul]:pl-4
+                            [&_ol]:text-sm [&_ol]:my-2 [&_ol]:pl-4
+                            [&_li]:mb-1">
                             {!! $this->termsItem->detailed_terms !!}
                         </div>
                     </div>
@@ -804,6 +827,73 @@
                         <button
                             type="button"
                             wire:click="hideTerms"
+                            class="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors"
+                        >
+                            Schließen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- AGB Modal --}}
+    @if($showAgbModal)
+        <div
+            class="fixed inset-0 z-50 overflow-y-auto"
+            aria-labelledby="agb-modal-title"
+            role="dialog"
+            aria-modal="true"
+        >
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                {{-- Background overlay --}}
+                <div
+                    class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                    wire:click="$set('showAgbModal', false)"
+                ></div>
+
+                {{-- Modal panel --}}
+                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                    {{-- Header --}}
+                    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-900">
+                                Allgemeine Geschäftsbedingungen (AGB)
+                            </h3>
+                            <button
+                                type="button"
+                                wire:click="$set('showAgbModal', false)"
+                                class="text-gray-400 hover:text-gray-500"
+                            >
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Content --}}
+                    <div class="px-6 py-5 max-h-[60vh] overflow-y-auto">
+                        <div class="prose prose-sm prose-gray max-w-none
+                            [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3
+                            [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
+                            [&_p]:text-sm [&_p]:leading-relaxed [&_p]:mb-3
+                            [&_ul]:text-sm [&_ul]:my-2 [&_ul]:pl-4
+                            [&_ol]:text-sm [&_ol]:my-2 [&_ol]:pl-4
+                            [&_li]:mb-1">
+                            @if($settings->agb_content)
+                                {!! $settings->agb_content !!}
+                            @else
+                                <p class="text-gray-500">Keine AGB hinterlegt.</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- Footer --}}
+                    <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end">
+                        <button
+                            type="button"
+                            wire:click="$set('showAgbModal', false)"
                             class="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors"
                         >
                             Schließen

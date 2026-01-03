@@ -23,6 +23,8 @@ class QuoteAcceptance extends Component
 
     public bool $showTermsModal = false;
 
+    public bool $showAgbModal = false;
+
     public ?int $termsItemId = null;
 
     public int $currentStep = 1;
@@ -209,11 +211,11 @@ class QuoteAcceptance extends Component
         ], [
             'acceptedName.required' => 'Bitte geben Sie Ihren vollständigen Namen ein.',
             'acceptedName.min' => 'Der Name muss mindestens 3 Zeichen lang sein.',
-            'termsAccepted.accepted' => 'Bitte akzeptieren Sie die Vertragsbedingungen.',
+            'termsAccepted.accepted' => 'Bitte akzeptieren Sie die AGB und Leistungsvereinbarungen.',
             'signatureData.required' => 'Bitte unterschreiben Sie das Angebot.',
         ]);
 
-        // Save billing details
+        // Save billing details and acceptance metadata
         $this->quote->update([
             'billing_company' => $this->billingCompany,
             'billing_name' => $this->billingName,
@@ -224,6 +226,11 @@ class QuoteAcceptance extends Component
             'billing_vat_id' => $this->billingVatId,
             'signature_data' => $this->signatureData,
             'signature_at' => now(),
+            // Legal proof metadata (internal only, not shown in PDF)
+            'accepted_ip' => request()->ip(),
+            'accepted_user_agent' => request()->userAgent(),
+            'accepted_documents' => $this->quote->buildAcceptedDocuments(),
+            'document_hash' => $this->quote->generateDocumentHash(),
         ]);
 
         $quoteService = app(QuoteService::class);

@@ -5,6 +5,9 @@ namespace App\Filament\Pages;
 use App\Models\Setting;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -14,6 +17,7 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\HtmlString;
 
 class Settings extends Page implements HasForms
 {
@@ -70,6 +74,11 @@ class Settings extends Page implements HasForms
                 $data[$key] = $value;
             }
         }
+
+        // Ensure signature data is loaded even if null
+        $data['admin_signature_data'] = $setting->admin_signature_data;
+        $data['admin_signer_name'] = $setting->admin_signer_name;
+        $data['admin_signer_position'] = $setting->admin_signer_position;
 
         $this->form->fill($data);
     }
@@ -220,6 +229,29 @@ class Settings extends Page implements HasForms
                             ->helperText('z.B. Aufsichtsbehörde, Berufsbezeichnung, etc.'),
                     ]),
 
+                Section::make('Allgemeine Geschäftsbedingungen (AGB)')
+                    ->description('Diese AGB gelten für alle Angebote und Verträge')
+                    ->columns(1)
+                    ->columnSpanFull()
+                    ->collapsed()
+                    ->schema([
+                        RichEditor::make('agb_content')
+                            ->label('AGB Inhalt')
+                            ->toolbarButtons([
+                                'bold',
+                                'italic',
+                                'underline',
+                                'strike',
+                                'h2',
+                                'h3',
+                                'bulletList',
+                                'orderedList',
+                                'link',
+                            ])
+                            ->columnSpanFull()
+                            ->helperText('Diese AGB werden im Angebots-Annahmeprozess und auf der öffentlichen AGB-Seite angezeigt.'),
+                    ]),
+
                 Section::make('SEO Standardwerte')
                     ->description('Standard-Werte für Suchmaschinenoptimierung')
                     ->columns(1)
@@ -284,6 +316,34 @@ class Settings extends Page implements HasForms
                             ->maxLength(100)
                             ->placeholder('Direkt anrufen'),
                     ]),
+
+                Section::make('Unterschrift für Angebote')
+                    ->description('Diese Unterschrift wird automatisch für die Gegenzeichnung von Angeboten verwendet')
+                    ->columns(2)
+                    ->columnSpanFull()
+                    ->collapsed()
+                    ->schema([
+                        TextInput::make('admin_signer_name')
+                            ->label('Name des Unterzeichners')
+                            ->maxLength(255)
+                            ->placeholder('Steffen Fasselt'),
+
+                        TextInput::make('admin_signer_position')
+                            ->label('Position')
+                            ->maxLength(255)
+                            ->placeholder('Geschäftsführer'),
+
+                        Placeholder::make('signature_info')
+                            ->label('Unterschrift')
+                            ->content(new HtmlString('
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    Die Unterschrift kann im Bereich unten gezeichnet werden.
+                                </p>
+                            '))
+                            ->columnSpanFull(),
+
+                        Hidden::make('admin_signature_data'),
+                    ]),
             ])
             ->statePath('data');
     }
@@ -316,6 +376,9 @@ class Settings extends Page implements HasForms
     public function save(): void
     {
         $data = $this->form->getState();
+
+        // Merge signature data from Livewire property (set via Alpine)
+        $data['admin_signature_data'] = $this->data['admin_signature_data'] ?? null;
 
         $setting = Setting::instance();
 

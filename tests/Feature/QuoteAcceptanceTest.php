@@ -238,4 +238,124 @@ class QuoteAcceptanceTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_quote_acceptance_captures_legal_metadata(): void
+    {
+        $quote = Quote::factory()->viewed()->create([
+            'terms_text' => 'Test AGB Text',
+        ]);
+        QuoteItem::factory()->for($quote)->create([
+            'name' => 'Web Development',
+            'detailed_terms' => 'Detailed service agreement text',
+        ]);
+
+        $signatureData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+
+        Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
+            // Step 1: Fill billing details
+            ->set('billingName', 'Max Mustermann')
+            ->set('billingStreet', 'Teststraße 1')
+            ->set('billingZip', '12345')
+            ->set('billingCity', 'Berlin')
+            ->call('nextStep')
+            // Step 2: Accept with signature
+            ->set('acceptedName', 'Max Mustermann')
+            ->set('termsAccepted', true)
+            ->set('signatureData', $signatureData)
+            ->call('accept')
+            ->assertRedirect(route('quotes.accepted', ['token' => $quote->token]));
+
+        $quote->refresh();
+
+        // Verify legal metadata was captured (internal, not shown in PDF)
+        $this->assertNotNull($quote->accepted_ip);
+        $this->assertNotNull($quote->accepted_user_agent);
+        $this->assertNotNull($quote->document_hash);
+        $this->assertEquals(64, strlen($quote->document_hash)); // SHA256 = 64 hex chars
+
+        // Verify accepted_documents structure
+        $this->assertIsArray($quote->accepted_documents);
+        $this->assertArrayHasKey('agb', $quote->accepted_documents);
+        $this->assertTrue($quote->accepted_documents['agb']['accepted']);
+        $this->assertArrayHasKey('items', $quote->accepted_documents);
+        $this->assertNotEmpty($quote->accepted_documents['items']);
+    }
+
+    public function test_document_hash_is_deterministic(): void
+    {
+        $quote = Quote::factory()->viewed()->create([
+            'title' => 'Test Quote',
+            'total' => 1000.00,
+        ]);
+        QuoteItem::factory()->for($quote)->create([
+            'name' => 'Test Item',
+            'unit_price' => 1000.00,
+        ]);
+
+        $hash1 = $quote->generateDocumentHash();
+        $hash2 = $quote->generateDocumentHash();
+
+        $this->assertEquals($hash1, $hash2);
+        $this->assertEquals(64, strlen($hash1));
+    }
+
+    public function test_document_hash_changes_when_quote_changes(): void
+    {
+        $quote = Quote::factory()->viewed()->create([
+            'title' => 'Test Quote',
+            'total' => 1000.00,
+        ]);
+        QuoteItem::factory()->for($quote)->create([
+            'name' => 'Test Item',
+        ]);
+
+        $hash1 = $quote->generateDocumentHash();
+
+        // Modify quote
+        $quote->update(['title' => 'Modified Quote']);
+        $quote->refresh();
+
+        $hash2 = $quote->generateDocumentHash();
+
+        $this->assertNotEquals($hash1, $hash2);
+    }
+
+    public function test_build_accepted_documents_includes_all_selected_items(): void
+    {
+        $quote = Quote::factory()->viewed()->create();
+
+        $item1 = QuoteItem::factory()->for($quote)->create([
+            'name' => 'Required Item',
+            'is_optional' => false,
+            'detailed_terms' => 'Terms for item 1',
+        ]);
+
+        $item2 = QuoteItem::factory()->for($quote)->create([
+            'name' => 'Optional Item Selected',
+            'is_optional' => true,
+            'is_selected' => true,
+            'detailed_terms' => null,
+        ]);
+
+        $item3 = QuoteItem::factory()->for($quote)->create([
+            'name' => 'Optional Item Not Selected',
+            'is_optional' => true,
+            'is_selected' => false,
+        ]);
+
+        $quote->refresh();
+        $acceptedDocs = $quote->buildAcceptedDocuments();
+
+        // Should include required item and selected optional, but not unselected optional
+        $itemIds = collect($acceptedDocs['items'])->pluck('id')->toArray();
+        $this->assertContains($item1->id, $itemIds);
+        $this->assertContains($item2->id, $itemIds);
+        $this->assertNotContains($item3->id, $itemIds);
+
+        // Check has_terms flag
+        $item1Doc = collect($acceptedDocs['items'])->firstWhere('id', $item1->id);
+        $item2Doc = collect($acceptedDocs['items'])->firstWhere('id', $item2->id);
+        $this->assertTrue($item1Doc['has_terms']);
+        $this->assertFalse($item2Doc['has_terms']);
+    }
 }

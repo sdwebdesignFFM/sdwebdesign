@@ -12,11 +12,12 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -45,101 +46,118 @@ class ServiceCatalogResource extends Resource
     {
         return $schema
             ->components([
-                Section::make('Grunddaten')
-                    ->columns(2)
-                    ->schema([
-                        TextInput::make('name')
-                            ->label('Name')
-                            ->required()
-                            ->maxLength(255),
+                Tabs::make('Dienstleistung')
+                    ->tabs([
+                        Tab::make('Allgemein')
+                            ->icon(Heroicon::OutlinedInformationCircle)
+                            ->schema([
+                                Section::make('Grunddaten')
+                                    ->columns(2)
+                                    ->schema([
+                                        TextInput::make('name')
+                                            ->label('Name')
+                                            ->required()
+                                            ->maxLength(255),
 
-                        Select::make('category')
-                            ->label('Kategorie')
-                            ->options([
-                                'entwicklung' => 'Entwicklung',
-                                'hosting' => 'Hosting',
-                                'wartung' => 'Wartung',
-                                'beratung' => 'Beratung',
-                                'seo' => 'SEO',
-                                'design' => 'Design',
-                            ])
-                            ->searchable(),
+                                        Select::make('category')
+                                            ->label('Kategorie')
+                                            ->options([
+                                                'entwicklung' => 'Entwicklung',
+                                                'hosting' => 'Hosting',
+                                                'wartung' => 'Wartung',
+                                                'beratung' => 'Beratung',
+                                                'seo' => 'SEO',
+                                                'design' => 'Design',
+                                            ])
+                                            ->searchable(),
 
-                        Textarea::make('description')
-                            ->label('Beschreibung')
-                            ->rows(3)
-                            ->columnSpanFull(),
+                                        RichEditor::make('description')
+                                            ->label('Beschreibung')
+                                            ->toolbarButtons([
+                                                'bold',
+                                                'italic',
+                                                'bulletList',
+                                                'orderedList',
+                                                'link',
+                                            ])
+                                            ->columnSpanFull(),
 
-                        Select::make('type')
-                            ->label('Typ')
-                            ->options(ServiceType::class)
-                            ->default(ServiceType::OneTime)
-                            ->required()
-                            ->live(),
+                                        Select::make('type')
+                                            ->label('Typ')
+                                            ->options(ServiceType::class)
+                                            ->default(ServiceType::OneTime)
+                                            ->required()
+                                            ->live(),
 
-                        Select::make('default_unit')
-                            ->label('Einheit')
-                            ->options([
-                                'pauschal' => 'Pauschal',
-                                'stunde' => 'Stunde',
-                                'tag' => 'Tag',
-                                'stueck' => 'Stück',
-                            ])
-                            ->default('pauschal')
-                            ->hidden(fn (Get $get) => $get('type') === ServiceType::Recurring->value),
+                                        Select::make('default_unit')
+                                            ->label('Einheit')
+                                            ->options([
+                                                'pauschal' => 'Pauschal',
+                                                'stunde' => 'Stunde',
+                                                'tag' => 'Tag',
+                                                'stueck' => 'Stück',
+                                            ])
+                                            ->default('pauschal')
+                                            ->hidden(fn (Get $get) => $get('type') === ServiceType::Recurring->value),
 
-                        Select::make('default_billing_cycle')
-                            ->label('Abrechnungszyklus')
-                            ->options(BillingCycle::class)
-                            ->default(BillingCycle::Monthly)
-                            ->required(fn (Get $get) => $get('type') === ServiceType::Recurring->value)
-                            ->hidden(fn (Get $get) => $get('type') !== ServiceType::Recurring->value),
-                    ]),
+                                        Select::make('default_billing_cycle')
+                                            ->label('Abrechnungszyklus')
+                                            ->options(BillingCycle::class)
+                                            ->default(BillingCycle::Monthly)
+                                            ->required(fn (Get $get) => $get('type') === ServiceType::Recurring->value)
+                                            ->hidden(fn (Get $get) => $get('type') !== ServiceType::Recurring->value),
+                                    ]),
 
-                Section::make('Preise')
-                    ->schema([
-                        TextInput::make('default_price')
-                            ->label('Standardpreis')
-                            ->numeric()
-                            ->prefix('€')
-                            ->helperText(fn (Get $get) => $get('type') === ServiceType::Recurring->value
-                                ? 'Preis pro Abrechnungszeitraum'
-                                : null),
-                    ]),
+                                Section::make('Preise')
+                                    ->schema([
+                                        TextInput::make('default_price')
+                                            ->label('Standardpreis')
+                                            ->numeric()
+                                            ->prefix('€')
+                                            ->helperText(fn (Get $get) => $get('type') === ServiceType::Recurring->value
+                                                ? 'Preis pro Abrechnungszeitraum'
+                                                : null),
+                                    ]),
 
-                Section::make('Einstellungen')
-                    ->columns(2)
-                    ->schema([
-                        TextInput::make('sort_order')
-                            ->label('Sortierung')
-                            ->numeric()
-                            ->default(0),
+                                Section::make('Einstellungen')
+                                    ->columns(2)
+                                    ->schema([
+                                        TextInput::make('sort_order')
+                                            ->label('Sortierung')
+                                            ->numeric()
+                                            ->default(0),
 
-                        Toggle::make('is_active')
-                            ->label('Aktiv')
-                            ->default(true),
-                    ]),
+                                        Toggle::make('is_active')
+                                            ->label('Aktiv')
+                                            ->default(true),
+                                    ]),
+                            ]),
 
-                Section::make('Detaillierte Leistungsvereinbarung')
-                    ->description('Ausführliche AGB und Leistungsbedingungen für diese Dienstleistung. Diese werden dem Kunden in einem Modal angezeigt und als separates PDF an die E-Mail angehängt.')
-                    ->collapsed()
-                    ->schema([
-                        RichEditor::make('detailed_terms')
-                            ->label('Leistungsvereinbarung / AGB')
-                            ->toolbarButtons([
-                                'bold',
-                                'italic',
-                                'underline',
-                                'strike',
-                                'h2',
-                                'h3',
-                                'bulletList',
-                                'orderedList',
-                                'blockquote',
-                                'link',
-                            ])
-                            ->columnSpanFull(),
-                    ]),
+                        Tab::make('Leistungsvereinbarung')
+                            ->icon(Heroicon::OutlinedDocumentText)
+                            ->schema([
+                                Section::make('Detaillierte Leistungsvereinbarung')
+                                    ->description('Ausführliche Leistungsbedingungen für diese Dienstleistung. Diese werden dem Kunden in einem Modal angezeigt und können als separates PDF bereitgestellt werden.')
+                                    ->schema([
+                                        RichEditor::make('detailed_terms')
+                                            ->label('Leistungsvereinbarung')
+                                            ->toolbarButtons([
+                                                'bold',
+                                                'italic',
+                                                'underline',
+                                                'strike',
+                                                'h2',
+                                                'h3',
+                                                'bulletList',
+                                                'orderedList',
+                                                'blockquote',
+                                                'link',
+                                            ])
+                                            ->columnSpanFull(),
+                                    ]),
+                            ]),
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 
