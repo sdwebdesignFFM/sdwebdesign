@@ -10,6 +10,11 @@
     {!! Twitter::generate() !!}
     {!! JsonLd::generate() !!}
 
+    {{-- Favicons --}}
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+
     <link rel="canonical" href="{{ url()->current() }}" />
 
     {{-- hreflang Tags for SEO --}}
