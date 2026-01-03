@@ -24,6 +24,7 @@ class PdfService
         $pdf = Pdf::loadView('pdfs.quote', [
             'quote' => $quote->load('items'),
             'company' => $this->getCompanyData(),
+            'settings' => Setting::instance(),
         ]);
 
         $pdf->setPaper('a4');
@@ -108,6 +109,7 @@ class PdfService
         $pdf = Pdf::loadView('pdfs.quote', [
             'quote' => $quote->load('items'),
             'company' => $this->getCompanyData(),
+            'settings' => Setting::instance(),
         ]);
 
         return $pdf->download("Angebot-{$quote->quote_number}.pdf");
@@ -181,6 +183,7 @@ class PdfService
         $pdf = Pdf::loadView('pdfs.quote', [
             'quote' => $quote->load('items'),
             'company' => $this->getCompanyData(),
+            'settings' => Setting::instance(),
         ]);
 
         return $pdf->stream("Angebot-{$quote->quote_number}.pdf");

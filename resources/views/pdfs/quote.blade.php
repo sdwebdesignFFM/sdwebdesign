@@ -329,6 +329,69 @@
         .page-number:after {
             content: counter(page);
         }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        .attachment-page {
+            padding-top: 20px;
+        }
+
+        .attachment-header {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #1a365d;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a365d;
+        }
+
+        .attachment-subheader {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #333;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .attachment-content {
+            font-size: 9pt;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .attachment-content p {
+            margin: 0 0 8px 0;
+        }
+
+        .attachment-content h2 {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #1a365d;
+            margin: 20px 0 10px 0;
+        }
+
+        .attachment-content h3 {
+            font-size: 10pt;
+            font-weight: bold;
+            color: #333;
+            margin: 15px 0 8px 0;
+        }
+
+        .attachment-content ul,
+        .attachment-content ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .attachment-content li {
+            margin-bottom: 4px;
+        }
+
+        .attachment-content strong {
+            color: #1a365d;
+        }
     </style>
 </head>
 <body>
@@ -439,14 +502,6 @@
         </div>
     @endif
 
-    {{-- Terms --}}
-    @if($quote->terms_text)
-        <div class="terms-section">
-            <div class="terms-title">Vertragsbedingungen</div>
-            <div class="terms-text">{!! $quote->terms_text !!}</div>
-        </div>
-    @endif
-
     {{-- Validity Notice (only show if not yet accepted) --}}
     @if(!$quote->accepted_at)
         <div class="validity">
@@ -535,6 +590,19 @@
                                 Art der Signatur: Elektronische Signatur
                             </div>
                         </div>
+                    @elseif(isset($settings) && $settings->hasAdminSignature())
+                        <div class="signature-col">
+                            <div class="signature-label">Digitale Bestätigung - Auftragnehmer</div>
+                            <div class="signature-name">{{ $settings->admin_signer_name }}</div>
+                            @if($settings->admin_signer_position)
+                                <div class="signature-position">{{ $settings->admin_signer_position }}</div>
+                            @endif
+                            <img src="{{ $settings->admin_signature_data }}" alt="Unterschrift Auftragnehmer" class="signature-image">
+                            <div class="signature-meta">
+                                Datum & Uhrzeit: {{ $quote->accepted_at->format('d.m.Y, H:i') }} Uhr<br>
+                                Art der Signatur: Elektronische Signatur
+                            </div>
+                        </div>
                     @else
                         <div class="signature-col">
                             <div class="signature-label">Auftragnehmer</div>
@@ -545,6 +613,36 @@
                     @endif
                 </div>
             @endif
+        </div>
+    @endif
+
+    {{-- Leistungsvereinbarungen Page --}}
+    @php
+        $itemsWithTerms = $quote->items()->whereNotNull('detailed_terms')->where('detailed_terms', '!=', '')->get();
+    @endphp
+    @if($itemsWithTerms->count() > 0)
+        <div class="page-break attachment-page">
+            <div class="attachment-header">Leistungsvereinbarungen</div>
+            <p style="font-size: 9pt; color: #666; margin-bottom: 20px;">
+                Die folgenden Leistungsvereinbarungen sind Bestandteil dieses Vertrags und definieren den Umfang der beauftragten Leistungen.
+            </p>
+
+            @foreach($itemsWithTerms as $item)
+                <div class="attachment-subheader">{{ $item->name }}</div>
+                <div class="attachment-content">
+                    {!! $item->detailed_terms !!}
+                </div>
+            @endforeach
+        </div>
+    @endif
+
+    {{-- AGB Page --}}
+    @if(isset($settings) && $settings->agb_content)
+        <div class="page-break attachment-page">
+            <div class="attachment-header">Allgemeine Geschäftsbedingungen (AGB)</div>
+            <div class="attachment-content">
+                {!! $settings->agb_content !!}
+            </div>
         </div>
     @endif
 
