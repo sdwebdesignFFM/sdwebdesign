@@ -286,7 +286,7 @@ class ContactModal extends Component
         $this->isSubmitting = false;
         $this->isOpen = false;
 
-        return $this->redirect(localized_route('contact.thank-you'), navigate: true);
+        return $this->redirect(localized_route('contact.thank-you'));
     }
 
     public function render()

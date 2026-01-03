@@ -7,7 +7,9 @@
         desktopNavItems: [],
         desktopNavIndex: -1,
         initDesktopNav() {
-            this.desktopNavItems = [...this.$refs.desktopNav.querySelectorAll('[data-nav-item]')];
+            if (this.$refs.desktopNav) {
+                this.desktopNavItems = [...this.$refs.desktopNav.querySelectorAll('[data-nav-item]')];
+            }
         },
         focusDesktopNext() {
             if (this.desktopNavItems.length === 0) this.initDesktopNav();
