@@ -116,26 +116,42 @@
                 </a>
             </div>
 
-            {{-- Mobile Menu Button --}}
-            <button
-                x-ref="mobileMenuButton"
-                @click="mobileMenuOpen = !mobileMenuOpen; if(mobileMenuOpen) initMobileMenu()"
-                @keydown.arrow-down.prevent="mobileMenuOpen = true; initMobileMenu(); $nextTick(() => focusMobileNext())"
-                class="lg:hidden p-2 -mr-2"
-                :aria-expanded="mobileMenuOpen.toString()"
-                :aria-label="mobileMenuOpen ? '{{ __('accessibility.close_menu') }}' : '{{ __('accessibility.open_menu') }}'"
-                aria-controls="mobile-menu"
-            >
-                <svg x-show="!mobileMenuOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <line x1="4" x2="20" y1="12" y2="12"/>
-                    <line x1="4" x2="20" y1="6" y2="6"/>
-                    <line x1="4" x2="20" y1="18" y2="18"/>
-                </svg>
-                <svg x-show="mobileMenuOpen" x-cloak xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M18 6 6 18"/>
-                    <path d="m6 6 12 12"/>
-                </svg>
-            </button>
+            {{-- Mobile: Language Switcher + Menu Button --}}
+            <div class="lg:hidden flex items-center gap-3">
+                {{-- Compact Language Switcher --}}
+                <div class="flex items-center gap-1 text-sm">
+                    <a
+                        href="{{ alternate_locale_url('de') }}"
+                        class="{{ app()->getLocale() === 'de' ? 'font-bold' : 'text-muted-foreground hover:text-foreground' }}"
+                    >DE</a>
+                    <span class="text-muted-foreground">|</span>
+                    <a
+                        href="{{ alternate_locale_url('en') }}"
+                        class="{{ app()->getLocale() === 'en' ? 'font-bold' : 'text-muted-foreground hover:text-foreground' }}"
+                    >EN</a>
+                </div>
+
+                {{-- Menu Button --}}
+                <button
+                    x-ref="mobileMenuButton"
+                    @click="mobileMenuOpen = !mobileMenuOpen; if(mobileMenuOpen) initMobileMenu()"
+                    @keydown.arrow-down.prevent="mobileMenuOpen = true; initMobileMenu(); $nextTick(() => focusMobileNext())"
+                    class="p-2 -mr-2"
+                    :aria-expanded="mobileMenuOpen.toString()"
+                    :aria-label="mobileMenuOpen ? '{{ __('accessibility.close_menu') }}' : '{{ __('accessibility.open_menu') }}'"
+                    aria-controls="mobile-menu"
+                >
+                    <svg x-show="!mobileMenuOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="4" x2="20" y1="12" y2="12"/>
+                        <line x1="4" x2="20" y1="6" y2="6"/>
+                        <line x1="4" x2="20" y1="18" y2="18"/>
+                    </svg>
+                    <svg x-show="mobileMenuOpen" x-cloak xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
+                </button>
+            </div>
         </nav>
     </div>
 
@@ -172,18 +188,9 @@
                 {{ app()->getLocale() === 'de' ? 'Ratgeber' : 'Guides' }}
             </a>
 
-            {{-- Mobile Language & Dark Mode --}}
+            {{-- Mobile Dark Mode Toggle --}}
             <div class="flex items-center justify-between py-3 border-b border-border">
-                <div class="flex items-center gap-4">
-                    @foreach (['de' => 'Deutsch', 'en' => 'English'] as $locale => $label)
-                        <a
-                            href="{{ alternate_locale_url($locale) }}"
-                            class="text-sm {{ app()->getLocale() === $locale ? 'font-bold text-accent' : 'text-muted-foreground hover:text-foreground' }}"
-                        >
-                            {{ $label }}
-                        </a>
-                    @endforeach
-                </div>
+                <span class="text-sm text-muted-foreground">{{ app()->getLocale() === 'de' ? 'Darstellung' : 'Appearance' }}</span>
                 <x-frontend.dark-mode-toggle />
             </div>
 
