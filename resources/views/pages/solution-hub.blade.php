@@ -264,7 +264,7 @@
 
                     {{-- Features & Ideal For --}}
                     @if(count($childFeatures) > 0 || ($childIdealFor ?? false))
-                    <div class="grid md:grid-cols-2 gap-8">
+                    <div class="grid md:grid-cols-2 gap-8 mb-6">
                         {{-- Features --}}
                         @if(count($childFeatures) > 0)
                         <div>
@@ -295,6 +295,14 @@
                         @endif
                     </div>
                     @endif
+
+                    {{-- Learn more indicator --}}
+                    <span class="inline-flex items-center gap-2 text-[0.9375rem] font-medium group-hover:text-accent group-hover:gap-3 transition-all">
+                        {{ app()->getLocale() === 'en' ? 'Learn more' : 'Mehr erfahren' }}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                        </svg>
+                    </span>
                 </a>
                 @endforeach
             </div>
