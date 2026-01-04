@@ -287,6 +287,29 @@
                     @endforeach
                 </div>
 
+                {{-- Confidentiality Notice - only show for specific pages --}}
+                @php
+                    $showConfidentialityNotice = $hasMockups && !in_array($page->getTranslation('slug', 'de'), [
+                        'kosmetikerin-ecommerce-app',
+                        'gewapur-ecommerce'
+                    ]);
+                @endphp
+                @if($showConfidentialityNotice)
+                <div class="motion motion-fade-up mt-16 p-6 bg-muted/10 border border-border">
+                    <div class="flex items-start gap-4">
+                        <x-frontend.icon name="shield" class="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
+                        <div>
+                            <p class="text-[0.875rem] text-muted-foreground leading-relaxed">
+                                {{ app()->getLocale() === 'en'
+                                    ? 'To protect our clients\' business processes, we display stylized representations instead of actual screenshots. For detailed information about this project, please '
+                                    : 'Zum Schutz der Geschäftsprozesse unserer Kunden zeigen wir stilisierte Darstellungen anstelle von echten Screenshots. Für detaillierte Informationen zu diesem Projekt nehmen Sie bitte ' }}
+                                <a href="{{ localized_route('contact') }}" class="text-foreground hover:text-accent underline underline-offset-2">
+                                    {{ app()->getLocale() === 'en' ? 'contact us' : 'Kontakt mit uns auf' }}</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </section>
