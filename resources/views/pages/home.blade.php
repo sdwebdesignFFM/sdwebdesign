@@ -697,8 +697,9 @@
                 <div class="space-y-12">
                     @foreach($process['steps'] as $index => $step)
                     <div class="motion motion-fade-left motion-delay-{{ $index + 1 }} relative">
-                        <div class="flex gap-8">
-                            <div class="relative flex-shrink-0">
+                        <div class="flex gap-4 md:gap-8">
+                            {{-- Icon Box - hidden on mobile --}}
+                            <div class="relative flex-shrink-0 hidden md:block">
                                 <div class="relative z-10 w-24 h-24 border-4 border-background bg-background shadow-lg flex items-center justify-center">
                                     <div class="absolute inset-2 border-2 border-foreground flex items-center justify-center">
                                         @if($step['icon'] ?? false)
@@ -710,8 +711,8 @@
                                 </div>
                             </div>
 
-                            <div class="flex-1 pb-8">
-                                <div class="group p-8 border-2 border-border hover:border-foreground transition-all bg-background hover:shadow-xl">
+                            <div class="flex-1 pb-4 md:pb-8">
+                                <div class="group p-6 md:p-8 border-2 border-border hover:border-foreground transition-all bg-background hover:shadow-xl">
                                     <div class="flex items-center gap-4 mb-4">
                                         <span class="text-[0.875rem] font-mono text-muted-foreground">{{ $step['number'] ?? str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
                                         <h3 class="text-[1.5rem]">{{ $step['title'] }}</h3>
