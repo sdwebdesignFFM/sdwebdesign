@@ -195,7 +195,7 @@
 
                             @if($area['relevant_for'] ?? false)
                             <p class="text-[0.8125rem] text-muted-foreground mt-4 pt-4 border-t border-border">
-                                <span class="font-medium">Relevant für:</span> {{ $area['relevant_for'] }}
+                                <span class="font-medium">{{ app()->getLocale() === 'en' ? 'Relevant for:' : 'Relevant für:' }}</span> {{ $area['relevant_for'] }}
                             </p>
                             @endif
 
