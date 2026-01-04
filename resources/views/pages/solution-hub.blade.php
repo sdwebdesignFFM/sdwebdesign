@@ -41,16 +41,16 @@
     </section>
 
     {{-- Hero Section --}}
-    <section class="relative py-16 overflow-hidden border-t border-b border-border">
+    <section class="relative py-12 md:py-16 overflow-hidden border-t border-b border-border">
         <div class="absolute inset-0 opacity-[0.02] grid-background"></div>
 
         <div class="relative max-w-[1400px] mx-auto px-6">
             <div class="max-w-[900px]">
-                <div class="motion motion-fade-up flex items-start gap-8">
+                <div class="motion motion-fade-up flex flex-col md:flex-row items-start gap-4 md:gap-8">
                     {{-- Icon Box --}}
                     @if($hero['icon'] ?? false)
-                    <div class="p-5 border-2 border-foreground shrink-0">
-                        <x-frontend.icon :name="$hero['icon']" class="w-10 h-10" />
+                    <div class="p-4 md:p-5 border-2 border-foreground shrink-0">
+                        <x-frontend.icon :name="$hero['icon']" class="w-8 h-8 md:w-10 md:h-10" />
                     </div>
                     @endif
 
@@ -65,7 +65,7 @@
                         <h1 class="mb-4">{{ $page->title }}</h1>
 
                         @if($hero['subtitle'] ?? false)
-                        <p class="text-[1.125rem] text-muted-foreground leading-relaxed">
+                        <p class="text-[1rem] md:text-[1.125rem] text-muted-foreground leading-relaxed">
                             {{ $hero['subtitle'] }}
                         </p>
                         @endif

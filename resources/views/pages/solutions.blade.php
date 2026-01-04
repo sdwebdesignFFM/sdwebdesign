@@ -61,20 +61,20 @@
                         $useCases = $solutionCard['use_cases'] ?? [];
                     @endphp
                     <article class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }} group border-2 border-border hover:border-foreground transition-all bg-background hover:shadow-2xl">
-                        <div class="p-10">
+                        <div class="p-6 md:p-10">
                             {{-- Header --}}
-                            <div class="flex items-start gap-6 mb-6">
-                                <div class="p-5 border-2 border-border group-hover:border-foreground transition-all shrink-0">
-                                    <x-frontend.icon :name="$solutionHero['icon'] ?? 'code'" class="w-8 h-8" />
+                            <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-6 mb-6">
+                                <div class="p-4 sm:p-5 border-2 border-border group-hover:border-foreground transition-all shrink-0">
+                                    <x-frontend.icon :name="$solutionHero['icon'] ?? 'code'" class="w-6 h-6 sm:w-8 sm:h-8" />
                                 </div>
-                                <div class="flex-1">
+                                <div class="flex-1 w-full">
                                     <div class="flex items-center gap-3 mb-3">
                                         <span class="text-[0.875rem] font-mono text-muted-foreground">
                                             {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
                                         </span>
                                         <div class="h-px flex-1 bg-border group-hover:bg-foreground transition-colors"></div>
                                     </div>
-                                    <h3 class="text-[1.375rem] leading-tight">
+                                    <h3 class="text-[1.125rem] sm:text-[1.375rem] leading-tight">
                                         {{ $solutionPage->title }}
                                     </h3>
                                 </div>
