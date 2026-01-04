@@ -287,12 +287,11 @@
                     @endforeach
                 </div>
 
-                {{-- Confidentiality Notice - only show for specific pages --}}
+                {{-- Confidentiality Notice - only show for zeiterfassung page in German --}}
                 @php
-                    $showConfidentialityNotice = $hasMockups && !in_array($page->getTranslation('slug', 'de'), [
-                        'kosmetikerin-ecommerce-app',
-                        'gewapur-ecommerce'
-                    ]);
+                    $showConfidentialityNotice = $hasMockups
+                        && app()->getLocale() === 'de'
+                        && $page->getTranslation('slug', 'de') === 'zeiterfassung-einsatzplanung';
                 @endphp
                 @if($showConfidentialityNotice)
                 <div class="motion motion-fade-up mt-16 p-6 bg-muted/10 border border-border">
