@@ -142,15 +142,21 @@
 
             {{-- Detail Button --}}
             @if($project['detail_slug'] ?? false)
+            @php
+                // Find the reference page by its German slug to get the correct localized URL
+                $detailPage = $referencePages->first(fn($p) => $p->getTranslation('slug', 'de') === $project['detail_slug']);
+            @endphp
+            @if($detailPage)
             <div class="motion motion-fade-up mt-12">
-                <a href="{{ localized_route('references.show', ['slug' => $project['detail_slug']]) }}"
+                <a href="{{ $detailPage->getUrl() }}"
                    class="inline-flex items-center justify-between gap-4 px-8 py-5 border-2 border-foreground hover:bg-foreground hover:text-background transition-all">
-                    <span class="font-medium">Projekt im Detail ansehen</span>
+                    <span class="font-medium">{{ app()->getLocale() === 'en' ? 'View project details' : 'Projekt im Detail ansehen' }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
                     </svg>
                 </a>
             </div>
+            @endif
             @endif
         </div>
     </section>
