@@ -143,8 +143,11 @@
             {{-- Detail Button --}}
             @if($project['detail_slug'] ?? false)
             @php
-                // Find the reference page by its German slug to get the correct localized URL
-                $detailPage = $referencePages->first(fn($p) => $p->getTranslation('slug', 'de') === $project['detail_slug']);
+                // Find the reference page by slug (check both DE and EN translations)
+                $detailPage = $referencePages->first(fn($p) =>
+                    $p->getTranslation('slug', 'de') === $project['detail_slug'] ||
+                    $p->getTranslation('slug', 'en', false) === $project['detail_slug']
+                );
             @endphp
             @if($detailPage)
             <div class="motion motion-fade-up mt-12">
