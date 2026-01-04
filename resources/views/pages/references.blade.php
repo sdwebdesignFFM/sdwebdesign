@@ -143,10 +143,18 @@
             {{-- Detail Button --}}
             @if($project['detail_slug'] ?? false)
             @php
+                // Normalize slug (handle legacy mismatches)
+                $searchSlug = $project['detail_slug'];
+                if ($searchSlug === 'time-tracking-scheduling') {
+                    $searchSlug = 'time-tracking-resource-planning';
+                }
+
                 // Find the reference page by slug (check both DE and EN translations)
                 $detailPage = $referencePages->first(fn($p) =>
                     $p->getTranslation('slug', 'de') === $project['detail_slug'] ||
-                    $p->getTranslation('slug', 'en', false) === $project['detail_slug']
+                    $p->getTranslation('slug', 'de') === $searchSlug ||
+                    $p->getTranslation('slug', 'en', false) === $project['detail_slug'] ||
+                    $p->getTranslation('slug', 'en', false) === $searchSlug
                 );
             @endphp
             @if($detailPage)
