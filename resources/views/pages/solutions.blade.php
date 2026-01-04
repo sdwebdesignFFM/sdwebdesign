@@ -74,7 +74,7 @@
                                         </span>
                                         <div class="h-px flex-1 bg-border group-hover:bg-foreground transition-colors"></div>
                                     </div>
-                                    <h3 class="text-[1.125rem] sm:text-[1.375rem] leading-tight">
+                                    <h3 class="text-[1.25rem] md:text-[1.5rem] leading-tight">
                                         {{ $solutionPage->title }}
                                     </h3>
                                 </div>
