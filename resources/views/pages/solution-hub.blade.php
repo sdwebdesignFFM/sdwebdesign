@@ -245,7 +245,7 @@
                         <span class="text-[1.25rem] font-mono text-muted-foreground">
                             {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
                         </span>
-                        <h3 class="text-[1.375rem] font-medium mt-1 group-hover:text-accent transition-colors">
+                        <h3 class="text-[1.25rem] md:text-[1.5rem] font-medium mt-1 group-hover:text-accent transition-colors">
                             {{ $child->title }}
                         </h3>
                         @if($childHero['tagline'] ?? false)
