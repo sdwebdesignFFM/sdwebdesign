@@ -102,7 +102,8 @@ class QuoteAcceptanceTest extends TestCase
 
         Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
             // Step 1: Fill billing details
-            ->set('billingName', 'Max Mustermann')
+            ->set('billingFirstName', 'Max')
+            ->set('billingLastName', 'Mustermann')
             ->set('billingStreet', 'Teststraße 1')
             ->set('billingZip', '12345')
             ->set('billingCity', 'Berlin')
@@ -213,12 +214,13 @@ class QuoteAcceptanceTest extends TestCase
 
         Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
             ->call('showAcceptForm')
-            ->set('billingName', '')
+            ->set('billingFirstName', '')
+            ->set('billingLastName', '')
             ->set('billingStreet', 'Teststraße 1')
             ->set('billingZip', '12345')
             ->set('billingCity', 'Berlin')
             ->call('nextStep')
-            ->assertHasErrors(['billingName' => 'required'])
+            ->assertHasErrors(['billingFirstName' => 'required', 'billingLastName' => 'required'])
             ->assertSet('currentStep', 1);
     }
 
@@ -253,7 +255,8 @@ class QuoteAcceptanceTest extends TestCase
 
         Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
             // Step 1: Fill billing details
-            ->set('billingName', 'Max Mustermann')
+            ->set('billingFirstName', 'Max')
+            ->set('billingLastName', 'Mustermann')
             ->set('billingStreet', 'Teststraße 1')
             ->set('billingZip', '12345')
             ->set('billingCity', 'Berlin')

@@ -17,9 +17,11 @@ class QuoteItem extends Model
         'name',
         'description',
         'detailed_terms',
+        'payment_terms',
         'quantity',
         'unit',
         'billing_cycle',
+        'invoice_interval',
         'unit_price',
         'total_price',
         'is_optional',
@@ -35,6 +37,7 @@ class QuoteItem extends Model
             'unit_price' => 'decimal:2',
             'total_price' => 'decimal:2',
             'billing_cycle' => BillingCycle::class,
+            'invoice_interval' => BillingCycle::class,
             'is_optional' => 'boolean',
             'is_selected' => 'boolean',
         ];
@@ -79,5 +82,10 @@ class QuoteItem extends Model
     public function hasDetailedTerms(): bool
     {
         return ! empty($this->detailed_terms);
+    }
+
+    public function hasPaymentTerms(): bool
+    {
+        return ! empty($this->payment_terms);
     }
 }

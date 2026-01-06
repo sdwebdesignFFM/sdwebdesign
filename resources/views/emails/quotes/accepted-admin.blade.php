@@ -75,9 +75,9 @@
                                     <td style="padding: 12px 16px; font-size: 14px; color: #166534; border-bottom: 1px solid #bbf7d0;">Typ</td>
                                     <td style="padding: 12px 16px; font-size: 14px; color: #166534; text-align: right; font-weight: 500; border-bottom: 1px solid #bbf7d0;">{{ $quote->type->getLabel() }}</td>
                                 </tr>
-                                @if($quote->isRecurring())
+                                @if($quote->isRecurring() && $quote->billing_cycle)
                                 <tr>
-                                    <td style="padding: 12px 16px; font-size: 14px; color: #166534; border-bottom: 1px solid #bbf7d0;">Abrechnungszyklus</td>
+                                    <td style="padding: 12px 16px; font-size: 14px; color: #166534; border-bottom: 1px solid #bbf7d0;">Zahlungsweise</td>
                                     <td style="padding: 12px 16px; font-size: 14px; color: #166534; text-align: right; font-weight: 500; border-bottom: 1px solid #bbf7d0;">{{ $quote->billing_cycle->getLabel() }}</td>
                                 </tr>
                                 @endif

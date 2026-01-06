@@ -1,3 +1,104 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is **sdWebdesign** - a multi-language (German/English) web design agency website built with Laravel 12. The application includes a Filament admin panel for managing quotes, services, blog articles, and reference projects.
+
+**Served at**: `https://sdwebdesign.test` (via Laravel Herd)
+
+## Development Commands
+
+```bash
+# Full setup (install deps, migrate, build assets)
+composer setup
+
+# Run development server (concurrent: serve, queue, logs, vite)
+composer dev
+
+# Run all tests
+composer test
+# or
+php artisan test
+
+# Run specific test file
+php artisan test tests/Feature/PageRoutesTest.php
+
+# Run specific test by name
+php artisan test --filter=testHomepageLoads
+
+# Build frontend assets
+npm run build
+
+# Format PHP code
+vendor/bin/pint --dirty
+```
+
+## Architecture
+
+### Multi-Language Routing
+- German (default, no prefix): `/`, `/loesungen`, `/referenzen`, `/ratgeber`
+- English (prefix): `/en/`, `/en/solutions`, `/en/references`, `/en/guides`
+- Locale set via `SetLocale` middleware
+
+### Key Directories
+- `app/Filament/Resources/` - Admin panel resources (Quotes, Services, BlogArticles, References)
+- `app/Livewire/` - Interactive components (ContactModal, QuoteAcceptance)
+- `app/Services/Quote/` - Business logic (QuoteService, PdfService, ContractService, InvoiceService)
+- `app/Enums/` - Status enums (QuoteStatus, ContractStatus, InvoiceStatus)
+- `lang/de/`, `lang/en/` - Translation files
+
+### Filament Resource Structure
+Each resource follows this pattern:
+```
+Resources/EntityName/
+├── EntityNameResource.php
+├── Pages/
+│   ├── CreateEntityName.php
+│   ├── EditEntityName.php
+│   └── ListEntityNames.php
+├── Schemas/
+│   └── EntityNameForm.php
+└── Tables/
+    └── EntityNameTable.php
+```
+
+### Translatable Models
+Uses `spatie/laravel-translatable`. Models with JSON-translated fields: Page, BlogArticle, Service, QuoteTemplate.
+
+### Controllers
+- `PageController` - Main website routes (home, solutions, references, guides, contact, SEO pages)
+- `QuoteController` - Quote generation, contract signing, PDF downloads
+- `BlogController` - Blog/guide article display
+
+### Livewire Components
+- `ContactModal` - Multi-step contact form (3 steps: project type → budget/timeline → contact info)
+- `QuoteAcceptance` - Digital signature and contract generation workflow
+
+## Frontend
+
+- **Tailwind CSS v3** with dark mode (`darkMode: 'class'`)
+- **Custom animations**: `motion-fade-up`, `motion-fade-left`, `motion-scale` (triggered by `.in-view` class)
+- **Motion delays**: `.motion-delay-1` through `.motion-delay-8` for staggered animations
+- Custom CSS variables for color system in `resources/css/app.css`
+
+## Testing
+
+- PHPUnit with SQLite in-memory database
+- Use factories: `UserFactory`, `PageFactory`, `BlogArticleFactory`, `QuoteFactory`
+- Feature tests in `tests/Feature/`, unit tests in `tests/Unit/`
+- Most tests should be feature tests
+
+## URL Redirects
+
+301 redirects managed via `Redirect` model and `HandleRedirects` middleware:
+- `/blog` → `/ratgeber`
+- `/seo` → `/suchmaschinenoptimierung`
+- `/sea` → `/suchmaschinenwerbung`
+
+---
+
 <laravel-boost-guidelines>
 === foundation rules ===
 
@@ -8,7 +109,7 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 ## Foundational Context
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
-- php - 8.3.24
+- php - 8.3.26
 - filament/filament (FILAMENT) - v4
 - laravel/framework (LARAVEL) - v12
 - laravel/prompts (PROMPTS) - v0
@@ -110,14 +211,6 @@ protected function isAccessible(User $user, ?string $path = null): bool
 
 ## Enums
 - Typically, keys in an Enum should be TitleCase. For example: `FavoritePerson`, `BestLake`, `Monthly`.
-
-
-=== herd rules ===
-
-## Laravel Herd
-
-- The application is served by Laravel Herd and will be available at: https?://[kebab-case-project-dir].test. Use the `get-absolute-url` tool to generate URLs for the user to ensure valid URLs.
-- You must not run any commands to make the site available via HTTP(s). It is _always_ available through Laravel Herd.
 
 
 === tests rules ===

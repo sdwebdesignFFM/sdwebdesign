@@ -41,8 +41,9 @@ class PdfService
     public function createContractPdf(Contract $contract): string
     {
         $pdf = Pdf::loadView('pdfs.contract', [
-            'contract' => $contract->load('items'),
+            'contract' => $contract->load(['items', 'quote']),
             'company' => $this->getCompanyData(),
+            'settings' => Setting::instance(),
         ]);
 
         $pdf->setPaper('a4');
@@ -121,8 +122,9 @@ class PdfService
     public function downloadContract(Contract $contract): Response
     {
         $pdf = Pdf::loadView('pdfs.contract', [
-            'contract' => $contract->load('items'),
+            'contract' => $contract->load(['items', 'quote']),
             'company' => $this->getCompanyData(),
+            'settings' => Setting::instance(),
         ]);
 
         return $pdf->download("Vertrag-{$contract->contract_number}.pdf");
@@ -170,8 +172,12 @@ class PdfService
             'country' => $settings->country ?? 'Deutschland',
             'email' => $settings->email ?? '',
             'phone' => $settings->phone ?? '',
+            'website' => $settings->website_url ?? '',
             'vat_id' => $settings->vat_id ?? '',
             'tax_number' => $settings->tax_number ?? '',
+            'bank_name' => $settings->bank_name ?? '',
+            'bank_iban' => $settings->bank_iban ?? '',
+            'bank_bic' => $settings->bank_bic ?? '',
         ];
     }
 

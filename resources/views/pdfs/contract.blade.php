@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>{{ $quote->accepted_at ? 'Auftragsbestätigung' : 'Angebot' }} {{ $quote->quote_number }}</title>
+    <title>Vertrag {{ $contract->contract_number }}</title>
     <style>
         @page {
             margin: 2cm 2cm 4.5cm 2cm;
@@ -45,7 +45,7 @@
             margin-bottom: 5px;
         }
 
-        .quote-number {
+        .contract-number {
             font-size: 11pt;
             color: #666;
             margin-bottom: 20px;
@@ -76,11 +76,6 @@
             font-weight: bold;
             color: #1a365d;
             margin-bottom: 10px;
-        }
-
-        .intro-text {
-            margin-bottom: 30px;
-            white-space: pre-line;
         }
 
         .items-table {
@@ -136,12 +131,6 @@
             margin-bottom: 2px;
         }
 
-        .item-optional {
-            color: #3182ce;
-            font-size: 8pt;
-            font-style: italic;
-        }
-
         .totals-container {
             margin-left: auto;
             width: 250px;
@@ -184,30 +173,6 @@
             margin-bottom: 10px;
         }
 
-        .terms-section {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-        }
-
-        .terms-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .terms-text {
-            font-size: 9pt;
-            color: #666;
-        }
-
-        .validity {
-            margin-top: 30px;
-            padding: 15px;
-            background-color: #fff5f5;
-            border-left: 3px solid #c53030;
-            font-size: 9pt;
-        }
-
         .acceptance-section {
             margin-top: 40px;
             padding: 20px;
@@ -248,31 +213,6 @@
             color: #333;
         }
 
-        .signature-box {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-        }
-
-        .signature-label {
-            font-size: 8pt;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .signature-image {
-            max-width: 300px;
-            max-height: 100px;
-        }
-
-        .signature-meta {
-            font-size: 8pt;
-            color: #666;
-            margin-top: 5px;
-        }
-
         .signatures-row {
             display: table;
             width: 100%;
@@ -293,6 +233,14 @@
             padding-left: 15px;
         }
 
+        .signature-label {
+            font-size: 8pt;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
         .signature-name {
             font-weight: bold;
             font-size: 10pt;
@@ -303,6 +251,17 @@
             font-size: 9pt;
             color: #666;
             margin-bottom: 10px;
+        }
+
+        .signature-image {
+            max-width: 300px;
+            max-height: 100px;
+        }
+
+        .signature-meta {
+            font-size: 8pt;
+            color: #666;
+            margin-top: 5px;
         }
 
         .footer {
@@ -417,10 +376,10 @@
                 @endif
             </div>
             <div class="header-right">
-                <div class="quote-number">{{ $quote->accepted_at ? 'Auftragsbestätigung' : 'Angebot' }} {{ $quote->quote_number }}</div>
-                <div>Erstellt: {{ $quote->created_at->format('d.m.Y') }}</div>
-                @if(!$quote->accepted_at)
-                    <div>Gültig bis: {{ $quote->valid_until->format('d.m.Y') }}</div>
+                <div class="contract-number">Vertrag {{ $contract->contract_number }}</div>
+                <div>Vertragsbeginn: {{ $contract->start_date->format('d.m.Y') }}</div>
+                @if($contract->quote)
+                    <div style="font-size: 9pt; color: #888;">Angebot: {{ $contract->quote->quote_number }}</div>
                 @endif
             </div>
         </div>
@@ -428,33 +387,21 @@
 
     {{-- Client Info --}}
     <div class="client-box">
-        <div class="client-label">{{ $quote->accepted_at ? 'Auftragsbestätigung für' : 'Angebot für' }}</div>
-        <div class="client-name">{{ $quote->client_name }}</div>
-        @if($quote->client_company)
-            <div>{{ $quote->client_company }}</div>
+        <div class="client-label">Vertragspartner</div>
+        <div class="client-name">{{ $contract->client_name }}</div>
+        @if($contract->client_company)
+            <div>{{ $contract->client_company }}</div>
         @endif
-        @if($quote->hasBillingDetails())
-            <div>{{ $quote->billing_street }}</div>
-            <div>{{ $quote->billing_zip }} {{ $quote->billing_city }}</div>
-            @if($quote->billing_country && $quote->billing_country !== 'Deutschland')
-                <div>{{ $quote->billing_country }}</div>
-            @endif
+        @if($contract->client_address)
+            <div style="white-space: pre-line;">{{ $contract->client_address }}</div>
         @endif
-        @if($quote->client_email)
-            <div style="margin-top: 5px;">{{ $quote->client_email }}</div>
+        @if($contract->client_email)
+            <div style="margin-top: 5px;">{{ $contract->client_email }}</div>
         @endif
     </div>
 
     {{-- Title --}}
-    <div class="title">{{ $quote->title }}</div>
-
-    {{-- Greeting and Intro Text --}}
-    <div class="intro-text">
-        <p style="margin-bottom: 10px;"><strong>{{ $quote->getGreeting() }}</strong></p>
-        @if($quote->intro_text)
-            {!! $quote->intro_text !!}
-        @endif
-    </div>
+    <div class="title">{{ $contract->title }}</div>
 
     {{-- Items Table --}}
     <table class="items-table">
@@ -466,33 +413,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($quote->items()->orderBy('sort_order')->get() as $item)
-                @if(!$item->is_optional || $item->is_selected)
-                    <tr>
-                        <td>
-                            <div class="item-name">{{ $item->name }}</div>
-                            @if($item->description)
-                                <div class="item-description">{!! $item->description !!}</div>
-                            @endif
-                            @if($item->is_optional)
-                                <div class="item-optional">(Optional)</div>
-                            @endif
-                        </td>
-                        <td>{{ number_format($item->quantity, 0, ',', '.') }} {{ $item->unit }}</td>
-                        <td>
-                            {{ number_format($item->total_price, 2, ',', '.') }} &euro;
-                            @if($item->billing_cycle)
-                                <div style="font-size: 8pt; color: #666;">{{ $item->billing_cycle->getPeriodLabel() }}</div>
-                            @endif
-                            @if($item->invoice_interval && $item->invoice_interval !== $item->billing_cycle)
-                                <div style="font-size: 7pt; color: #888;">Abrechnung: {{ $item->invoice_interval->getLabel() }}</div>
-                            @endif
-                            @if($item->hasPaymentTerms())
-                                <div style="font-size: 7pt; color: #888;">Zahlung: {{ $item->payment_terms }}</div>
-                            @endif
-                        </td>
-                    </tr>
-                @endif
+            @foreach($contract->items as $item)
+                <tr>
+                    <td>
+                        <div class="item-name">{{ $item->name }}</div>
+                        @if($item->description)
+                            <div class="item-description">{!! $item->description !!}</div>
+                        @endif
+                    </td>
+                    <td>{{ number_format($item->quantity, 0, ',', '.') }} {{ $item->unit }}</td>
+                    <td>{{ number_format($item->total_price, 2, ',', '.') }} &euro;</td>
+                </tr>
             @endforeach
         </tbody>
     </table>
@@ -501,143 +432,123 @@
     <div class="totals-container">
         <div class="totals-row">
             <div class="totals-label">Netto</div>
-            <div class="totals-value">{{ number_format($quote->subtotal, 2, ',', '.') }} &euro;</div>
+            <div class="totals-value">{{ number_format($contract->subtotal, 2, ',', '.') }} &euro;</div>
         </div>
         <div class="totals-row">
-            <div class="totals-label">MwSt. ({{ number_format($quote->tax_rate, 0) }}%)</div>
-            <div class="totals-value">{{ number_format($quote->tax_amount, 2, ',', '.') }} &euro;</div>
+            <div class="totals-label">MwSt. ({{ number_format($contract->tax_rate, 0) }}%)</div>
+            <div class="totals-value">{{ number_format($contract->tax_amount, 2, ',', '.') }} &euro;</div>
         </div>
         <div class="totals-row totals-total">
             <div class="totals-label">Gesamtbetrag</div>
-            <div class="totals-value">{{ number_format($quote->total, 2, ',', '.') }} &euro;</div>
+            <div class="totals-value">{{ number_format($contract->total, 2, ',', '.') }} &euro;</div>
         </div>
     </div>
 
     {{-- Contract Info (for recurring) --}}
-    @if($quote->isRecurring() && $quote->billing_cycle)
+    @if($contract->isRecurring() && $contract->billing_cycle)
         <div class="contract-info">
             <div class="contract-info-title">Vertragsinformationen</div>
-            <div>Zahlungsweise: {{ $quote->billing_cycle->getLabel() }}</div>
-            @if($quote->min_term_months)
-                <div>Mindestlaufzeit: {{ $quote->min_term_months }} Monate</div>
+            <div>Zahlungsweise: {{ $contract->billing_cycle->getLabel() }}</div>
+            @if($contract->min_term_months)
+                <div>Mindestlaufzeit: {{ $contract->min_term_months }} Monate</div>
             @endif
-            @if($quote->notice_period_days)
-                <div>Kündigungsfrist: {{ $quote->notice_period_days }} Tage</div>
+            @if($contract->notice_period_days)
+                <div>Kündigungsfrist: {{ $contract->notice_period_days }} Tage</div>
             @endif
-            <div>Automatische Verlängerung: {{ $quote->auto_renewal ? 'Ja' : 'Nein' }}</div>
+            <div>Automatische Verlängerung: {{ $contract->auto_renewal ? 'Ja' : 'Nein' }}</div>
+            @if($contract->min_term_end_date)
+                <div>Ende Mindestlaufzeit: {{ $contract->min_term_end_date->format('d.m.Y') }}</div>
+            @endif
         </div>
     @endif
 
-    {{-- Validity Notice (only show if not yet accepted) --}}
-    @if(!$quote->accepted_at)
-        <div class="validity">
-            <strong>Hinweis:</strong> Dieses Angebot ist gültig bis zum {{ $quote->valid_until->format('d.m.Y') }}.
-            Nach Ablauf dieser Frist können wir die genannten Preise und Leistungen nicht mehr garantieren.
+    {{-- Acceptance Section --}}
+    <div class="acceptance-section">
+        <div class="acceptance-title">Vertragsabschluss</div>
+
+        {{-- Contract Status --}}
+        <div style="margin-bottom: 15px;">
+            <strong>Beauftragt am:</strong> {{ $contract->accepted_at?->format('d.m.Y') ?? $contract->created_at->format('d.m.Y') }}
         </div>
-    @endif
 
-    {{-- Acceptance Section (only show if quote was accepted) --}}
-    @if($quote->accepted_at)
-        <div class="acceptance-section">
-            <div class="acceptance-title">Vertragsabschluss</div>
+        {{-- Electronic Acceptance Note --}}
+        <div style="margin-bottom: 15px; font-size: 9pt; color: #666;">
+            Annahme erfolgte elektronisch über das Angebotssystem von {{ config('app.name', 'SD Webdesign') }}.
+        </div>
 
-            {{-- Contract Status --}}
-            <div style="margin-bottom: 15px;">
-                <strong>Beauftragt am:</strong> {{ $quote->accepted_at->format('d.m.Y') }}
-            </div>
+        {{-- Contract Components --}}
+        <div style="margin-bottom: 20px; font-size: 9pt; padding: 10px; background-color: #f8f8f8; border-left: 2px solid #22543d;">
+            <strong>Vertragsbestandteile:</strong><br>
+            Allgemeine Geschäftsbedingungen (AGB) sowie die zugehörigen Leistungsvereinbarungen in der bei Annahme gültigen Fassung.
+        </div>
 
-            {{-- Electronic Acceptance Note --}}
-            <div style="margin-bottom: 15px; font-size: 9pt; color: #666;">
-                Annahme erfolgte elektronisch über das Angebotssystem von {{ config('app.name', 'SD Webdesign') }}.
-            </div>
-
-            {{-- Contract Components --}}
-            <div style="margin-bottom: 20px; font-size: 9pt; padding: 10px; background-color: #f8f8f8; border-left: 2px solid #22543d;">
-                <strong>Vertragsbestandteile:</strong><br>
-                Allgemeine Geschäftsbedingungen (AGB) sowie die zugehörigen Leistungsvereinbarungen in der bei Annahme gültigen Fassung.
-            </div>
-
-            <div class="acceptance-row">
-                {{-- Billing Address --}}
-                @if($quote->hasBillingDetails())
-                    <div class="acceptance-col">
-                        <div class="acceptance-label">Rechnungsadresse</div>
-                        <div class="acceptance-value">
-                            @if($quote->billing_company)
-                                {{ $quote->billing_company }}<br>
-                            @endif
-                            {{ $quote->billing_name }}<br>
-                            {{ $quote->billing_street }}<br>
-                            {{ $quote->billing_zip }} {{ $quote->billing_city }}
-                            @if($quote->billing_country && $quote->billing_country !== 'Deutschland')
-                                <br>{{ $quote->billing_country }}
-                            @endif
-                            @if($quote->billing_vat_id)
-                                <br><small>USt-IdNr.: {{ $quote->billing_vat_id }}</small>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-
-                {{-- Acceptance Details --}}
-                <div class="acceptance-col">
-                    <div class="acceptance-label">Angenommen von</div>
-                    <div class="acceptance-value">
-                        {{ $quote->accepted_name }}
-                    </div>
+        <div class="acceptance-row">
+            {{-- Acceptance Details --}}
+            <div class="acceptance-col">
+                <div class="acceptance-label">Angenommen von</div>
+                <div class="acceptance-value">
+                    {{ $contract->accepted_name }}
                 </div>
             </div>
 
-            {{-- Digital Signature Block --}}
-            @if($quote->hasSignature())
-                <div class="signatures-row">
-                    {{-- Customer Signature --}}
+            {{-- IP Address --}}
+            <div class="acceptance-col">
+                <div class="acceptance-label">IP-Adresse</div>
+                <div class="acceptance-value">
+                    {{ $contract->accepted_ip ?? ($contract->quote?->accepted_ip ?? '-') }}
+                </div>
+            </div>
+        </div>
+
+        {{-- Digital Signature Block --}}
+        @if($contract->quote && $contract->quote->hasSignature())
+            <div class="signatures-row">
+                {{-- Customer Signature --}}
+                <div class="signature-col">
+                    <div class="signature-label">Digitale Annahme - Auftraggeber</div>
+                    <div class="signature-name">{{ $contract->quote->accepted_name }}</div>
+                    <img src="{{ $contract->quote->signature_data }}" alt="Kundenunterschrift" class="signature-image">
+                    <div class="signature-meta">
+                        Datum & Uhrzeit: {{ $contract->quote->signature_at?->format('d.m.Y, H:i') ?? $contract->quote->accepted_at->format('d.m.Y, H:i') }} Uhr<br>
+                        Art der Signatur: Elektronische Signatur
+                    </div>
+                </div>
+
+                {{-- Admin Signature --}}
+                @if($contract->quote->hasAdminSignature())
                     <div class="signature-col">
-                        <div class="signature-label">Digitale Annahme - Auftraggeber</div>
-                        <div class="signature-name">{{ $quote->accepted_name }}</div>
-                        <img src="{{ $quote->signature_data }}" alt="Kundenunterschrift" class="signature-image">
+                        <div class="signature-label">Digitale Bestätigung - Auftragnehmer</div>
+                        <div class="signature-name">{{ $contract->quote->admin_signature_name }}</div>
+                        @if($contract->quote->admin_signature_position)
+                            <div class="signature-position">{{ $contract->quote->admin_signature_position }}</div>
+                        @endif
+                        <img src="{{ $contract->quote->admin_signature_data }}" alt="Unterschrift Auftragnehmer" class="signature-image">
                         <div class="signature-meta">
-                            Datum & Uhrzeit: {{ $quote->signature_at?->format('d.m.Y, H:i') ?? $quote->accepted_at->format('d.m.Y, H:i') }} Uhr<br>
+                            Datum & Uhrzeit: {{ $contract->quote->admin_signed_at?->format('d.m.Y, H:i') }} Uhr<br>
                             Art der Signatur: Elektronische Signatur
                         </div>
                     </div>
-
-                    {{-- Admin Signature --}}
-                    @if($quote->hasAdminSignature())
-                        <div class="signature-col">
-                            <div class="signature-label">Digitale Bestätigung - Auftragnehmer</div>
-                            <div class="signature-name">{{ $quote->admin_signature_name }}</div>
-                            @if($quote->admin_signature_position)
-                                <div class="signature-position">{{ $quote->admin_signature_position }}</div>
-                            @endif
-                            <img src="{{ $quote->admin_signature_data }}" alt="Unterschrift Auftragnehmer" class="signature-image">
-                            <div class="signature-meta">
-                                Datum & Uhrzeit: {{ $quote->admin_signed_at?->format('d.m.Y, H:i') }} Uhr<br>
-                                Art der Signatur: Elektronische Signatur
-                            </div>
+                @elseif(isset($settings) && $settings->hasAdminSignature())
+                    <div class="signature-col">
+                        <div class="signature-label">Digitale Bestätigung - Auftragnehmer</div>
+                        <div class="signature-name">{{ $settings->admin_signer_name }}</div>
+                        @if($settings->admin_signer_position)
+                            <div class="signature-position">{{ $settings->admin_signer_position }}</div>
+                        @endif
+                        <img src="{{ $settings->admin_signature_data }}" alt="Unterschrift Auftragnehmer" class="signature-image">
+                        <div class="signature-meta">
+                            Datum & Uhrzeit: {{ $contract->accepted_at?->format('d.m.Y, H:i') ?? $contract->created_at->format('d.m.Y, H:i') }} Uhr<br>
+                            Art der Signatur: Elektronische Signatur
                         </div>
-                    @elseif(isset($settings) && $settings->hasAdminSignature())
-                        <div class="signature-col">
-                            <div class="signature-label">Digitale Bestätigung - Auftragnehmer</div>
-                            <div class="signature-name">{{ $settings->admin_signer_name }}</div>
-                            @if($settings->admin_signer_position)
-                                <div class="signature-position">{{ $settings->admin_signer_position }}</div>
-                            @endif
-                            <img src="{{ $settings->admin_signature_data }}" alt="Unterschrift Auftragnehmer" class="signature-image">
-                            <div class="signature-meta">
-                                Datum & Uhrzeit: {{ $quote->accepted_at->format('d.m.Y, H:i') }} Uhr<br>
-                                Art der Signatur: Elektronische Signatur
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            @endif
-        </div>
-    @endif
+                    </div>
+                @endif
+            </div>
+        @endif
+    </div>
 
     {{-- Leistungsvereinbarungen Page --}}
     @php
-        $itemsWithTerms = $quote->items()->whereNotNull('detailed_terms')->where('detailed_terms', '!=', '')->get();
+        $itemsWithTerms = $contract->items->filter(fn($item) => $item->hasDetailedTerms());
     @endphp
     @if($itemsWithTerms->count() > 0)
         <div class="page-break attachment-page">

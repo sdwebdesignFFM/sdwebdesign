@@ -12,6 +12,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -101,7 +102,7 @@ class ServiceCatalogResource extends Resource
                                             ->hidden(fn (Get $get) => $get('type') === ServiceType::Recurring->value),
 
                                         Select::make('default_billing_cycle')
-                                            ->label('Abrechnungszyklus')
+                                            ->label('Zahlungsweise')
                                             ->options(BillingCycle::class)
                                             ->default(BillingCycle::Monthly)
                                             ->required(fn (Get $get) => $get('type') === ServiceType::Recurring->value)
@@ -153,6 +154,16 @@ class ServiceCatalogResource extends Resource
                                                 'blockquote',
                                                 'link',
                                             ])
+                                            ->columnSpanFull(),
+                                    ]),
+
+                                Section::make('Zahlungsbedingungen')
+                                    ->description('Optionale Zahlungsbedingungen für diese Dienstleistung (z.B. "50% bei Annahme, 50% nach Fertigstellung").')
+                                    ->schema([
+                                        Textarea::make('payment_terms')
+                                            ->label('Zahlungsbedingungen')
+                                            ->placeholder('z.B. 50% bei Angebotsannahme, 50% nach Fertigstellung')
+                                            ->rows(3)
                                             ->columnSpanFull(),
                                     ]),
                             ]),

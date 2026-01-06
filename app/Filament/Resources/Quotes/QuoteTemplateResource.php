@@ -85,10 +85,11 @@ class QuoteTemplateResource extends Resource
                                     ->columns(2)
                                     ->schema([
                                         Select::make('default_billing_cycle')
-                                            ->label('Abrechnungszyklus')
+                                            ->label('Zahlungsweise')
                                             ->options([
                                                 'monthly' => 'Monatlich',
-                                                'quarterly' => 'Vierteljährlich',
+                                                'quarterly' => 'Quartalsweise',
+                                                'semi_annually' => 'Halbjährlich',
                                                 'yearly' => 'Jährlich',
                                             ]),
 

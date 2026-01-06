@@ -66,6 +66,7 @@ class Quote extends Model
         'admin_signature_position',
         'admin_signed_at',
         'customer_id',
+        'client_id',
         'token',
         'reminder_count',
         'last_reminder_at',
@@ -142,6 +143,11 @@ class Quote extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'customer_id');
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 
     public function hasBillingDetails(): bool
@@ -362,5 +368,33 @@ class Quote extends Model
         }
 
         return $this->client_name;
+    }
+
+    public function getGreeting(): string
+    {
+        // Try to get salutation from linked client
+        if ($this->client) {
+            $salutation = $this->client->salutation;
+            $lastName = $this->client->last_name;
+
+            if ($salutation && $lastName) {
+                return match ($salutation) {
+                    'Frau' => "Sehr geehrte Frau {$lastName},",
+                    'Herr' => "Sehr geehrter Herr {$lastName},",
+                    default => "Guten Tag {$this->client->full_name},",
+                };
+            }
+
+            if ($this->client->full_name) {
+                return "Guten Tag {$this->client->full_name},";
+            }
+        }
+
+        // Fallback to client_name on quote
+        if ($this->client_name) {
+            return "Guten Tag {$this->client_name},";
+        }
+
+        return 'Sehr geehrte Damen und Herren,';
     }
 }

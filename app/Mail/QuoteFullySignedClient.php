@@ -49,10 +49,13 @@ class QuoteFullySignedClient extends Mailable
      */
     public function attachments(): array
     {
+        $settings = Setting::instance();
+
         // Generate the fully-signed PDF
         $pdf = Pdf::loadView('pdfs.quote', [
             'quote' => $this->quote->load('items'),
-            'settings' => Setting::instance(),
+            'settings' => $settings,
+            'company' => $this->getCompanyData($settings),
         ]);
 
         $attachments = [
@@ -71,5 +74,30 @@ class QuoteFullySignedClient extends Mailable
         }
 
         return $attachments;
+    }
+
+    /**
+     * Get company data for PDFs.
+     *
+     * @return array<string, string>
+     */
+    private function getCompanyData(Setting $settings): array
+    {
+        return [
+            'name' => $settings->company_name ?? 'SD Webdesign',
+            'owner' => $settings->owner_name ?? '',
+            'street' => $settings->street ?? '',
+            'postal_code' => $settings->postal_code ?? '',
+            'city' => $settings->city ?? '',
+            'country' => $settings->country ?? 'Deutschland',
+            'email' => $settings->email ?? '',
+            'phone' => $settings->phone ?? '',
+            'website' => $settings->website_url ?? '',
+            'vat_id' => $settings->vat_id ?? '',
+            'tax_number' => $settings->tax_number ?? '',
+            'bank_name' => $settings->bank_name ?? '',
+            'bank_iban' => $settings->bank_iban ?? '',
+            'bank_bic' => $settings->bank_bic ?? '',
+        ];
     }
 }

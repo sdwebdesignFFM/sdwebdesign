@@ -7,6 +7,7 @@ use App\Enums\QuoteStatus;
 use App\Enums\ServiceType;
 use App\Filament\Resources\Quotes\QuoteResource\Pages;
 use App\Filament\Resources\Quotes\QuoteResource\RelationManagers\ItemsRelationManager;
+use App\Models\Client;
 use App\Models\Quote;
 use App\Models\QuoteTemplate;
 use App\Models\Service;
@@ -84,6 +85,85 @@ class QuoteResource extends Resource
                                             }),
                                     ]),
 
+                                Section::make('Kunde auswählen')
+                                    ->schema([
+                                        Select::make('client_id')
+                                            ->label('Bestehenden Kunden laden')
+                                            ->relationship('client', 'last_name')
+                                            ->getOptionLabelFromRecordUsing(fn (?Client $record): string => $record?->display_name ?? '')
+                                            ->searchable(['first_name', 'last_name', 'company', 'email'])
+                                            ->preload()
+                                            ->live()
+                                            ->afterStateUpdated(function (Set $set, ?int $state) {
+                                                if ($state) {
+                                                    $client = Client::find($state);
+                                                    if ($client) {
+                                                        $set('client_name', $client->full_name);
+                                                        $set('client_company', $client->company);
+                                                        $set('client_email', $client->email);
+                                                        $set('client_phone', $client->phone);
+                                                        $set('client_address', $client->full_address);
+                                                    }
+                                                }
+                                            })
+                                            ->createOptionForm([
+                                                Select::make('salutation')
+                                                    ->label('Anrede')
+                                                    ->options([
+                                                        'Herr' => 'Herr',
+                                                        'Frau' => 'Frau',
+                                                        'Divers' => 'Divers',
+                                                    ]),
+                                                TextInput::make('title')
+                                                    ->label('Titel')
+                                                    ->placeholder('z.B. Dr., Prof.')
+                                                    ->maxLength(50),
+                                                TextInput::make('first_name')
+                                                    ->label('Vorname')
+                                                    ->maxLength(255),
+                                                TextInput::make('last_name')
+                                                    ->label('Nachname')
+                                                    ->required()
+                                                    ->maxLength(255),
+                                                TextInput::make('company')
+                                                    ->label('Unternehmen')
+                                                    ->maxLength(255),
+                                                TextInput::make('email')
+                                                    ->label('E-Mail')
+                                                    ->email()
+                                                    ->required()
+                                                    ->maxLength(255),
+                                                TextInput::make('phone')
+                                                    ->label('Telefon')
+                                                    ->tel()
+                                                    ->maxLength(50),
+                                                TextInput::make('street')
+                                                    ->label('Straße')
+                                                    ->maxLength(255),
+                                                TextInput::make('zip')
+                                                    ->label('PLZ')
+                                                    ->maxLength(20),
+                                                TextInput::make('city')
+                                                    ->label('Stadt')
+                                                    ->maxLength(255),
+                                                TextInput::make('country')
+                                                    ->label('Land')
+                                                    ->maxLength(255)
+                                                    ->default('Deutschland'),
+                                            ])
+                                            ->createOptionUsing(function (array $data, Set $set): int {
+                                                $client = Client::create($data);
+                                                $set('client_name', $client->full_name);
+                                                $set('client_company', $client->company);
+                                                $set('client_email', $client->email);
+                                                $set('client_phone', $client->phone);
+                                                $set('client_address', $client->full_address);
+
+                                                return $client->getKey();
+                                            })
+                                            ->helperText('Kunde auswählen oder neuen Kunden erstellen'),
+                                    ]),
+
                                 Section::make('Kundendaten')
                                     ->columns(2)
                                     ->schema([
@@ -137,23 +217,16 @@ class QuoteResource extends Resource
                                             ->label('Gültig bis')
                                             ->default(now()->addDays(30)),
 
-                                        Textarea::make('subject')
-                                            ->label('Vertragsgegenstand')
-                                            ->placeholder('z.B. Domain: example.com')
-                                            ->rows(2)
-                                            ->columnSpanFull(),
-                                    ]),
-
-                                Section::make('Einleitung')
-                                    ->schema([
                                         RichEditor::make('intro_text')
-                                            ->label('')
+                                            ->label('Einleitung')
+                                            ->default('<p>Vielen Dank für Ihre Anfrage und Ihr Interesse an einer Zusammenarbeit.<br>Gerne unterbreite ich Ihnen nachfolgend das entsprechende Angebot.</p>')
                                             ->toolbarButtons([
                                                 'bold',
                                                 'italic',
                                                 'bulletList',
                                                 'orderedList',
-                                            ]),
+                                            ])
+                                            ->columnSpanFull(),
                                     ]),
                             ]),
 
@@ -179,6 +252,7 @@ class QuoteResource extends Resource
                                                                 $set('name', $service->name);
                                                                 $set('description', $service->description);
                                                                 $set('detailed_terms', $service->detailed_terms);
+                                                                $set('payment_terms', $service->payment_terms);
                                                                 $set('unit', $service->default_unit);
                                                                 $set('unit_price', $service->default_price);
                                                                 $set('billing_cycle', $service->default_billing_cycle?->value);
@@ -191,9 +265,9 @@ class QuoteResource extends Resource
                                                     ->required()
                                                     ->maxLength(255),
 
-                                                Textarea::make('description')
+                                                RichEditor::make('description')
                                                     ->label('Beschreibung')
-                                                    ->rows(2),
+                                                    ->toolbarButtons(['bold', 'italic', 'bulletList', 'orderedList']),
 
                                                 TextInput::make('quantity')
                                                     ->label('Menge')
@@ -212,9 +286,20 @@ class QuoteResource extends Resource
                                                     ->placeholder('Einheit wählen'),
 
                                                 Select::make('billing_cycle')
-                                                    ->label('Abrechnungszyklus')
+                                                    ->label('Preis pro')
                                                     ->options(BillingCycle::class)
-                                                    ->placeholder('Einmalig'),
+                                                    ->placeholder('Einmalig')
+                                                    ->live(),
+
+                                                Select::make('invoice_interval')
+                                                    ->label('Rechnungsintervall')
+                                                    ->options([
+                                                        BillingCycle::SemiAnnually->value => 'Halbjährlich',
+                                                        BillingCycle::Yearly->value => 'Jährlich',
+                                                    ])
+                                                    ->placeholder('Wie Preis')
+                                                    ->default(BillingCycle::Yearly)
+                                                    ->visible(fn (Get $get) => $get('billing_cycle') !== null),
 
                                                 TextInput::make('unit_price')
                                                     ->label('Einzelpreis')
@@ -236,6 +321,12 @@ class QuoteResource extends Resource
                                                     ->label('Optionsgruppe')
                                                     ->placeholder('z.B. option_a, option_b')
                                                     ->visible(fn (Get $get) => $get('is_optional')),
+
+                                                Textarea::make('payment_terms')
+                                                    ->label('Zahlungsbedingungen')
+                                                    ->placeholder('z.B. 50% bei Annahme, 50% nach Fertigstellung')
+                                                    ->rows(2)
+                                                    ->columnSpanFull(),
 
                                                 Hidden::make('sort_order'),
                                                 Hidden::make('detailed_terms'),
@@ -282,8 +373,12 @@ class QuoteResource extends Resource
                                     ->columns(2)
                                     ->schema([
                                         Select::make('billing_cycle')
-                                            ->label('Abrechnungszyklus')
-                                            ->options(BillingCycle::class),
+                                            ->label('Standard-Rechnungsintervall')
+                                            ->options([
+                                                BillingCycle::SemiAnnually->value => 'Halbjährlich',
+                                                BillingCycle::Yearly->value => 'Jährlich',
+                                            ])
+                                            ->default(BillingCycle::Yearly),
 
                                         TextInput::make('min_term_months')
                                             ->label('Mindestlaufzeit (Monate)')

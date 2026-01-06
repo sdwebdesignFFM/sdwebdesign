@@ -17,6 +17,7 @@ class Service extends Model
         'name',
         'description',
         'detailed_terms',
+        'payment_terms',
         'category',
         'type',
         'default_price',

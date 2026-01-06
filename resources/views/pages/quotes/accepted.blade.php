@@ -53,9 +53,9 @@
                         <dd class="font-medium text-gray-900">{{ number_format($quote->total, 2, ',', '.') }} &euro;</dd>
                     </div>
 
-                    @if($quote->isRecurring())
+                    @if($quote->isRecurring() && $quote->billing_cycle)
                         <div class="py-3 flex justify-between">
-                            <dt class="text-gray-500">Abrechnungszyklus</dt>
+                            <dt class="text-gray-500">Zahlungsweise</dt>
                             <dd class="font-medium text-gray-900">{{ $quote->billing_cycle->getLabel() }}</dd>
                         </div>
                     @endif

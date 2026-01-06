@@ -12,6 +12,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -25,6 +26,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class ContractResource extends Resource
 {
@@ -109,7 +111,7 @@ class ContractResource extends Resource
                                             ->disabled(),
 
                                         Select::make('billing_cycle')
-                                            ->label('Abrechnungszyklus')
+                                            ->label('Zahlungsweise')
                                             ->options(BillingCycle::class)
                                             ->disabled(),
 
@@ -140,6 +142,81 @@ class ContractResource extends Resource
                                         DatePicker::make('next_billing_date')
                                             ->label('Nächste Abrechnung')
                                             ->disabled(),
+                                    ]),
+                            ]),
+
+                        Tab::make('Annahme')
+                            ->icon('heroicon-o-check-badge')
+                            ->schema([
+                                Section::make('Angebotsannahme')
+                                    ->description('Rechtlich relevante Informationen zur Vertragsannahme')
+                                    ->columns(2)
+                                    ->schema([
+                                        Placeholder::make('quote_number')
+                                            ->label('Angebotsnummer')
+                                            ->content(fn (Contract $record) => $record->quote?->quote_number ?? '-'),
+
+                                        Placeholder::make('quote_version')
+                                            ->label('Angebotsversion')
+                                            ->content(fn (Contract $record) => $record->quote?->document_hash
+                                                ? substr($record->quote->document_hash, 0, 12).'...'
+                                                : '-')
+                                            ->hint(fn (Contract $record) => $record->quote?->document_hash ?? null),
+
+                                        Placeholder::make('accepted_at_display')
+                                            ->label('Datum & Uhrzeit der Annahme')
+                                            ->content(fn (Contract $record) => $record->quote?->accepted_at?->format('d.m.Y, H:i:s') ?? '-'),
+
+                                        Placeholder::make('accepted_name_display')
+                                            ->label('Name des Unterzeichners')
+                                            ->content(fn (Contract $record) => $record->quote?->accepted_name ?? '-'),
+
+                                        Placeholder::make('acceptance_type')
+                                            ->label('Art der Annahme')
+                                            ->content(fn (Contract $record) => $record->quote?->signature_data
+                                                ? new HtmlString('<span class="text-green-600 font-medium">Elektronisch (digitale Unterschrift)</span>')
+                                                : 'Manuell (PDF)'),
+
+                                        Placeholder::make('accepted_ip_display')
+                                            ->label('IP-Adresse')
+                                            ->content(fn (Contract $record) => $record->quote?->accepted_ip ?? '-'),
+                                    ]),
+
+                                Section::make('Akzeptierte Dokumente')
+                                    ->schema([
+                                        Placeholder::make('accepted_documents_display')
+                                            ->label('')
+                                            ->content(function (Contract $record) {
+                                                $quote = $record->quote;
+                                                if (! $quote || ! $quote->accepted_documents) {
+                                                    return '-';
+                                                }
+
+                                                $docs = $quote->accepted_documents;
+                                                $lines = [];
+
+                                                // AGB
+                                                if (isset($docs['agb']) && $docs['agb']['accepted']) {
+                                                    $version = isset($docs['agb']['version'])
+                                                        ? ' (Version: '.substr($docs['agb']['version'], 0, 10).'...)'
+                                                        : '';
+                                                    $lines[] = '✓ Allgemeine Geschäftsbedingungen (AGB)'.$version;
+                                                }
+
+                                                // Leistungsvereinbarungen
+                                                if (isset($docs['items']) && is_array($docs['items'])) {
+                                                    foreach ($docs['items'] as $item) {
+                                                        $termsInfo = ($item['has_terms'] ?? false) ? ' (inkl. Leistungsvereinbarung)' : '';
+                                                        $lines[] = '✓ '.$item['name'].$termsInfo;
+                                                    }
+                                                }
+
+                                                return new HtmlString(
+                                                    '<div class="space-y-1 text-sm">'.
+                                                    implode('<br>', array_map('e', $lines)).
+                                                    '</div>'
+                                                );
+                                            }),
                                     ]),
                             ]),
 

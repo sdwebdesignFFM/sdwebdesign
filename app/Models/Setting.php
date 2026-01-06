@@ -43,6 +43,10 @@ class Setting extends Model
         'github_url',
         'vat_id',
         'tax_number',
+        'bank_name',
+        'bank_iban',
+        'bank_bic',
+        'website_url',
         'imprint_extra',
         'agb_content',
         'default_meta_title',
@@ -57,7 +61,15 @@ class Setting extends Model
         'admin_signer_name',
         'admin_signer_position',
         'admin_signature_data',
+        'default_hourly_rate',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'default_hourly_rate' => 'decimal:2',
+        ];
+    }
 
     /**
      * Get the singleton instance of settings.

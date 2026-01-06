@@ -34,7 +34,9 @@ class QuoteAcceptance extends Component
     // Step 1: Billing details
     public string $billingCompany = '';
 
-    public string $billingName = '';
+    public string $billingFirstName = '';
+
+    public string $billingLastName = '';
 
     public string $billingStreet = '';
 
@@ -55,11 +57,20 @@ class QuoteAcceptance extends Component
 
     public function mount(Quote $quote): void
     {
-        $this->quote = $quote->load(['items' => fn ($q) => $q->orderBy('sort_order')]);
+        $this->quote = $quote->load(['items' => fn ($q) => $q->orderBy('sort_order'), 'client']);
 
-        // Pre-fill billing details from quote client data
-        $this->billingCompany = $quote->client_company ?? '';
-        $this->billingName = $quote->client_name ?? '';
+        // Pre-fill billing details from linked client or quote client data
+        if ($quote->client) {
+            $this->billingCompany = $quote->client->company ?? '';
+            $this->billingFirstName = $quote->client->first_name ?? '';
+            $this->billingLastName = $quote->client->last_name ?? '';
+            $this->billingStreet = $quote->client->street ?? '';
+            $this->billingZip = $quote->client->zip ?? '';
+            $this->billingCity = $quote->client->city ?? '';
+            $this->billingCountry = $quote->client->country ?? 'Deutschland';
+        } else {
+            $this->billingCompany = $quote->client_company ?? '';
+        }
 
         // Initialize selected options
         foreach ($this->quote->items as $item) {
@@ -165,13 +176,16 @@ class QuoteAcceptance extends Component
 
         if ($this->currentStep === 1) {
             $this->validate([
-                'billingName' => 'required|string|min:3|max:255',
+                'billingFirstName' => 'required|string|min:2|max:255',
+                'billingLastName' => 'required|string|min:2|max:255',
                 'billingStreet' => 'required|string|max:255',
                 'billingZip' => 'required|string|max:10',
                 'billingCity' => 'required|string|max:255',
             ], [
-                'billingName.required' => 'Bitte geben Sie einen Namen ein.',
-                'billingName.min' => 'Der Name muss mindestens 3 Zeichen lang sein.',
+                'billingFirstName.required' => 'Bitte geben Sie einen Vornamen ein.',
+                'billingFirstName.min' => 'Der Vorname muss mindestens 2 Zeichen lang sein.',
+                'billingLastName.required' => 'Bitte geben Sie einen Nachnamen ein.',
+                'billingLastName.min' => 'Der Nachname muss mindestens 2 Zeichen lang sein.',
                 'billingStreet.required' => 'Bitte geben Sie eine Straße ein.',
                 'billingZip.required' => 'Bitte geben Sie eine Postleitzahl ein.',
                 'billingCity.required' => 'Bitte geben Sie eine Stadt ein.',
@@ -218,7 +232,7 @@ class QuoteAcceptance extends Component
         // Save billing details and acceptance metadata
         $this->quote->update([
             'billing_company' => $this->billingCompany,
-            'billing_name' => $this->billingName,
+            'billing_name' => trim($this->billingFirstName.' '.$this->billingLastName),
             'billing_street' => $this->billingStreet,
             'billing_zip' => $this->billingZip,
             'billing_city' => $this->billingCity,
@@ -265,7 +279,7 @@ class QuoteAcceptance extends Component
         // Save billing details (but don't mark as accepted yet)
         $this->quote->update([
             'billing_company' => $this->billingCompany,
-            'billing_name' => $this->billingName,
+            'billing_name' => trim($this->billingFirstName.' '.$this->billingLastName),
             'billing_street' => $this->billingStreet,
             'billing_zip' => $this->billingZip,
             'billing_city' => $this->billingCity,

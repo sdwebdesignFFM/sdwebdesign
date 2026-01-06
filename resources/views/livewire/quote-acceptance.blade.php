@@ -44,20 +44,16 @@
                 </div>
             </div>
 
-            @if($quote->subject)
-                <div class="mt-4 pt-4 border-t border-gray-200">
-                    <h3 class="text-sm font-medium text-gray-700 mb-1">Vertragsgegenstand</h3>
-                    <p class="text-gray-900">{{ $quote->subject }}</p>
-                </div>
-            @endif
-        </div>
-
-        {{-- Intro Text --}}
-        @if($quote->intro_text)
-            <div class="prose prose-gray max-w-none mb-8">
-                {!! $quote->intro_text !!}
+            {{-- Greeting and Intro Text --}}
+            <div class="mt-4 pt-4 border-t border-gray-200 text-sm text-gray-700 space-y-2">
+                <p class="font-medium text-gray-900">{{ $quote->getGreeting() }}</p>
+                @if($quote->intro_text)
+                    <div class="[&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1">
+                        {!! $quote->intro_text !!}
+                    </div>
+                @endif
             </div>
-        @endif
+        </div>
 
         {{-- Quote Items --}}
         <div class="bg-background rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-8">
@@ -73,7 +69,7 @@
                             <div class="flex-1">
                                 <h3 class="font-medium text-gray-900">{{ $item->name }}</h3>
                                 @if($item->description)
-                                    <p class="mt-1 text-sm text-gray-600">{!! nl2br(e($item->description)) !!}</p>
+                                    <div class="mt-1 text-sm text-gray-600 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
                                 @endif
                                 @if($item->hasDetailedTerms())
                                     <button
@@ -98,6 +94,12 @@
                                         <span class="text-sm font-normal text-gray-500">{{ $item->billing_cycle->getPeriodLabel() }}</span>
                                     @endif
                                 </p>
+                                @if($item->invoice_interval && $item->invoice_interval !== $item->billing_cycle)
+                                    <p class="text-xs text-gray-500">Abrechnung: {{ $item->invoice_interval->getLabel() }}</p>
+                                @endif
+                                @if($item->hasPaymentTerms())
+                                    <p class="text-xs text-gray-500">Zahlung: {{ $item->payment_terms }}</p>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -137,7 +139,7 @@
                                 <div class="flex-1">
                                     <h3 class="font-medium text-gray-900">{{ $item->name }}</h3>
                                     @if($item->description)
-                                        <p class="mt-1 text-sm text-gray-600">{!! nl2br(e($item->description)) !!}</p>
+                                        <div class="mt-1 text-sm text-gray-600 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
                                     @endif
                                     @if($item->hasDetailedTerms())
                                         <button
@@ -162,6 +164,12 @@
                                             <span class="text-sm font-normal">{{ $item->billing_cycle->getPeriodLabel() }}</span>
                                         @endif
                                     </p>
+                                    @if($item->invoice_interval && $item->invoice_interval !== $item->billing_cycle)
+                                        <p class="text-xs text-gray-500">Abrechnung: {{ $item->invoice_interval->getLabel() }}</p>
+                                    @endif
+                                    @if($item->hasPaymentTerms())
+                                        <p class="text-xs text-gray-500">Zahlung: {{ $item->payment_terms }}</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -198,7 +206,7 @@
                                 <div class="flex-1">
                                     <h3 class="font-medium text-gray-900">{{ $item->name }}</h3>
                                     @if($item->description)
-                                        <p class="mt-1 text-sm text-gray-600">{!! nl2br(e($item->description)) !!}</p>
+                                        <div class="mt-1 text-sm text-gray-600 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
                                     @endif
                                     @if($item->hasDetailedTerms())
                                         <button
@@ -223,6 +231,12 @@
                                             <span class="text-sm font-normal">{{ $item->billing_cycle->getPeriodLabel() }}</span>
                                         @endif
                                     </p>
+                                    @if($item->invoice_interval && $item->invoice_interval !== $item->billing_cycle)
+                                        <p class="text-xs text-gray-500">Abrechnung: {{ $item->invoice_interval->getLabel() }}</p>
+                                    @endif
+                                    @if($item->hasPaymentTerms())
+                                        <p class="text-xs text-gray-500">Zahlung: {{ $item->payment_terms }}</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -252,14 +266,16 @@
         </div>
 
         {{-- Contract Duration (for recurring) --}}
-        @if($quote->isRecurring())
+        @if($quote->isRecurring() && ($quote->billing_cycle || $quote->min_term_months || $quote->notice_period_days))
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
                 <h3 class="text-lg font-semibold text-blue-900 mb-4">Vertragsinformationen</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <span class="text-blue-700">Abrechnungszyklus:</span>
-                        <span class="ml-2 font-medium text-blue-900">{{ $quote->billing_cycle->getLabel() }}</span>
-                    </div>
+                    @if($quote->billing_cycle)
+                        <div>
+                            <span class="text-blue-700">Zahlungsweise:</span>
+                            <span class="ml-2 font-medium text-blue-900">{{ $quote->billing_cycle->getLabel() }}</span>
+                        </div>
+                    @endif
                     @if($quote->min_term_months)
                         <div>
                             <span class="text-blue-700">Mindestlaufzeit:</span>
@@ -272,10 +288,12 @@
                             <span class="ml-2 font-medium text-blue-900">{{ $quote->notice_period_days }} Tage</span>
                         </div>
                     @endif
-                    <div>
-                        <span class="text-blue-700">Automatische Verlängerung:</span>
-                        <span class="ml-2 font-medium text-blue-900">{{ $quote->auto_renewal ? 'Ja' : 'Nein' }}</span>
-                    </div>
+                    @if($quote->auto_renewal)
+                        <div>
+                            <span class="text-blue-700">Automatische Verlängerung:</span>
+                            <span class="ml-2 font-medium text-blue-900">Ja</span>
+                        </div>
+                    @endif
                 </div>
             </div>
         @endif
@@ -402,22 +420,40 @@
                                         >
                                     </div>
 
-                                    {{-- Name --}}
-                                    <div>
-                                        <label for="billingName" class="block text-sm font-medium text-gray-700 mb-1">
-                                            Name *
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="billingName"
-                                            wire:model="billingName"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
-                                            placeholder="Vor- und Nachname"
-                                            required
-                                        >
-                                        @error('billingName')
-                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
+                                    {{-- First Name & Last Name --}}
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="billingFirstName" class="block text-sm font-medium text-gray-700 mb-1">
+                                                Vorname *
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="billingFirstName"
+                                                wire:model="billingFirstName"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
+                                                placeholder="Vorname"
+                                                required
+                                            >
+                                            @error('billingFirstName')
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div>
+                                            <label for="billingLastName" class="block text-sm font-medium text-gray-700 mb-1">
+                                                Nachname *
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="billingLastName"
+                                                wire:model="billingLastName"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
+                                                placeholder="Nachname"
+                                                required
+                                            >
+                                            @error('billingLastName')
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                            @enderror
+                                        </div>
                                     </div>
 
                                     {{-- Street --}}

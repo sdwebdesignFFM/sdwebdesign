@@ -6,7 +6,7 @@
     <title>Angebot {{ $quote->quote_number }} - Zur Unterschrift</title>
     <style>
         @page {
-            margin: 2cm 2cm 3cm 2cm;
+            margin: 2cm 2cm 4cm 2cm;
         }
 
         body {
@@ -76,14 +76,6 @@
             font-weight: bold;
             color: #1a365d;
             margin-bottom: 10px;
-        }
-
-        .subject {
-            font-size: 10pt;
-            color: #666;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #ddd;
         }
 
         .intro-text {
@@ -299,19 +291,19 @@
 
         .footer {
             position: fixed;
-            bottom: 0;
+            bottom: -3cm;
             left: 0;
             right: 0;
             height: 2cm;
             font-size: 8pt;
             color: #666;
-            text-align: center;
+            text-align: right;
             border-top: 1px solid #ddd;
             padding-top: 10px;
         }
 
-        .page-number:after {
-            content: counter(page);
+        .page-number {
+            /* Page numbers will be added via PHP script */
         }
     </style>
 </head>
@@ -321,6 +313,9 @@
         <div class="header-row">
             <div class="header-left">
                 <div class="company-name">{{ config('app.name', 'SD Webdesign') }}</div>
+                @if(isset($settings) && $settings->owner_name)
+                    <div>{{ $settings->owner_name }}</div>
+                @endif
             </div>
             <div class="header-right">
                 <div class="quote-number">Angebot {{ $quote->quote_number }}</div>
@@ -344,14 +339,14 @@
 
     {{-- Title & Subject --}}
     <div class="title">{{ $quote->title }}</div>
-    @if($quote->subject)
-        <div class="subject"><strong>Vertragsgegenstand:</strong> {{ $quote->subject }}</div>
-    @endif
 
-    {{-- Intro Text --}}
-    @if($quote->intro_text)
-        <div class="intro-text">{!! $quote->intro_text !!}</div>
-    @endif
+    {{-- Greeting and Intro Text --}}
+    <div class="intro-text">
+        <p style="margin-bottom: 10px;"><strong>{{ $quote->getGreeting() }}</strong></p>
+        @if($quote->intro_text)
+            {!! $quote->intro_text !!}
+        @endif
+    </div>
 
     {{-- Items Table --}}
     <table class="items-table">
@@ -376,7 +371,18 @@
                             @endif
                         </td>
                         <td>{{ number_format($item->quantity, 0, ',', '.') }} {{ $item->unit }}</td>
-                        <td>{{ number_format($item->total_price, 2, ',', '.') }} &euro;</td>
+                        <td>
+                            {{ number_format($item->total_price, 2, ',', '.') }} &euro;
+                            @if($item->billing_cycle)
+                                <div style="font-size: 8pt; color: #666;">{{ $item->billing_cycle->getPeriodLabel() }}</div>
+                            @endif
+                            @if($item->invoice_interval && $item->invoice_interval !== $item->billing_cycle)
+                                <div style="font-size: 7pt; color: #888;">Abrechnung: {{ $item->invoice_interval->getLabel() }}</div>
+                            @endif
+                            @if($item->hasPaymentTerms())
+                                <div style="font-size: 7pt; color: #888;">Zahlung: {{ $item->payment_terms }}</div>
+                            @endif
+                        </td>
                     </tr>
                 @endif
             @endforeach
@@ -400,10 +406,10 @@
     </div>
 
     {{-- Contract Info (for recurring) --}}
-    @if($quote->isRecurring())
+    @if($quote->isRecurring() && $quote->billing_cycle)
         <div class="contract-info">
             <div class="contract-info-title">Vertragsinformationen</div>
-            <div>Abrechnungszyklus: {{ $quote->billing_cycle->getLabel() }}</div>
+            <div>Zahlungsweise: {{ $quote->billing_cycle->getLabel() }}</div>
             @if($quote->min_term_months)
                 <div>Mindestlaufzeit: {{ $quote->min_term_months }} Monate</div>
             @endif
@@ -491,7 +497,19 @@
 
     {{-- Footer --}}
     <div class="footer">
-        {{ config('app.name', 'SD Webdesign') }} | Angebot {{ $quote->quote_number }} | Seite <span class="page-number"></span>
+        <span class="page-number"></span>
     </div>
+
+    <script type="text/php">
+        if (isset($pdf)) {
+            $text = "Seite {PAGE_NUM} von {PAGE_COUNT}";
+            $size = 7;
+            $font = $fontMetrics->getFont("DejaVu Sans");
+            $width = $fontMetrics->get_text_width($text, $font, $size);
+            $x = $pdf->get_width() - $width - 56.7; // 2cm margin in points
+            $y = $pdf->get_height() - 30;
+            $pdf->page_text($x, $y, $text, $font, $size, [0.6, 0.6, 0.6]);
+        }
+    </script>
 </body>
 </html>

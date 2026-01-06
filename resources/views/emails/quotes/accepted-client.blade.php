@@ -74,9 +74,9 @@
                                         <td style="padding: 8px 0; font-size: 16px; font-weight: 600; color: #166534;">Gesamtbetrag:</td>
                                         <td style="padding: 8px 0; font-size: 16px; font-weight: 600; color: #166534; text-align: right;">{{ number_format($quote->total, 2, ',', '.') }} &euro;</td>
                                     </tr>
-                                    @if($quote->isRecurring())
+                                    @if($quote->isRecurring() && $quote->billing_cycle)
                                     <tr>
-                                        <td style="padding: 8px 0; font-size: 14px; color: #166534;">Abrechnungszyklus:</td>
+                                        <td style="padding: 8px 0; font-size: 14px; color: #166534;">Zahlungsweise:</td>
                                         <td style="padding: 8px 0; font-size: 14px; color: #166534; text-align: right; font-weight: 500;">{{ $quote->billing_cycle->getLabel() }}</td>
                                     </tr>
                                     @endif

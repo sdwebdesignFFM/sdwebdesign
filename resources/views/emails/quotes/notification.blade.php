@@ -70,9 +70,9 @@
                                     </tr>
                                 </table>
 
-                                @if($quote->isRecurring())
+                                @if($quote->isRecurring() && $quote->billing_cycle)
                                 <p style="margin: 16px 0 0; padding: 12px; background-color: #dbeafe; border-radius: 6px; font-size: 13px; color: #1e40af;">
-                                    Abrechnungszyklus: {{ $quote->billing_cycle->getLabel() }}
+                                    Zahlungsweise: {{ $quote->billing_cycle->getLabel() }}
                                     @if($quote->min_term_months)
                                         | Mindestlaufzeit: {{ $quote->min_term_months }} Monate
                                     @endif

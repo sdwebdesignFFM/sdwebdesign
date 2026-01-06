@@ -222,11 +222,54 @@ class Settings extends Page implements HasForms
                             ->label('Steuernummer')
                             ->maxLength(50),
 
+                        TextInput::make('website_url')
+                            ->label('Website')
+                            ->url()
+                            ->maxLength(255)
+                            ->placeholder('https://www.sdwebdesign.de')
+                            ->columnSpanFull(),
+
                         Textarea::make('imprint_extra')
                             ->label('Zusätzliche Impressums-Angaben')
                             ->rows(4)
                             ->columnSpanFull()
                             ->helperText('z.B. Aufsichtsbehörde, Berufsbezeichnung, etc.'),
+                    ]),
+
+                Section::make('Bankverbindung')
+                    ->description('Für Rechnungen und Angebote')
+                    ->columns(2)
+                    ->columnSpanFull()
+                    ->collapsed()
+                    ->schema([
+                        TextInput::make('bank_name')
+                            ->label('Bank')
+                            ->maxLength(255)
+                            ->placeholder('Sparkasse Frankfurt'),
+
+                        TextInput::make('bank_iban')
+                            ->label('IBAN')
+                            ->maxLength(34)
+                            ->placeholder('DE89 3704 0044 0532 0130 00'),
+
+                        TextInput::make('bank_bic')
+                            ->label('BIC')
+                            ->maxLength(11)
+                            ->placeholder('COBADEFFXXX'),
+                    ]),
+
+                Section::make('Zeiterfassung')
+                    ->description('Einstellungen für die Arbeitszeiterfassung')
+                    ->columns(1)
+                    ->columnSpanFull()
+                    ->collapsed()
+                    ->schema([
+                        TextInput::make('default_hourly_rate')
+                            ->label('Standard-Stundensatz')
+                            ->numeric()
+                            ->prefix('€')
+                            ->default(85.00)
+                            ->helperText('Wird verwendet, wenn kein kundenspezifischer Stundensatz hinterlegt ist'),
                     ]),
 
                 Section::make('Allgemeine Geschäftsbedingungen (AGB)')
