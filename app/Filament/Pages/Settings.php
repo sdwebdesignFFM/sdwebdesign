@@ -423,6 +423,11 @@ class Settings extends Page implements HasForms
         // Merge signature data from Livewire property (set via Alpine)
         $data['admin_signature_data'] = $this->data['admin_signature_data'] ?? null;
 
+        // Ensure default_hourly_rate has a value (not nullable in DB)
+        if (empty($data['default_hourly_rate'])) {
+            $data['default_hourly_rate'] = 85.00;
+        }
+
         $setting = Setting::instance();
 
         // Get translatable field names
