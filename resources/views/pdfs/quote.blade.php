@@ -462,9 +462,9 @@
     <table class="items-table">
         <thead>
             <tr>
-                <th style="width: 60%">Leistung</th>
-                <th style="width: 15%">Menge</th>
-                <th style="width: 25%">Betrag</th>
+                <th style="width: 55%">Leistung</th>
+                <th style="width: 10%">Menge</th>
+                <th style="width: 35%">Betrag</th>
             </tr>
         </thead>
         <tbody>
