@@ -105,7 +105,6 @@
 
         .items-table td:last-child {
             text-align: right;
-            white-space: nowrap;
         }
 
         .item-name {
