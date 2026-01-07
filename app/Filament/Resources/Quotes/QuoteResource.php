@@ -275,15 +275,9 @@ class QuoteResource extends Resource
                                                     ->default(1)
                                                     ->required(),
 
-                                                Select::make('unit')
+                                                TextInput::make('unit')
                                                     ->label('Einheit')
-                                                    ->options([
-                                                        'pauschal' => 'Pauschal',
-                                                        'stunde' => 'Stunde',
-                                                        'tag' => 'Tag',
-                                                        'stueck' => 'Stück',
-                                                    ])
-                                                    ->placeholder('Einheit wählen'),
+                                                    ->placeholder('z.B. Stück, Stunde, Pauschal'),
 
                                                 Select::make('billing_cycle')
                                                     ->label('Preis pro')

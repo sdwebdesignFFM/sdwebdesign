@@ -69,7 +69,7 @@
                             <div class="flex-1">
                                 <h3 class="font-medium text-gray-900">{{ $item->name }}</h3>
                                 @if($item->description)
-                                    <div class="mt-1 text-sm text-gray-600 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
+                                    <div class="mt-1 text-xs text-gray-600 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
                                 @endif
                                 @if($item->hasDetailedTerms())
                                     <button
@@ -139,7 +139,7 @@
                                 <div class="flex-1">
                                     <h3 class="font-medium text-gray-900">{{ $item->name }}</h3>
                                     @if($item->description)
-                                        <div class="mt-1 text-sm text-gray-600 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
+                                        <div class="mt-1 text-xs text-gray-600 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
                                     @endif
                                     @if($item->hasDetailedTerms())
                                         <button
@@ -206,7 +206,7 @@
                                 <div class="flex-1">
                                     <h3 class="font-medium text-gray-900">{{ $item->name }}</h3>
                                     @if($item->description)
-                                        <div class="mt-1 text-sm text-gray-600 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
+                                        <div class="mt-1 text-xs text-gray-600 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
                                     @endif
                                     @if($item->hasDetailedTerms())
                                         <button

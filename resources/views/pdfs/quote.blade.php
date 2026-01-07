@@ -64,8 +64,7 @@
         }
 
         .client-name {
-            font-size: 12pt;
-            font-weight: bold;
+            font-size: 10pt;
             margin-bottom: 3px;
         }
 
