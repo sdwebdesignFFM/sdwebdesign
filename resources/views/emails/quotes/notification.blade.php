@@ -29,52 +29,8 @@
                                 {{ $quote->getEmailGreeting() }}
                             </p>
                             <p style="margin: 16px 0 0; font-size: 14px; color: #404040; line-height: 1.6;">
-                                vielen Dank für Ihr Interesse an unseren Leistungen. Ihr individuelles Angebot liegt für Sie bereit:
+                                vielen Dank für Ihr Interesse an unseren Leistungen. Ihr individuelles Angebot liegt für Sie bereit.
                             </p>
-                        </td>
-                    </tr>
-
-                    {{-- Quote Summary --}}
-                    <tr>
-                        <td style="padding: 0 40px 32px;">
-                            <div style="background-color: #f9fafb; border-radius: 8px; padding: 24px; border: 1px solid #e5e7eb;">
-                                <h2 style="margin: 0 0 16px; font-size: 18px; font-weight: 600; color: #171717;">
-                                    {{ $quote->title }}
-                                </h2>
-
-                                @if($quote->subject)
-                                <p style="margin: 0 0 16px; font-size: 14px; color: #6b7280;">
-                                    {{ $quote->subject }}
-                                </p>
-                                @endif
-
-                                <table role="presentation" style="width: 100%; border-collapse: collapse;">
-                                    <tr>
-                                        <td style="padding: 8px 0; font-size: 14px; color: #6b7280;">Netto:</td>
-                                        <td style="padding: 8px 0; font-size: 14px; color: #171717; text-align: right;">{{ number_format($quote->subtotal, 2, ',', '.') }} &euro;</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 8px 0; font-size: 14px; color: #6b7280;">MwSt. ({{ number_format($quote->tax_rate, 0) }}%):</td>
-                                        <td style="padding: 8px 0; font-size: 14px; color: #171717; text-align: right;">{{ number_format($quote->tax_amount, 2, ',', '.') }} &euro;</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" style="border-top: 1px solid #e5e7eb;"></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 12px 0 0; font-size: 16px; font-weight: 600; color: #171717;">Gesamt:</td>
-                                        <td style="padding: 12px 0 0; font-size: 16px; font-weight: 600; color: #171717; text-align: right;">{{ number_format($quote->total, 2, ',', '.') }} &euro;</td>
-                                    </tr>
-                                </table>
-
-                                @if($quote->isRecurring() && $quote->billing_cycle)
-                                <p style="margin: 16px 0 0; padding: 12px; background-color: #dbeafe; border-radius: 6px; font-size: 13px; color: #1e40af;">
-                                    Zahlungsweise: {{ $quote->billing_cycle->getLabel() }}
-                                    @if($quote->min_term_months)
-                                        | Mindestlaufzeit: {{ $quote->min_term_months }} Monate
-                                    @endif
-                                </p>
-                                @endif
-                            </div>
                         </td>
                     </tr>
 
