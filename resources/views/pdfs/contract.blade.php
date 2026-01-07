@@ -82,6 +82,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
+            table-layout: fixed;
         }
 
         .items-table th {
