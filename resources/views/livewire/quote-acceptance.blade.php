@@ -84,7 +84,7 @@
                                     </button>
                                 @endif
                             </div>
-                            <div class="ml-4 text-right whitespace-nowrap">
+                            <div class="ml-4 text-right shrink-0 w-[28%]">
                                 @if($item->quantity > 1)
                                     <p class="text-sm text-gray-500">{{ number_format($item->quantity, 0) }} {{ $item->unit }} &times; {{ number_format($item->unit_price, 2, ',', '.') }} &euro;</p>
                                 @endif
@@ -154,7 +154,7 @@
                                         </button>
                                     @endif
                                 </div>
-                                <div class="ml-4 text-right whitespace-nowrap">
+                                <div class="ml-4 text-right shrink-0 w-[28%]">
                                     @if($item->quantity > 1)
                                         <p class="text-sm text-gray-500">{{ number_format($item->quantity, 0) }} {{ $item->unit }} &times; {{ number_format($item->unit_price, 2, ',', '.') }} &euro;</p>
                                     @endif
@@ -221,7 +221,7 @@
                                         </button>
                                     @endif
                                 </div>
-                                <div class="ml-4 text-right whitespace-nowrap">
+                                <div class="ml-4 text-right shrink-0 w-[28%]">
                                     @if($item->quantity > 1)
                                         <p class="text-sm text-gray-500">{{ number_format($item->quantity, 0) }} {{ $item->unit }} &times; {{ number_format($item->unit_price, 2, ',', '.') }} &euro;</p>
                                     @endif
