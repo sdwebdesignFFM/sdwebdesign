@@ -397,4 +397,30 @@ class Quote extends Model
 
         return 'Sehr geehrte Damen und Herren,';
     }
+
+    /**
+     * Get informal greeting for emails (Guten Tag Herr/Frau LastName).
+     */
+    public function getEmailGreeting(): string
+    {
+        if ($this->client) {
+            $salutation = $this->client->salutation;
+            $lastName = $this->client->last_name;
+
+            if ($salutation && $lastName) {
+                return "Guten Tag {$salutation} {$lastName},";
+            }
+
+            if ($lastName) {
+                return "Guten Tag {$lastName},";
+            }
+        }
+
+        // Fallback to client_name on quote
+        if ($this->client_name) {
+            return "Guten Tag {$this->client_name},";
+        }
+
+        return 'Guten Tag,';
+    }
 }

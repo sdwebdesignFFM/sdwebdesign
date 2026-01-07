@@ -26,11 +26,7 @@
                     <tr>
                         <td style="padding: 32px 40px 24px;">
                             <p style="margin: 0; font-size: 16px; color: #171717; line-height: 1.6;">
-                                @if($quote->client_company)
-                                    Guten Tag {{ $quote->client_name }} ({{ $quote->client_company }}),
-                                @else
-                                    Guten Tag {{ $quote->client_name }},
-                                @endif
+                                {{ $quote->getEmailGreeting() }}
                             </p>
                             <p style="margin: 16px 0 0; font-size: 14px; color: #404040; line-height: 1.6;">
                                 vielen Dank für Ihr Interesse an unseren Leistungen. Ihr individuelles Angebot liegt für Sie bereit:
@@ -85,12 +81,9 @@
                     {{-- Validity Notice --}}
                     <tr>
                         <td style="padding: 0 40px 32px;">
-                            <div style="background-color: #fef3c7; border-radius: 6px; padding: 16px; border-left: 4px solid #f59e0b;">
-                                <p style="margin: 0; font-size: 14px; color: #92400e;">
-                                    <strong>Gültig bis {{ $quote->valid_until->format('d.m.Y') }}</strong><br>
-                                    Bitte nehmen Sie das Angebot bis zu diesem Datum an, um von den aktuellen Konditionen zu profitieren.
-                                </p>
-                            </div>
+                            <p style="margin: 0; font-size: 14px; color: #404040;">
+                                Das Angebot ist bis einschließlich {{ $quote->valid_until->format('d.m.Y') }} gültig.
+                            </p>
                         </td>
                     </tr>
 

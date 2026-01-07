@@ -44,14 +44,7 @@ class QuoteAcceptance extends Component
 
     public string $billingCountry = 'Deutschland';
 
-    public string $billingVatId = '';
-
-    // Signature
-    public string $acceptedName = '';
-
     public bool $termsAccepted = false;
-
-    public string $signatureData = '';
 
     public function mount(Quote $quote): void
     {
@@ -166,12 +159,6 @@ class QuoteAcceptance extends Component
         return $this->quote->items->firstWhere('id', $this->termsItemId);
     }
 
-    public function clearSignature(): void
-    {
-        $this->signatureData = '';
-        $this->dispatch('signature-cleared');
-    }
-
     public function accept(): void
     {
         $this->errorMessage = null;
@@ -188,9 +175,7 @@ class QuoteAcceptance extends Component
             'billingStreet' => 'required|string|max:255',
             'billingZip' => 'required|string|max:10',
             'billingCity' => 'required|string|max:255',
-            'acceptedName' => 'required|string|min:3|max:255',
             'termsAccepted' => 'accepted',
-            'signatureData' => 'required|string',
         ], [
             'billingFirstName.required' => 'Bitte geben Sie einen Vornamen ein.',
             'billingFirstName.min' => 'Der Vorname muss mindestens 2 Zeichen lang sein.',
@@ -199,23 +184,20 @@ class QuoteAcceptance extends Component
             'billingStreet.required' => 'Bitte geben Sie eine Straße ein.',
             'billingZip.required' => 'Bitte geben Sie eine Postleitzahl ein.',
             'billingCity.required' => 'Bitte geben Sie eine Stadt ein.',
-            'acceptedName.required' => 'Bitte geben Sie Ihren vollständigen Namen ein.',
-            'acceptedName.min' => 'Der Name muss mindestens 3 Zeichen lang sein.',
             'termsAccepted.accepted' => 'Bitte akzeptieren Sie die AGB und Leistungsvereinbarungen.',
-            'signatureData.required' => 'Bitte unterschreiben Sie das Angebot.',
         ]);
+
+        $acceptedName = trim($this->billingFirstName.' '.$this->billingLastName);
 
         // Save billing details and acceptance metadata
         $this->quote->update([
             'billing_company' => $this->billingCompany,
-            'billing_name' => trim($this->billingFirstName.' '.$this->billingLastName),
+            'billing_name' => $acceptedName,
             'billing_street' => $this->billingStreet,
             'billing_zip' => $this->billingZip,
             'billing_city' => $this->billingCity,
             'billing_country' => $this->billingCountry,
-            'billing_vat_id' => $this->billingVatId,
-            'signature_data' => $this->signatureData,
-            'signature_at' => now(),
+            'accepted_at' => now(),
             // Legal proof metadata (internal only, not shown in PDF)
             'accepted_ip' => request()->ip(),
             'accepted_user_agent' => request()->userAgent(),
@@ -224,7 +206,7 @@ class QuoteAcceptance extends Component
         ]);
 
         $quoteService = app(QuoteService::class);
-        $contract = $quoteService->accept($this->quote, $this->acceptedName);
+        $contract = $quoteService->accept($this->quote, $acceptedName);
 
         if ($contract) {
             $this->redirect(route('quotes.accepted', ['token' => $this->quote->token]));
@@ -244,30 +226,32 @@ class QuoteAcceptance extends Component
 
         // Validate required fields
         $this->validate([
-            'acceptedName' => 'required|string|min:3|max:255',
+            'billingFirstName' => 'required|string|min:2|max:255',
+            'billingLastName' => 'required|string|min:2|max:255',
             'termsAccepted' => 'accepted',
         ], [
-            'acceptedName.required' => 'Bitte geben Sie Ihren vollständigen Namen ein.',
-            'acceptedName.min' => 'Der Name muss mindestens 3 Zeichen lang sein.',
+            'billingFirstName.required' => 'Bitte geben Sie einen Vornamen ein.',
+            'billingLastName.required' => 'Bitte geben Sie einen Nachnamen ein.',
             'termsAccepted.accepted' => 'Bitte bestätigen Sie die Vertragsbedingungen.',
         ]);
+
+        $acceptedName = trim($this->billingFirstName.' '.$this->billingLastName);
 
         // Save billing details (but don't mark as accepted yet)
         $this->quote->update([
             'billing_company' => $this->billingCompany,
-            'billing_name' => trim($this->billingFirstName.' '.$this->billingLastName),
+            'billing_name' => $acceptedName,
             'billing_street' => $this->billingStreet,
             'billing_zip' => $this->billingZip,
             'billing_city' => $this->billingCity,
             'billing_country' => $this->billingCountry,
-            'billing_vat_id' => $this->billingVatId,
         ]);
 
         // Generate PDF with signature area
         $pdf = Pdf::loadView('pdfs.quote-for-signing', [
             'quote' => $this->quote->load('items'),
             'settings' => Setting::instance(),
-            'acceptedName' => $this->acceptedName,
+            'acceptedName' => $acceptedName,
         ]);
 
         $filename = 'Angebot-'.$this->quote->quote_number.'-zur-Unterschrift.pdf';

@@ -96,9 +96,6 @@ class QuoteAcceptanceTest extends TestCase
         $quote = Quote::factory()->viewed()->create();
         QuoteItem::factory()->for($quote)->create();
 
-        // Base64 encoded tiny PNG (1x1 pixel) for signature
-        $signatureData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-
         Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
             // Fill billing details
             ->set('billingFirstName', 'Max')
@@ -106,10 +103,7 @@ class QuoteAcceptanceTest extends TestCase
             ->set('billingStreet', 'Teststraße 1')
             ->set('billingZip', '12345')
             ->set('billingCity', 'Berlin')
-            // Accept with signature
-            ->set('acceptedName', 'Max Mustermann')
             ->set('termsAccepted', true)
-            ->set('signatureData', $signatureData)
             ->call('accept')
             ->assertRedirect(route('quotes.accepted', ['token' => $quote->token]));
 
@@ -120,7 +114,6 @@ class QuoteAcceptanceTest extends TestCase
         $this->assertEquals('Teststraße 1', $quote->billing_street);
         $this->assertEquals('12345', $quote->billing_zip);
         $this->assertEquals('Berlin', $quote->billing_city);
-        $this->assertNotNull($quote->signature_data);
         $this->assertNotNull($quote->contract);
     }
 
@@ -129,19 +122,15 @@ class QuoteAcceptanceTest extends TestCase
         $quote = Quote::factory()->viewed()->create();
         QuoteItem::factory()->for($quote)->create();
 
-        $signatureData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-
         Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
-            ->set('billingFirstName', 'Max')
-            ->set('billingLastName', 'Mustermann')
+            ->set('billingFirstName', '')
+            ->set('billingLastName', '')
             ->set('billingStreet', 'Teststraße 1')
             ->set('billingZip', '12345')
             ->set('billingCity', 'Berlin')
-            ->set('acceptedName', '')
             ->set('termsAccepted', true)
-            ->set('signatureData', $signatureData)
             ->call('accept')
-            ->assertHasErrors(['acceptedName' => 'required']);
+            ->assertHasErrors(['billingFirstName' => 'required', 'billingLastName' => 'required']);
     }
 
     public function test_quote_acceptance_requires_terms_accepted(): void
@@ -149,37 +138,15 @@ class QuoteAcceptanceTest extends TestCase
         $quote = Quote::factory()->viewed()->create();
         QuoteItem::factory()->for($quote)->create();
 
-        $signatureData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-
         Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
             ->set('billingFirstName', 'Max')
             ->set('billingLastName', 'Mustermann')
             ->set('billingStreet', 'Teststraße 1')
             ->set('billingZip', '12345')
             ->set('billingCity', 'Berlin')
-            ->set('acceptedName', 'Max Mustermann')
             ->set('termsAccepted', false)
-            ->set('signatureData', $signatureData)
             ->call('accept')
             ->assertHasErrors(['termsAccepted' => 'accepted']);
-    }
-
-    public function test_quote_acceptance_requires_signature(): void
-    {
-        $quote = Quote::factory()->viewed()->create();
-        QuoteItem::factory()->for($quote)->create();
-
-        Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
-            ->set('billingFirstName', 'Max')
-            ->set('billingLastName', 'Mustermann')
-            ->set('billingStreet', 'Teststraße 1')
-            ->set('billingZip', '12345')
-            ->set('billingCity', 'Berlin')
-            ->set('acceptedName', 'Max Mustermann')
-            ->set('termsAccepted', true)
-            ->set('signatureData', '')
-            ->call('accept')
-            ->assertHasErrors(['signatureData' => 'required']);
     }
 
     public function test_expired_quote_cannot_be_accepted(): void
@@ -189,17 +156,13 @@ class QuoteAcceptanceTest extends TestCase
         ]);
         QuoteItem::factory()->for($quote)->create();
 
-        $signatureData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-
         Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
             ->set('billingFirstName', 'Max')
             ->set('billingLastName', 'Mustermann')
             ->set('billingStreet', 'Teststraße 1')
             ->set('billingZip', '12345')
             ->set('billingCity', 'Berlin')
-            ->set('acceptedName', 'Max Mustermann')
             ->set('termsAccepted', true)
-            ->set('signatureData', $signatureData)
             ->call('accept')
             ->assertSet('errorMessage', 'Dieses Angebot kann nicht mehr angenommen werden.');
     }
@@ -209,17 +172,13 @@ class QuoteAcceptanceTest extends TestCase
         $quote = Quote::factory()->accepted()->create();
         QuoteItem::factory()->for($quote)->create();
 
-        $signatureData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-
         Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
             ->set('billingFirstName', 'Max')
             ->set('billingLastName', 'Mustermann')
             ->set('billingStreet', 'Teststraße 1')
             ->set('billingZip', '12345')
             ->set('billingCity', 'Berlin')
-            ->set('acceptedName', 'Max Mustermann')
             ->set('termsAccepted', true)
-            ->set('signatureData', $signatureData)
             ->call('accept')
             ->assertSet('errorMessage', 'Dieses Angebot kann nicht mehr angenommen werden.');
     }
@@ -229,17 +188,13 @@ class QuoteAcceptanceTest extends TestCase
         $quote = Quote::factory()->viewed()->create();
         QuoteItem::factory()->for($quote)->create();
 
-        $signatureData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-
         Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
             ->set('billingFirstName', '')
             ->set('billingLastName', '')
             ->set('billingStreet', 'Teststraße 1')
             ->set('billingZip', '12345')
             ->set('billingCity', 'Berlin')
-            ->set('acceptedName', 'Max Mustermann')
             ->set('termsAccepted', true)
-            ->set('signatureData', $signatureData)
             ->call('accept')
             ->assertHasErrors(['billingFirstName' => 'required', 'billingLastName' => 'required']);
     }
@@ -271,17 +226,13 @@ class QuoteAcceptanceTest extends TestCase
             'detailed_terms' => 'Detailed service agreement text',
         ]);
 
-        $signatureData = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
-
         Livewire::test(QuoteAcceptance::class, ['quote' => $quote])
             ->set('billingFirstName', 'Max')
             ->set('billingLastName', 'Mustermann')
             ->set('billingStreet', 'Teststraße 1')
             ->set('billingZip', '12345')
             ->set('billingCity', 'Berlin')
-            ->set('acceptedName', 'Max Mustermann')
             ->set('termsAccepted', true)
-            ->set('signatureData', $signatureData)
             ->call('accept')
             ->assertRedirect(route('quotes.accepted', ['token' => $quote->token]));
 
