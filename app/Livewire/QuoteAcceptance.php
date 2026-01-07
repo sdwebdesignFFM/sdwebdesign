@@ -27,11 +27,9 @@ class QuoteAcceptance extends Component
 
     public ?int $termsItemId = null;
 
-    public int $currentStep = 1;
-
     public ?string $errorMessage = null;
 
-    // Step 1: Billing details
+    // Billing details
     public string $billingCompany = '';
 
     public string $billingFirstName = '';
@@ -48,7 +46,7 @@ class QuoteAcceptance extends Component
 
     public string $billingVatId = '';
 
-    // Step 2: Terms & Signature
+    // Signature
     public string $acceptedName = '';
 
     public bool $termsAccepted = false;
@@ -138,14 +136,12 @@ class QuoteAcceptance extends Component
     public function showAcceptForm(): void
     {
         $this->showAcceptanceForm = true;
-        $this->currentStep = 1;
         $this->errorMessage = null;
     }
 
     public function hideAcceptForm(): void
     {
         $this->showAcceptanceForm = false;
-        $this->currentStep = 1;
         $this->errorMessage = null;
     }
 
@@ -170,38 +166,6 @@ class QuoteAcceptance extends Component
         return $this->quote->items->firstWhere('id', $this->termsItemId);
     }
 
-    public function nextStep(): void
-    {
-        $this->errorMessage = null;
-
-        if ($this->currentStep === 1) {
-            $this->validate([
-                'billingFirstName' => 'required|string|min:2|max:255',
-                'billingLastName' => 'required|string|min:2|max:255',
-                'billingStreet' => 'required|string|max:255',
-                'billingZip' => 'required|string|max:10',
-                'billingCity' => 'required|string|max:255',
-            ], [
-                'billingFirstName.required' => 'Bitte geben Sie einen Vornamen ein.',
-                'billingFirstName.min' => 'Der Vorname muss mindestens 2 Zeichen lang sein.',
-                'billingLastName.required' => 'Bitte geben Sie einen Nachnamen ein.',
-                'billingLastName.min' => 'Der Nachname muss mindestens 2 Zeichen lang sein.',
-                'billingStreet.required' => 'Bitte geben Sie eine Straße ein.',
-                'billingZip.required' => 'Bitte geben Sie eine Postleitzahl ein.',
-                'billingCity.required' => 'Bitte geben Sie eine Stadt ein.',
-            ]);
-
-            $this->currentStep = 2;
-        }
-    }
-
-    public function previousStep(): void
-    {
-        if ($this->currentStep > 1) {
-            $this->currentStep--;
-        }
-    }
-
     public function clearSignature(): void
     {
         $this->signatureData = '';
@@ -219,10 +183,22 @@ class QuoteAcceptance extends Component
         }
 
         $this->validate([
+            'billingFirstName' => 'required|string|min:2|max:255',
+            'billingLastName' => 'required|string|min:2|max:255',
+            'billingStreet' => 'required|string|max:255',
+            'billingZip' => 'required|string|max:10',
+            'billingCity' => 'required|string|max:255',
             'acceptedName' => 'required|string|min:3|max:255',
             'termsAccepted' => 'accepted',
             'signatureData' => 'required|string',
         ], [
+            'billingFirstName.required' => 'Bitte geben Sie einen Vornamen ein.',
+            'billingFirstName.min' => 'Der Vorname muss mindestens 2 Zeichen lang sein.',
+            'billingLastName.required' => 'Bitte geben Sie einen Nachnamen ein.',
+            'billingLastName.min' => 'Der Nachname muss mindestens 2 Zeichen lang sein.',
+            'billingStreet.required' => 'Bitte geben Sie eine Straße ein.',
+            'billingZip.required' => 'Bitte geben Sie eine Postleitzahl ein.',
+            'billingCity.required' => 'Bitte geben Sie eine Stadt ein.',
             'acceptedName.required' => 'Bitte geben Sie Ihren vollständigen Namen ein.',
             'acceptedName.min' => 'Der Name muss mindestens 3 Zeichen lang sein.',
             'termsAccepted.accepted' => 'Bitte akzeptieren Sie die AGB und Leistungsvereinbarungen.',

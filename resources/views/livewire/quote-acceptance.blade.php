@@ -350,7 +350,7 @@
 
                 {{-- Modal panel --}}
                 <div class="inline-block align-bottom bg-background rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full">
-                    {{-- Header with Steps --}}
+                    {{-- Header --}}
                     <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-semibold text-gray-900">
@@ -366,29 +366,6 @@
                                 </svg>
                             </button>
                         </div>
-
-                        {{-- Step Indicator --}}
-                        <div class="flex items-center justify-center mt-4">
-                            <div class="flex items-center">
-                                <div class="flex items-center justify-center w-8 h-8 rounded-full {{ $currentStep >= 1 ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-600' }}">
-                                    @if($currentStep > 1)
-                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                        </svg>
-                                    @else
-                                        1
-                                    @endif
-                                </div>
-                                <span class="ml-2 text-sm font-medium {{ $currentStep >= 1 ? 'text-green-600' : 'text-gray-500' }}">Rechnungsadresse</span>
-                            </div>
-                            <div class="w-12 h-0.5 mx-4 {{ $currentStep > 1 ? 'bg-green-600' : 'bg-gray-200' }}"></div>
-                            <div class="flex items-center">
-                                <div class="flex items-center justify-center w-8 h-8 rounded-full {{ $currentStep >= 2 ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-600' }}">
-                                    2
-                                </div>
-                                <span class="ml-2 text-sm font-medium {{ $currentStep >= 2 ? 'text-green-600' : 'text-gray-500' }}">Unterschrift</span>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="px-6 py-5">
@@ -402,10 +379,13 @@
                             </div>
                         @endif
 
-                        {{-- Step 1: Billing Details --}}
-                        @if($currentStep === 1)
-                            <form wire:submit="nextStep">
-                                <div class="space-y-4">
+                        {{-- Combined Form --}}
+                        <form wire:submit="accept">
+                            <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                                {{-- Billing Section --}}
+                                <div class="space-y-3">
+                                    <h4 class="text-sm font-semibold text-gray-900">Rechnungsadresse</h4>
+
                                     {{-- Company (optional) --}}
                                     <div>
                                         <label for="billingCompany" class="block text-sm font-medium text-gray-700 mb-1">
@@ -421,7 +401,7 @@
                                     </div>
 
                                     {{-- First Name & Last Name --}}
-                                    <div class="grid grid-cols-2 gap-4">
+                                    <div class="grid grid-cols-2 gap-3">
                                         <div>
                                             <label for="billingFirstName" class="block text-sm font-medium text-gray-700 mb-1">
                                                 Vorname *
@@ -432,7 +412,6 @@
                                                 wire:model="billingFirstName"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                                                 placeholder="Vorname"
-                                                required
                                             >
                                             @error('billingFirstName')
                                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -448,7 +427,6 @@
                                                 wire:model="billingLastName"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                                                 placeholder="Nachname"
-                                                required
                                             >
                                             @error('billingLastName')
                                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -467,15 +445,14 @@
                                             wire:model="billingStreet"
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                                             placeholder="Musterstraße 123"
-                                            required
                                         >
                                         @error('billingStreet')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
                                     </div>
 
-                                    {{-- Zip + City --}}
-                                    <div class="grid grid-cols-3 gap-4">
+                                    {{-- Zip + City + Country --}}
+                                    <div class="grid grid-cols-4 gap-3">
                                         <div>
                                             <label for="billingZip" class="block text-sm font-medium text-gray-700 mb-1">
                                                 PLZ *
@@ -486,7 +463,6 @@
                                                 wire:model="billingZip"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                                                 placeholder="12345"
-                                                required
                                             >
                                             @error('billingZip')
                                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -502,28 +478,25 @@
                                                 wire:model="billingCity"
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
                                                 placeholder="Berlin"
-                                                required
                                             >
                                             @error('billingCity')
                                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                    </div>
-
-                                    {{-- Country --}}
-                                    <div>
-                                        <label for="billingCountry" class="block text-sm font-medium text-gray-700 mb-1">
-                                            Land
-                                        </label>
-                                        <select
-                                            id="billingCountry"
-                                            wire:model="billingCountry"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
-                                        >
-                                            <option value="Deutschland">Deutschland</option>
-                                            <option value="Österreich">Österreich</option>
-                                            <option value="Schweiz">Schweiz</option>
-                                        </select>
+                                        <div>
+                                            <label for="billingCountry" class="block text-sm font-medium text-gray-700 mb-1">
+                                                Land
+                                            </label>
+                                            <select
+                                                id="billingCountry"
+                                                wire:model="billingCountry"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
+                                            >
+                                                <option value="Deutschland">DE</option>
+                                                <option value="Österreich">AT</option>
+                                                <option value="Schweiz">CH</option>
+                                            </select>
+                                        </div>
                                     </div>
 
                                     {{-- VAT ID (optional) --}}
@@ -541,269 +514,116 @@
                                     </div>
                                 </div>
 
-                                {{-- Actions --}}
-                                <div class="flex gap-3 justify-end mt-6 pt-4 border-t border-gray-200">
-                                    <button
-                                        type="button"
-                                        wire:click="hideAcceptForm"
-                                        class="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
-                                    >
-                                        Abbrechen
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        class="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
-                                    >
-                                        Weiter
-                                    </button>
-                                </div>
-                            </form>
-                        @endif
+                                {{-- Signature Section --}}
+                                <div class="space-y-3 pt-4 border-t border-gray-200">
+                                    <h4 class="text-sm font-semibold text-gray-900">Unterschrift</h4>
 
-                        {{-- Step 2: Signature Method Selection --}}
-                        @if($currentStep === 2)
-                            <div x-data="{ signatureMethod: 'digital' }">
-                                {{-- Signature Method Selection --}}
-                                <div class="mb-6">
-                                    <label class="block text-sm font-medium text-gray-700 mb-3">
-                                        Wie möchten Sie unterschreiben?
-                                    </label>
-                                    <div class="grid grid-cols-1 gap-3">
-                                        {{-- Digital Signature Option --}}
-                                        <label
-                                            class="relative flex items-start p-4 border-2 rounded-lg cursor-pointer transition-colors"
-                                            :class="signatureMethod === 'digital' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'"
-                                        >
-                                            <input
-                                                type="radio"
-                                                x-model="signatureMethod"
-                                                value="digital"
-                                                class="mt-0.5 h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
-                                            >
-                                            <div class="ml-3">
-                                                <span class="block text-sm font-medium text-gray-900">Online unterschreiben</span>
-                                                <span class="block text-sm text-gray-500">Direkt hier mit Maus oder Finger unterschreiben</span>
-                                            </div>
+                                    {{-- Accepted Name --}}
+                                    <div>
+                                        <label for="acceptedName" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Vollständiger Name des Unterzeichners *
                                         </label>
-
-                                        {{-- Manual/PDF Option --}}
-                                        <label
-                                            class="relative flex items-start p-4 border-2 rounded-lg cursor-pointer transition-colors"
-                                            :class="signatureMethod === 'manual' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'"
+                                        <input
+                                            type="text"
+                                            id="acceptedName"
+                                            wire:model="acceptedName"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
+                                            placeholder="Vor- und Nachname"
                                         >
-                                            <input
-                                                type="radio"
-                                                x-model="signatureMethod"
-                                                value="manual"
-                                                class="mt-0.5 h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
-                                            >
-                                            <div class="ml-3">
-                                                <span class="block text-sm font-medium text-gray-900">PDF herunterladen & per E-Mail senden</span>
-                                                <span class="block text-sm text-gray-500">PDF ausdrucken, unterschreiben und an uns zurücksenden</span>
-                                            </div>
-                                        </label>
+                                        @error('acceptedName')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
-                                </div>
 
-                                {{-- Digital Signature Form --}}
-                                <div x-show="signatureMethod === 'digital'" x-cloak>
-                                    <form wire:submit="accept">
-                                        <div class="space-y-4">
-                                            {{-- Accepted Name --}}
-                                            <div>
-                                                <label for="acceptedName" class="block text-sm font-medium text-gray-700 mb-1">
-                                                    Vollständiger Name des Unterzeichners *
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    id="acceptedName"
-                                                    wire:model="acceptedName"
-                                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
-                                                    placeholder="Vor- und Nachname"
-                                                    required
-                                                >
-                                                @error('acceptedName')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            {{-- Signature Pad --}}
+                                    {{-- Signature Pad --}}
+                                    <div
+                                        x-data="signaturePadComponent()"
+                                        x-init="$nextTick(() => setupCanvas())"
+                                        @signature-cleared.window="clearCanvas()"
+                                    >
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                                            Unterschrift *
+                                        </label>
+                                        <div class="relative border-2 border-dashed border-gray-300 rounded-lg bg-background">
+                                            <canvas
+                                                x-ref="signatureCanvas"
+                                                class="w-full rounded-lg touch-none cursor-crosshair"
+                                                style="height: 120px; display: block;"
+                                            ></canvas>
                                             <div
-                                                x-data="signaturePadComponent()"
-                                                x-init="$nextTick(() => setupCanvas())"
-                                                @signature-cleared.window="clearCanvas()"
+                                                x-show="!hasSignature"
+                                                class="absolute inset-0 flex items-center justify-center pointer-events-none"
                                             >
-                                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                                    Unterschrift *
-                                                </label>
-                                                <div class="relative border-2 border-dashed border-gray-300 rounded-lg bg-background">
-                                                    <canvas
-                                                        x-ref="signatureCanvas"
-                                                        class="w-full rounded-lg touch-none cursor-crosshair"
-                                                        style="height: 150px; display: block;"
-                                                    ></canvas>
-                                                    <div
-                                                        x-show="!hasSignature"
-                                                        class="absolute inset-0 flex items-center justify-center pointer-events-none"
-                                                    >
-                                                        <p class="text-gray-400 text-sm">Hier unterschreiben (mit Maus oder Finger)</p>
-                                                    </div>
-                                                </div>
-                                                <div class="flex justify-end mt-2">
-                                                    <button
-                                                        type="button"
-                                                        @click="clearCanvas()"
-                                                        class="text-sm text-gray-500 hover:text-gray-700"
-                                                    >
-                                                        Unterschrift löschen
-                                                    </button>
-                                                </div>
-                                                @error('signatureData')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
-                                            </div>
-
-                                            {{-- Terms Checkbox --}}
-                                            <div class="pt-2">
-                                                <div class="flex items-start gap-3">
-                                                    <input
-                                                        type="checkbox"
-                                                        wire:model.live="termsAccepted"
-                                                        id="termsAccepted"
-                                                        class="mt-0.5 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                                                        required
-                                                    >
-                                                    <label for="termsAccepted" class="text-sm text-gray-700">
-                                                        Ich habe die <button type="button" wire:click="$set('showAgbModal', true)" class="text-blue-600 hover:text-blue-700 underline">Allgemeinen Geschäftsbedingungen (AGB)</button>
-                                                        @php
-                                                            $termsItems = $quote->items->filter(fn($item) => $item->hasDetailedTerms() && (!$item->is_optional || ($selectedOptions[$item->id] ?? false)));
-                                                        @endphp
-                                                        @if($termsItems->isNotEmpty())
-                                                            sowie die Leistungsvereinbarungen für
-                                                            @foreach($termsItems as $index => $item)
-                                                                <button type="button" wire:click="showTerms({{ $item->id }})" class="text-blue-600 hover:text-blue-700 underline">{{ $item->name }}</button>@if(!$loop->last), @endif
-                                                            @endforeach
-                                                        @endif
-                                                        gelesen und akzeptiere diese als Vertragsbestandteil. *
-                                                    </label>
-                                                </div>
-                                                <p class="mt-2 ml-7 text-xs text-gray-500">
-                                                    Mit dem Absenden dieses Formulars kommt ein rechtsverbindlicher Vertrag zustande.
-                                                </p>
-                                                @error('termsAccepted')
-                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                                @enderror
+                                                <p class="text-gray-400 text-sm">Hier unterschreiben (mit Maus oder Finger)</p>
                                             </div>
                                         </div>
-
-                                        {{-- Actions --}}
-                                        <div class="flex gap-3 justify-between mt-6 pt-4 border-t border-gray-200">
+                                        <div class="flex justify-end mt-1">
                                             <button
                                                 type="button"
-                                                wire:click="previousStep"
-                                                class="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                                                @click="clearCanvas()"
+                                                class="text-xs text-gray-500 hover:text-gray-700"
                                             >
-                                                Zurück
-                                            </button>
-                                            <button
-                                                type="submit"
-                                                wire:loading.attr="disabled"
-                                                @if(!$termsAccepted) disabled @endif
-                                                class="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                            >
-                                                <span wire:loading.remove wire:target="accept">Verbindlich annehmen</span>
-                                                <span wire:loading wire:target="accept">Wird verarbeitet...</span>
+                                                Unterschrift löschen
                                             </button>
                                         </div>
-                                    </form>
-                                </div>
-
-                                {{-- Manual Signature / PDF Download --}}
-                                <div x-show="signatureMethod === 'manual'" x-cloak>
-                                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                                        <h4 class="font-medium text-blue-900 mb-2">So funktioniert's:</h4>
-                                        <ol class="text-sm text-blue-800 space-y-1 list-decimal list-inside">
-                                            <li>Laden Sie das Angebot als PDF herunter</li>
-                                            <li>Drucken Sie das Dokument aus</li>
-                                            <li>Unterschreiben Sie auf der letzten Seite</li>
-                                            <li>Scannen oder fotografieren Sie das unterschriebene Dokument</li>
-                                            <li>Senden Sie es per E-Mail an: <a href="mailto:{{ $settings->email ?? 'info@sdwebdesign.de' }}" class="font-medium underline">{{ $settings->email ?? 'info@sdwebdesign.de' }}</a></li>
-                                        </ol>
+                                        @error('signatureData')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
-                                    <div class="space-y-4">
-                                        {{-- Accepted Name for PDF --}}
-                                        <div>
-                                            <label for="acceptedNamePdf" class="block text-sm font-medium text-gray-700 mb-1">
-                                                Vollständiger Name *
-                                            </label>
+                                    {{-- Terms Checkbox --}}
+                                    <div class="pt-2">
+                                        <div class="flex items-start gap-3">
                                             <input
-                                                type="text"
-                                                id="acceptedNamePdf"
-                                                wire:model="acceptedName"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500"
-                                                placeholder="Vor- und Nachname"
+                                                type="checkbox"
+                                                wire:model.live="termsAccepted"
+                                                id="termsAccepted"
+                                                class="mt-0.5 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                                             >
-                                            @error('acceptedName')
-                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                            @enderror
+                                            <label for="termsAccepted" class="text-sm text-gray-700">
+                                                Ich habe die <button type="button" wire:click="$set('showAgbModal', true)" class="text-blue-600 hover:text-blue-700 underline">Allgemeinen Geschäftsbedingungen (AGB)</button>
+                                                @php
+                                                    $termsItems = $quote->items->filter(fn($item) => $item->hasDetailedTerms() && (!$item->is_optional || ($selectedOptions[$item->id] ?? false)));
+                                                @endphp
+                                                @if($termsItems->isNotEmpty())
+                                                    sowie die Leistungsvereinbarungen für
+                                                    @foreach($termsItems as $index => $item)
+                                                        <button type="button" wire:click="showTerms({{ $item->id }})" class="text-blue-600 hover:text-blue-700 underline">{{ $item->name }}</button>@if(!$loop->last), @endif
+                                                    @endforeach
+                                                @endif
+                                                gelesen und akzeptiere diese als Vertragsbestandteil. *
+                                            </label>
                                         </div>
-
-                                        {{-- Terms Checkbox for PDF --}}
-                                        <div>
-                                            <div class="flex items-start gap-3">
-                                                <input
-                                                    type="checkbox"
-                                                    wire:model.live="termsAccepted"
-                                                    id="termsAcceptedPdf"
-                                                    class="mt-0.5 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                                                >
-                                                <label for="termsAcceptedPdf" class="text-sm text-gray-700">
-                                                    Ich habe die <button type="button" wire:click="$set('showAgbModal', true)" class="text-blue-600 hover:text-blue-700 underline">Allgemeinen Geschäftsbedingungen (AGB)</button>
-                                                    @php
-                                                        $termsItemsPdf = $quote->items->filter(fn($item) => $item->hasDetailedTerms() && (!$item->is_optional || ($selectedOptions[$item->id] ?? false)));
-                                                    @endphp
-                                                    @if($termsItemsPdf->isNotEmpty())
-                                                        sowie die Leistungsvereinbarungen für
-                                                        @foreach($termsItemsPdf as $index => $item)
-                                                            <button type="button" wire:click="showTerms({{ $item->id }})" class="text-blue-600 hover:text-blue-700 underline">{{ $item->name }}</button>@if(!$loop->last), @endif
-                                                        @endforeach
-                                                    @endif
-                                                    gelesen und akzeptiere diese als Vertragsbestandteil. *
-                                                </label>
-                                            </div>
-                                            @error('termsAccepted')
-                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    {{-- Actions --}}
-                                    <div class="flex gap-3 justify-between mt-6 pt-4 border-t border-gray-200">
-                                        <button
-                                            type="button"
-                                            wire:click="previousStep"
-                                            class="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
-                                        >
-                                            Zurück
-                                        </button>
-                                        <button
-                                            type="button"
-                                            wire:click="downloadForSigning"
-                                            wire:loading.attr="disabled"
-                                            @if(!$termsAccepted) disabled @endif
-                                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                        >
-                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                            <span wire:loading.remove wire:target="downloadForSigning">PDF herunterladen</span>
-                                            <span wire:loading wire:target="downloadForSigning">Wird erstellt...</span>
-                                        </button>
+                                        <p class="mt-1 ml-7 text-xs text-gray-500">
+                                            Mit dem Absenden dieses Formulars kommt ein rechtsverbindlicher Vertrag zustande.
+                                        </p>
+                                        @error('termsAccepted')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
-                        @endif
+
+                            {{-- Actions --}}
+                            <div class="flex gap-3 justify-end mt-6 pt-4 border-t border-gray-200">
+                                <button
+                                    type="button"
+                                    wire:click="hideAcceptForm"
+                                    class="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                                >
+                                    Abbrechen
+                                </button>
+                                <button
+                                    type="submit"
+                                    wire:loading.attr="disabled"
+                                    @if(!$termsAccepted) disabled @endif
+                                    class="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <span wire:loading.remove wire:target="accept">Verbindlich annehmen</span>
+                                    <span wire:loading wire:target="accept">Wird verarbeitet...</span>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
