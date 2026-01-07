@@ -93,7 +93,7 @@
     <section class="max-w-[1400px] mx-auto px-6 py-16 lg:py-24 border-t border-border">
         <div class="max-w-[800px]">
             <div class="motion motion-fade-up">
-                <h2 class="text-[1.25rem] font-semibold mb-8">{{ $isEnglish ? 'Responsible for content according to § 55 Abs. 2 RStV' : 'Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV' }}</h2>
+                <h2 class="text-[1.25rem] font-semibold mb-8">{{ $isEnglish ? 'Responsible for content according to § 18 Abs. 2 MStV' : 'Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV' }}</h2>
 
                 <div class="space-y-1 text-[1.0625rem] text-muted-foreground leading-relaxed">
                     <p>{{ $settings->owner_name }}</p>
