@@ -17,7 +17,7 @@
         }
 
         .header {
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
 
         .header-row {
@@ -52,9 +52,7 @@
         }
 
         .client-box {
-            background-color: #f7f7f7;
-            padding: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
 
         .client-label {
@@ -75,12 +73,11 @@
             font-size: 14pt;
             font-weight: bold;
             color: #1a365d;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .intro-text {
-            margin-bottom: 30px;
-            white-space: pre-line;
+            margin-bottom: 15px;
         }
 
         .items-table {
@@ -92,7 +89,7 @@
         .items-table th {
             background-color: #1a365d;
             color: white;
-            padding: 10px;
+            padding: 8px;
             text-align: left;
             font-size: 9pt;
         }
@@ -102,7 +99,7 @@
         }
 
         .items-table td {
-            padding: 10px;
+            padding: 8px;
             border-bottom: 1px solid #ddd;
             vertical-align: top;
         }
@@ -117,23 +114,23 @@
         }
 
         .item-description {
-            font-size: 9pt;
+            font-size: 8pt;
             color: #666;
-            margin-top: 3px;
+            margin-top: 2px;
         }
 
         .item-description p {
-            margin: 0 0 5px 0;
+            margin: 0 0 3px 0;
         }
 
         .item-description ul,
         .item-description ol {
-            margin: 5px 0;
-            padding-left: 15px;
+            margin: 3px 0;
+            padding-left: 12px;
         }
 
         .item-description li {
-            margin-bottom: 2px;
+            margin-bottom: 1px;
         }
 
         .item-optional {
@@ -403,6 +400,12 @@
 
         .attachment-content strong {
             color: #1a365d;
+        }
+
+        .attachment-content hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 15px 0;
         }
     </style>
 </head>

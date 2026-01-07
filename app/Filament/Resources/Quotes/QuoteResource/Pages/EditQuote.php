@@ -77,21 +77,12 @@ class EditQuote extends EditRecord
                     ->url(fn () => route('admin.quotes.download', $this->record))
                     ->openUrlInNewTab(),
 
-                Action::make('copyLink')
-                    ->label('Link kopieren')
-                    ->icon('heroicon-o-link')
+                Action::make('preview')
+                    ->label('Vorschau')
+                    ->icon('heroicon-o-eye')
                     ->color('gray')
-                    ->action(function () {
-                        Notification::make()
-                            ->success()
-                            ->title('Link kopiert')
-                            ->body($this->record->getSignedUrl())
-                            ->send();
-                    })
-                    ->extraAttributes([
-                        'x-data' => '{}',
-                        'x-on:click' => "navigator.clipboard.writeText('{$this->record->getSignedUrl()}')",
-                    ]),
+                    ->url(fn () => $this->record->getSignedUrl())
+                    ->openUrlInNewTab(),
 
                 Action::make('duplicate')
                     ->label('Duplizieren')

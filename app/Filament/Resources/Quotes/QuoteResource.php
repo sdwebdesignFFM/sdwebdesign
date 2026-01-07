@@ -519,15 +519,12 @@ class QuoteResource extends Resource
                     ->requiresConfirmation()
                     ->action(fn (Quote $record) => app(\App\Services\Quote\QuoteService::class)->send($record)),
 
-                Action::make('copyLink')
-                    ->label('Link kopieren')
-                    ->icon('heroicon-o-link')
+                Action::make('preview')
+                    ->label('Vorschau')
+                    ->icon('heroicon-o-eye')
                     ->color('gray')
-                    ->action(fn (Quote $record) => null)
-                    ->extraAttributes(fn (Quote $record) => [
-                        'x-data' => '{}',
-                        'x-on:click' => "navigator.clipboard.writeText('{$record->getSignedUrl()}'); \$notification.success('Link kopiert!')",
-                    ]),
+                    ->url(fn (Quote $record) => $record->getSignedUrl())
+                    ->openUrlInNewTab(),
 
                 EditAction::make(),
             ])

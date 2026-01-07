@@ -851,8 +851,8 @@
                             [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3
                             [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
                             [&_p]:text-sm [&_p]:leading-relaxed [&_p]:mb-3
-                            [&_ul]:text-sm [&_ul]:my-2 [&_ul]:pl-4
-                            [&_ol]:text-sm [&_ol]:my-2 [&_ol]:pl-4
+                            [&_ul]:text-sm [&_ul]:my-2 [&_ul]:pl-6 [&_ul]:list-disc
+                            [&_ol]:text-sm [&_ol]:my-2 [&_ol]:pl-6 [&_ol]:list-decimal
                             [&_li]:mb-1">
                             {!! $this->termsItem->detailed_terms !!}
                         </div>
@@ -914,8 +914,8 @@
                             [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3
                             [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
                             [&_p]:text-sm [&_p]:leading-relaxed [&_p]:mb-3
-                            [&_ul]:text-sm [&_ul]:my-2 [&_ul]:pl-4
-                            [&_ol]:text-sm [&_ol]:my-2 [&_ol]:pl-4
+                            [&_ul]:text-sm [&_ul]:my-2 [&_ul]:pl-6 [&_ul]:list-disc
+                            [&_ol]:text-sm [&_ol]:my-2 [&_ol]:pl-6 [&_ol]:list-decimal
                             [&_li]:mb-1">
                             @if($settings->agb_content)
                                 {!! $settings->agb_content !!}
