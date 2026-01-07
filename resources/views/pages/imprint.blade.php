@@ -123,6 +123,25 @@
         </div>
     </section>
 
+    {{-- Zusaetzliche Impressums-Angaben aus Settings --}}
+    @if($settings->imprint_extra)
+    <div class="max-w-[1400px] mx-auto px-6 py-16 lg:py-24 border-t border-border">
+        <div class="max-w-[800px]">
+            <div class="motion motion-fade-up">
+                <div class="prose prose-lg prose-gray max-w-none
+                    [&_h2]:text-[1.25rem] [&_h2]:font-semibold [&_h2]:mt-12 [&_h2]:mb-6 [&_h2]:first:mt-0
+                    [&_h3]:text-[1.125rem] [&_h3]:font-semibold [&_h3]:mt-8 [&_h3]:mb-4
+                    [&_p]:text-[1.0625rem] [&_p]:text-muted-foreground [&_p]:leading-relaxed [&_p]:mb-4
+                    [&_ul]:text-[1.0625rem] [&_ul]:text-muted-foreground [&_ul]:my-4 [&_ul]:pl-6
+                    [&_ol]:text-[1.0625rem] [&_ol]:text-muted-foreground [&_ol]:my-4 [&_ol]:pl-6
+                    [&_a]:text-accent [&_a]:hover:underline">
+                    {!! $settings->imprint_extra !!}
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     {{-- Zusaetzliche Abschnitte aus dem CMS --}}
     @foreach($sections as $section)
     <section class="max-w-[1400px] mx-auto px-6 py-16 lg:py-24 border-t border-border">

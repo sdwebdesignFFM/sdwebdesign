@@ -229,11 +229,19 @@ class Settings extends Page implements HasForms
                             ->placeholder('https://www.sdwebdesign.de')
                             ->columnSpanFull(),
 
-                        Textarea::make('imprint_extra')
+                        RichEditor::make('imprint_extra')
                             ->label('Zusätzliche Impressums-Angaben')
-                            ->rows(4)
+                            ->toolbarButtons([
+                                'bold',
+                                'italic',
+                                'h2',
+                                'h3',
+                                'bulletList',
+                                'orderedList',
+                                'link',
+                            ])
                             ->columnSpanFull()
-                            ->helperText('z.B. Aufsichtsbehörde, Berufsbezeichnung, etc.'),
+                            ->helperText('z.B. Haftungsausschluss, Urheberrecht, etc.'),
                     ]),
 
                 Section::make('Bankverbindung')
