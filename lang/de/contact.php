@@ -133,6 +133,7 @@ return [
     // Privacy
     'privacy_notice' => 'Mit dem Absenden stimmen Sie unserer',
     'privacy_policy' => 'Datenschutzerklärung',
+    'privacy_suffix' => 'zu',
 
     // Contact page sections
     'your_contact_person' => 'Ihr Ansprechpartner',

@@ -133,6 +133,7 @@ return [
     // Privacy
     'privacy_notice' => 'By submitting, you agree to our',
     'privacy_policy' => 'Privacy Policy',
+    'privacy_suffix' => '',
 
     // Contact page sections
     'your_contact_person' => 'Your contact person',

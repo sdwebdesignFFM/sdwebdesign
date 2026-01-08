@@ -317,7 +317,7 @@
 
                                 <p class="text-xs text-muted-foreground">
                                     {{ __('contact.privacy_notice') }}
-                                    <a href="{{ localized_route('privacy') }}" target="_blank" class="underline hover:text-foreground">{{ __('contact.privacy_policy') }}</a>.
+                                    <a href="{{ localized_route('privacy') }}" target="_blank" class="underline hover:text-foreground">{{ __('contact.privacy_policy') }}</a>@if(__('contact.privacy_suffix')) {{ __('contact.privacy_suffix') }}@endif.
                                 </p>
                             </div>
                         @endif
