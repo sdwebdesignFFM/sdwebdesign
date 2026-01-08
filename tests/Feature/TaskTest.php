@@ -344,4 +344,38 @@ class TaskTest extends TestCase
 
         $this->assertEquals($task->id, $workLog->task->id);
     }
+
+    public function test_worklogs_relation_manager_loads_on_edit_page(): void
+    {
+        $task = Task::factory()->create();
+
+        Livewire::test(EditTask::class, ['record' => $task->id])
+            ->assertSeeLivewire(\App\Filament\Resources\Tasks\RelationManagers\WorkLogsRelationManager::class);
+    }
+
+    public function test_worklog_can_be_created_via_relation_manager(): void
+    {
+        $task = Task::factory()->create();
+
+        Livewire::test(
+            \App\Filament\Resources\Tasks\RelationManagers\WorkLogsRelationManager::class,
+            ['ownerRecord' => $task, 'pageClass' => EditTask::class]
+        )
+            ->callAction(
+                \Filament\Actions\Testing\TestAction::make(\Filament\Actions\CreateAction::class)->table(),
+                data: [
+                    'worked_on' => now()->format('Y-m-d'),
+                    'duration_minutes' => 60,
+                    'title' => 'Teilaufgabe erledigt',
+                ]
+            )
+            ->assertHasNoActionErrors();
+
+        $this->assertDatabaseHas('work_logs', [
+            'task_id' => $task->id,
+            'client_id' => $task->client_id,
+            'title' => 'Teilaufgabe erledigt',
+            'duration_minutes' => 60,
+        ]);
+    }
 }

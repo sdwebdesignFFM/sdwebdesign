@@ -58,6 +58,7 @@ class WorkLogService
         return WorkLog::forClient($client->id)
             ->forMonth($month->year, $month->month)
             ->unbilled()
+            ->with('task')
             ->orderBy('worked_on')
             ->get();
     }
