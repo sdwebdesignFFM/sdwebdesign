@@ -14,6 +14,7 @@ class WorkLog extends Model
 
     protected $fillable = [
         'client_id',
+        'task_id',
         'invoice_id',
         'worked_on',
         'title',
@@ -43,6 +44,11 @@ class WorkLog extends Model
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);
+    }
+
+    public function task(): BelongsTo
+    {
+        return $this->belongsTo(Task::class);
     }
 
     // Scopes
