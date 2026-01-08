@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->colors([
                 'primary' => Color::Amber,
@@ -76,23 +77,8 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->renderHook(
-                PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
-                fn (): string => Blade::render('
-                    <div class="flex items-center gap-1">
-                        <a href="{{ route(\'filament.admin.resources.work-logs.index\') }}?tableAction=create"
-                           class="fi-icon-btn fi-icon-btn-size-md inline-flex items-center justify-center gap-x-2 rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-500/5 dark:text-gray-200 dark:hover:bg-gray-400/5"
-                           title="Neue Arbeitszeit">
-                            <x-heroicon-o-clock class="h-5 w-5" />
-                            <span class="hidden sm:inline">+Zeit</span>
-                        </a>
-                        <a href="{{ route(\'filament.admin.resources.tasks.create\') }}"
-                           class="fi-icon-btn fi-icon-btn-size-md inline-flex items-center justify-center gap-x-2 rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-500/5 dark:text-gray-200 dark:hover:bg-gray-400/5"
-                           title="Neue Aufgabe">
-                            <x-heroicon-o-clipboard-document-list class="h-5 w-5" />
-                            <span class="hidden sm:inline">+Aufgabe</span>
-                        </a>
-                    </div>
-                '),
+                PanelsRenderHook::USER_MENU_BEFORE,
+                fn (): string => Blade::render("@include('filament.components.quick-actions')"),
             );
     }
 }
