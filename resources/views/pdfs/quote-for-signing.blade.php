@@ -332,6 +332,13 @@
         @if($quote->client_company)
             <div>{{ $quote->client_company }}</div>
         @endif
+        @if($quote->client && $quote->client->street)
+            <div>{{ $quote->client->street }}</div>
+            <div>{{ $quote->client->zip }} {{ $quote->client->city }}</div>
+            @if($quote->client->country && $quote->client->country !== 'Deutschland')
+                <div>{{ $quote->client->country }}</div>
+            @endif
+        @endif
         @if($quote->client_email)
             <div>{{ $quote->client_email }}</div>
         @endif

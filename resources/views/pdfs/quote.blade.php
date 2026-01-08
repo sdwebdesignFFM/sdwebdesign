@@ -435,11 +435,19 @@
         @if($quote->client_company)
             <div>{{ $quote->client_company }}</div>
         @endif
-        @if($quote->hasBillingDetails())
+        @if($quote->accepted_at && $quote->hasBillingDetails())
+            {{-- Show billing address for accepted quotes --}}
             <div>{{ $quote->billing_street }}</div>
             <div>{{ $quote->billing_zip }} {{ $quote->billing_city }}</div>
             @if($quote->billing_country && $quote->billing_country !== 'Deutschland')
                 <div>{{ $quote->billing_country }}</div>
+            @endif
+        @elseif($quote->client && $quote->client->street)
+            {{-- Show client address for non-accepted quotes --}}
+            <div>{{ $quote->client->street }}</div>
+            <div>{{ $quote->client->zip }} {{ $quote->client->city }}</div>
+            @if($quote->client->country && $quote->client->country !== 'Deutschland')
+                <div>{{ $quote->client->country }}</div>
             @endif
         @endif
         @if($quote->client_email)
