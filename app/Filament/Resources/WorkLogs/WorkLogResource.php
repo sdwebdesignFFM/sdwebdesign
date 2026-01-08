@@ -4,6 +4,7 @@ namespace App\Filament\Resources\WorkLogs;
 
 use App\Filament\Resources\WorkLogs\Pages\ManageWorkLogs;
 use App\Models\Client;
+use App\Models\Task;
 use App\Models\WorkLog;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
@@ -15,6 +16,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -52,7 +54,31 @@ class WorkLogResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->columnSpanFull(),
+                    ->live()
+                    ->afterStateUpdated(fn ($set) => $set('task_id', null)),
+
+                Select::make('task_id')
+                    ->label('Aufgabe')
+                    ->placeholder('Keine Aufgabe')
+                    ->options(function (Get $get) {
+                        $clientId = $get('client_id');
+                        if (! $clientId) {
+                            return Task::query()
+                                ->open()
+                                ->whereNull('client_id')
+                                ->pluck('title', 'id');
+                        }
+
+                        return Task::query()
+                            ->open()
+                            ->where(function ($query) use ($clientId) {
+                                $query->where('client_id', $clientId)
+                                    ->orWhereNull('client_id');
+                            })
+                            ->pluck('title', 'id');
+                    })
+                    ->searchable()
+                    ->preload(),
 
                 DatePicker::make('worked_on')
                     ->label('Datum')
@@ -100,6 +126,12 @@ class WorkLogResource extends Resource
                     ->limit(50)
                     ->tooltip(fn (WorkLog $record) => $record->description),
 
+                TextColumn::make('task.title')
+                    ->label('Aufgabe')
+                    ->limit(30)
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('duration_formatted')
                     ->label('Dauer')
                     ->alignEnd(),
@@ -119,6 +151,12 @@ class WorkLogResource extends Resource
                     ->label('Kunde')
                     ->relationship('client', 'company')
                     ->getOptionLabelFromRecordUsing(fn (Client $record): string => $record->display_name)
+                    ->searchable()
+                    ->preload(),
+
+                SelectFilter::make('task_id')
+                    ->label('Aufgabe')
+                    ->relationship('task', 'title')
                     ->searchable()
                     ->preload(),
 
