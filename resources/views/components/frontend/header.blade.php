@@ -45,8 +45,8 @@
         }
     }"
     x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 20 }); initDesktopNav()"
-    :class="{ 'bg-background/95 backdrop-blur-md shadow-sm': scrolled, 'bg-transparent': !scrolled }"
-    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+    :class="{ 'shadow-sm': scrolled }"
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background/95 backdrop-blur-md"
 >
     <div class="max-w-8xl mx-auto px-6">
         <nav class="flex items-center justify-between h-20">
