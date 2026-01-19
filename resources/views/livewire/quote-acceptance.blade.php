@@ -309,7 +309,7 @@
         <div class="flex flex-wrap items-center justify-between gap-4">
             <a
                 href="{{ route('quotes.pdf', ['token' => $quote->token]) }}"
-                class="inline-flex items-center px-4 py-2 border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white font-medium rounded-lg hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 transition-colors"
+                class="inline-flex items-center px-4 py-2 border-2 border-foreground text-foreground font-medium rounded-lg hover:bg-foreground hover:text-background transition-colors"
                 target="_blank"
             >
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -350,17 +350,17 @@
             {{-- Modal Container --}}
             <div class="flex min-h-full items-center justify-center p-4">
                 {{-- Modal panel --}}
-                <div class="relative w-full max-w-xl bg-background rounded-lg text-left overflow-hidden shadow-xl">
+                <div class="relative w-full max-w-xl bg-background rounded-lg text-left overflow-hidden shadow-xl border border-border">
                     {{-- Header --}}
-                    <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div class="bg-muted px-6 py-4 border-b border-border">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            <h3 class="text-lg font-semibold text-foreground">
                                 Angebot annehmen
                             </h3>
                             <button
                                 type="button"
                                 wire:click="hideAcceptForm"
-                                class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+                                class="text-muted-foreground hover:text-foreground"
                             >
                                 <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -370,8 +370,8 @@
                     </div>
 
                     <div class="px-6 py-5">
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                            Angebot <strong class="text-gray-900 dark:text-white">{{ $quote->quote_number }}</strong> &mdash; <strong class="text-gray-900 dark:text-white">{{ number_format($this->currentTotals['total'], 2, ',', '.') }} &euro;</strong>
+                        <p class="text-sm text-foreground mb-4">
+                            Angebot <strong>{{ $quote->quote_number }}</strong> &mdash; <strong>{{ number_format($this->currentTotals['total'], 2, ',', '.') }} &euro;</strong>
                         </p>
 
                         @if($errorMessage)
@@ -385,18 +385,18 @@
                             <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
                                 {{-- Billing Section --}}
                                 <div class="space-y-3">
-                                    <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Rechnungsadresse</h4>
+                                    <h4 class="text-sm font-semibold text-foreground">Rechnungsadresse</h4>
 
                                     {{-- Company (optional) --}}
                                     <div>
-                                        <label for="billingCompany" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        <label for="billingCompany" class="block text-sm font-medium text-muted-foreground mb-1">
                                             Firma
                                         </label>
                                         <input
                                             type="text"
                                             id="billingCompany"
                                             wire:model="billingCompany"
-                                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-green-500 focus:border-green-500"
+                                            class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-green-500 focus:border-green-500"
                                             placeholder="Firmenname (optional)"
                                         >
                                     </div>
@@ -404,14 +404,14 @@
                                     {{-- First Name & Last Name --}}
                                     <div class="grid grid-cols-2 gap-3">
                                         <div>
-                                            <label for="billingFirstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            <label for="billingFirstName" class="block text-sm font-medium text-muted-foreground mb-1">
                                                 Vorname *
                                             </label>
                                             <input
                                                 type="text"
                                                 id="billingFirstName"
                                                 wire:model="billingFirstName"
-                                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-green-500 focus:border-green-500"
+                                                class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-green-500 focus:border-green-500"
                                                 placeholder="Vorname"
                                             >
                                             @error('billingFirstName')
@@ -419,14 +419,14 @@
                                             @enderror
                                         </div>
                                         <div>
-                                            <label for="billingLastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            <label for="billingLastName" class="block text-sm font-medium text-muted-foreground mb-1">
                                                 Nachname *
                                             </label>
                                             <input
                                                 type="text"
                                                 id="billingLastName"
                                                 wire:model="billingLastName"
-                                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-green-500 focus:border-green-500"
+                                                class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-green-500 focus:border-green-500"
                                                 placeholder="Nachname"
                                             >
                                             @error('billingLastName')
@@ -437,14 +437,14 @@
 
                                     {{-- Street --}}
                                     <div>
-                                        <label for="billingStreet" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        <label for="billingStreet" class="block text-sm font-medium text-muted-foreground mb-1">
                                             Straße und Hausnummer *
                                         </label>
                                         <input
                                             type="text"
                                             id="billingStreet"
                                             wire:model="billingStreet"
-                                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-green-500 focus:border-green-500"
+                                            class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-green-500 focus:border-green-500"
                                             placeholder="Musterstraße 123"
                                         >
                                         @error('billingStreet')
@@ -455,14 +455,14 @@
                                     {{-- Zip + City + Country --}}
                                     <div class="grid grid-cols-4 gap-3">
                                         <div>
-                                            <label for="billingZip" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            <label for="billingZip" class="block text-sm font-medium text-muted-foreground mb-1">
                                                 PLZ *
                                             </label>
                                             <input
                                                 type="text"
                                                 id="billingZip"
                                                 wire:model="billingZip"
-                                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-green-500 focus:border-green-500"
+                                                class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-green-500 focus:border-green-500"
                                                 placeholder="12345"
                                             >
                                             @error('billingZip')
@@ -470,14 +470,14 @@
                                             @enderror
                                         </div>
                                         <div class="col-span-2">
-                                            <label for="billingCity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            <label for="billingCity" class="block text-sm font-medium text-muted-foreground mb-1">
                                                 Stadt *
                                             </label>
                                             <input
                                                 type="text"
                                                 id="billingCity"
                                                 wire:model="billingCity"
-                                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-green-500 focus:border-green-500"
+                                                class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-green-500 focus:border-green-500"
                                                 placeholder="Berlin"
                                             >
                                             @error('billingCity')
@@ -485,13 +485,13 @@
                                             @enderror
                                         </div>
                                         <div>
-                                            <label for="billingCountry" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            <label for="billingCountry" class="block text-sm font-medium text-muted-foreground mb-1">
                                                 Land
                                             </label>
                                             <select
                                                 id="billingCountry"
                                                 wire:model="billingCountry"
-                                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-green-500 focus:border-green-500"
+                                                class="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:ring-green-500 focus:border-green-500"
                                             >
                                                 <option value="Deutschland">DE</option>
                                                 <option value="Österreich">AT</option>
@@ -503,7 +503,7 @@
                                 </div>
 
                                 {{-- Terms Section --}}
-                                <div class="space-y-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                <div class="space-y-3 pt-4 border-t border-border">
                                     {{-- Terms Checkbox --}}
                                     <div class="pt-2">
                                         <div class="flex items-start gap-3">
@@ -511,38 +511,38 @@
                                                 type="checkbox"
                                                 wire:model.live="termsAccepted"
                                                 id="termsAccepted"
-                                                class="mt-0.5 h-4 w-4 text-green-600 border-gray-300 dark:border-gray-600 rounded focus:ring-green-500 bg-white dark:bg-gray-800"
+                                                class="mt-0.5 h-4 w-4 text-green-600 border-border rounded focus:ring-green-500 bg-background"
                                             >
-                                            <label for="termsAccepted" class="text-sm text-gray-700 dark:text-gray-300">
-                                                Ich habe die <button type="button" wire:click="$set('showAgbModal', true)" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline">Allgemeinen Geschäftsbedingungen (AGB)</button>
+                                            <label for="termsAccepted" class="text-sm text-foreground">
+                                                Ich habe die <button type="button" wire:click="$set('showAgbModal', true)" class="text-accent hover:text-accent/80 underline">Allgemeinen Geschäftsbedingungen (AGB)</button>
                                                 @php
                                                     $termsItems = $quote->items->filter(fn($item) => $item->hasDetailedTerms() && (!$item->is_optional || ($selectedOptions[$item->id] ?? false)));
                                                 @endphp
                                                 @if($termsItems->isNotEmpty())
                                                     sowie die Leistungsvereinbarungen für
                                                     @foreach($termsItems as $index => $item)
-                                                        <button type="button" wire:click="showTerms({{ $item->id }})" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline">{{ $item->name }}</button>@if(!$loop->last), @endif
+                                                        <button type="button" wire:click="showTerms({{ $item->id }})" class="text-accent hover:text-accent/80 underline">{{ $item->name }}</button>@if(!$loop->last), @endif
                                                     @endforeach
                                                 @endif
                                                 gelesen und akzeptiere diese als Vertragsbestandteil. *
                                             </label>
                                         </div>
-                                        <p class="mt-1 ml-7 text-xs text-gray-500 dark:text-gray-400">
+                                        <p class="mt-1 ml-7 text-xs text-muted-foreground">
                                             Mit dem Absenden dieses Formulars kommt ein rechtsverbindlicher Vertrag zustande.
                                         </p>
                                         @error('termsAccepted')
-                                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                         @enderror
                                     </div>
                                 </div>
                             </div>
 
                             {{-- Actions --}}
-                            <div class="flex gap-3 justify-end mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <div class="flex gap-3 justify-end mt-6 pt-4 border-t border-border">
                                 <button
                                     type="button"
                                     wire:click="hideAcceptForm"
-                                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    class="px-4 py-2 border border-border text-foreground font-medium rounded-lg hover:bg-muted transition-colors"
                                 >
                                     Abbrechen
                                 </button>
@@ -580,17 +580,17 @@
             {{-- Modal Container --}}
             <div class="flex min-h-full items-center justify-center p-4">
                 {{-- Modal panel --}}
-                <div class="relative w-full max-w-2xl bg-background rounded-lg text-left overflow-hidden shadow-xl">
+                <div class="relative w-full max-w-2xl bg-background rounded-lg text-left overflow-hidden shadow-xl border border-border">
                     {{-- Header --}}
-                    <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div class="bg-muted px-6 py-4 border-b border-border">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            <h3 class="text-lg font-semibold text-foreground">
                                 Leistungsvereinbarung: {{ $this->termsItem->name }}
                             </h3>
                             <button
                                 type="button"
                                 wire:click="hideTerms"
-                                class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+                                class="text-muted-foreground hover:text-foreground"
                             >
                                 <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -600,24 +600,24 @@
                     </div>
 
                     {{-- Content --}}
-                    <div class="px-6 py-5 max-h-[60vh] overflow-y-auto">
-                        <div class="prose prose-sm prose-gray dark:prose-invert max-w-none
-                            [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3
-                            [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
-                            [&_p]:text-sm [&_p]:leading-relaxed [&_p]:mb-3
+                    <div class="px-6 py-5 max-h-[60vh] overflow-y-auto text-foreground">
+                        <div class="prose prose-sm max-w-none
+                            [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3 [&_h2]:text-foreground
+                            [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2 [&_h3]:text-foreground
+                            [&_p]:text-sm [&_p]:leading-relaxed [&_p]:mb-3 [&_p]:text-foreground
                             [&_ul]:text-sm [&_ul]:my-2 [&_ul]:pl-6 [&_ul]:list-disc
                             [&_ol]:text-sm [&_ol]:my-2 [&_ol]:pl-6 [&_ol]:list-decimal
-                            [&_li]:mb-1">
+                            [&_li]:mb-1 [&_li]:text-foreground">
                             {!! $this->termsItem->detailed_terms !!}
                         </div>
                     </div>
 
                     {{-- Footer --}}
-                    <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+                    <div class="bg-muted px-6 py-4 border-t border-border flex justify-end">
                         <button
                             type="button"
                             wire:click="hideTerms"
-                            class="px-4 py-2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                            class="px-4 py-2 bg-foreground text-background font-medium rounded-lg hover:bg-foreground/90 transition-colors"
                         >
                             Schließen
                         </button>
@@ -644,17 +644,17 @@
             {{-- Modal Container --}}
             <div class="flex min-h-full items-center justify-center p-4">
                 {{-- Modal panel --}}
-                <div class="relative w-full max-w-2xl bg-background rounded-lg text-left overflow-hidden shadow-xl">
+                <div class="relative w-full max-w-2xl bg-background rounded-lg text-left overflow-hidden shadow-xl border border-border">
                     {{-- Header --}}
-                    <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <div class="bg-muted px-6 py-4 border-b border-border">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            <h3 class="text-lg font-semibold text-foreground">
                                 Allgemeine Geschäftsbedingungen (AGB)
                             </h3>
                             <button
                                 type="button"
                                 wire:click="$set('showAgbModal', false)"
-                                class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+                                class="text-muted-foreground hover:text-foreground"
                             >
                                 <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -664,28 +664,28 @@
                     </div>
 
                     {{-- Content --}}
-                    <div class="px-6 py-5 max-h-[60vh] overflow-y-auto">
-                        <div class="prose prose-sm prose-gray dark:prose-invert max-w-none
-                            [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3
-                            [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
-                            [&_p]:text-sm [&_p]:leading-relaxed [&_p]:mb-3
+                    <div class="px-6 py-5 max-h-[60vh] overflow-y-auto text-foreground">
+                        <div class="prose prose-sm max-w-none
+                            [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3 [&_h2]:text-foreground
+                            [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2 [&_h3]:text-foreground
+                            [&_p]:text-sm [&_p]:leading-relaxed [&_p]:mb-3 [&_p]:text-foreground
                             [&_ul]:text-sm [&_ul]:my-2 [&_ul]:pl-6 [&_ul]:list-disc
                             [&_ol]:text-sm [&_ol]:my-2 [&_ol]:pl-6 [&_ol]:list-decimal
-                            [&_li]:mb-1">
+                            [&_li]:mb-1 [&_li]:text-foreground">
                             @if($settings->agb_content)
                                 {!! $settings->agb_content !!}
                             @else
-                                <p class="text-gray-500 dark:text-gray-400">Keine AGB hinterlegt.</p>
+                                <p class="text-muted-foreground">Keine AGB hinterlegt.</p>
                             @endif
                         </div>
                     </div>
 
                     {{-- Footer --}}
-                    <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+                    <div class="bg-muted px-6 py-4 border-t border-border flex justify-end">
                         <button
                             type="button"
                             wire:click="$set('showAgbModal', false)"
-                            class="px-4 py-2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                            class="px-4 py-2 bg-foreground text-background font-medium rounded-lg hover:bg-foreground/90 transition-colors"
                         >
                             Schließen
                         </button>
