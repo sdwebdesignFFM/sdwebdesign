@@ -1,16 +1,16 @@
 <div>
     {{-- Price Summary Sticky (top-20 to account for fixed navigation header) --}}
-    <div class="bg-background border-b border-gray-200 dark:border-gray-700 sticky top-20 z-10 shadow-sm">
+    <div class="bg-background border-b border-border sticky top-20 z-10 shadow-sm">
         <div class="max-w-4xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-6">
-                    <div class="text-sm text-gray-600 dark:text-gray-400">
-                        Netto: <span class="font-medium text-gray-900 dark:text-white">{{ number_format($this->currentTotals['subtotal'], 2, ',', '.') }} &euro;</span>
+                    <div class="text-sm text-muted-foreground">
+                        Netto: <span class="font-medium text-foreground">{{ number_format($this->currentTotals['subtotal'], 2, ',', '.') }} &euro;</span>
                     </div>
-                    <div class="text-sm text-gray-600 dark:text-gray-400">
-                        MwSt. ({{ number_format($quote->tax_rate, 0) }}%): <span class="font-medium text-gray-900 dark:text-white">{{ number_format($this->currentTotals['tax_amount'], 2, ',', '.') }} &euro;</span>
+                    <div class="text-sm text-muted-foreground">
+                        MwSt. ({{ number_format($quote->tax_rate, 0) }}%): <span class="font-medium text-foreground">{{ number_format($this->currentTotals['tax_amount'], 2, ',', '.') }} &euro;</span>
                     </div>
-                    <div class="text-lg font-semibold text-gray-900 dark:text-white">
+                    <div class="text-lg font-semibold text-foreground">
                         Gesamt: {{ number_format($this->currentTotals['total'], 2, ',', '.') }} &euro;
                     </div>
                 </div>
@@ -32,21 +32,21 @@
     <div class="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
 
         {{-- Quote Header --}}
-        <div class="bg-background rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+        <div class="bg-background rounded-lg shadow-sm border border-border p-6 mb-8">
             <div class="flex justify-between items-start">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">{{ $quote->title }}</h1>
-                    <p class="text-gray-600 dark:text-gray-400">{{ $quote->quote_number }}</p>
+                    <h1 class="text-2xl font-bold text-foreground mb-2">{{ $quote->title }}</h1>
+                    <p class="text-muted-foreground">{{ $quote->quote_number }}</p>
                 </div>
-                <div class="text-right text-sm text-gray-600 dark:text-gray-400">
+                <div class="text-right text-sm text-muted-foreground">
                     <p>Erstellt am: {{ $quote->created_at->format('d.m.Y') }}</p>
                     <p>Gültig bis: <span class="{{ $quote->isExpired() ? 'text-red-600 font-medium' : '' }}">{{ $quote->valid_until->format('d.m.Y') }}</span></p>
                 </div>
             </div>
 
             {{-- Greeting and Intro Text --}}
-            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-700 dark:text-gray-300 space-y-2">
-                <p class="font-medium text-gray-900 dark:text-white">{{ $quote->getGreeting() }}</p>
+            <div class="mt-4 pt-4 border-t border-border text-sm text-muted-foreground space-y-2">
+                <p class="font-medium text-foreground">{{ $quote->getGreeting() }}</p>
                 @if($quote->intro_text)
                     <div class="[&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1">
                         {!! $quote->intro_text !!}
@@ -56,26 +56,26 @@
         </div>
 
         {{-- Quote Items --}}
-        <div class="bg-background rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
-            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Leistungen</h2>
+        <div class="bg-background rounded-lg shadow-sm border border-border overflow-hidden mb-8">
+            <div class="px-6 py-4 bg-muted border-b border-border">
+                <h2 class="text-lg font-semibold text-foreground">Leistungen</h2>
             </div>
 
-            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+            <div class="divide-y divide-border">
                 {{-- Required Items --}}
                 @foreach($this->groupedItems['required'] as $item)
                     <div class="px-6 py-4">
                         <div class="flex justify-between items-start">
                             <div class="flex-1">
-                                <h3 class="font-medium text-gray-900 dark:text-white">{{ $item->name }}</h3>
+                                <h3 class="font-medium text-foreground">{{ $item->name }}</h3>
                                 @if($item->description)
-                                    <div class="mt-1 text-xs text-gray-600 dark:text-gray-400 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
+                                    <div class="mt-1 text-xs text-muted-foreground [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
                                 @endif
                                 @if($item->hasDetailedTerms())
                                     <button
                                         type="button"
                                         wire:click="showTerms({{ $item->id }})"
-                                        class="mt-2 inline-flex items-center text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                                        class="mt-2 inline-flex items-center text-xs text-accent hover:text-accent/80 font-medium"
                                     >
                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -86,19 +86,19 @@
                             </div>
                             <div class="ml-4 text-right shrink-0 w-[28%]">
                                 @if($item->quantity > 1)
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ number_format($item->quantity, 0) }} {{ $item->unit }} &times; {{ number_format($item->unit_price, 2, ',', '.') }} &euro;</p>
+                                    <p class="text-sm text-muted-foreground">{{ number_format($item->quantity, 0) }} {{ $item->unit }} &times; {{ number_format($item->unit_price, 2, ',', '.') }} &euro;</p>
                                 @endif
-                                <p class="font-medium text-gray-900 dark:text-white">
+                                <p class="font-medium text-foreground">
                                     {{ number_format($item->total_price, 2, ',', '.') }} &euro;
                                     @if($item->billing_cycle)
-                                        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ $item->billing_cycle->getPeriodLabel() }}</span>
+                                        <span class="text-sm font-normal text-muted-foreground">{{ $item->billing_cycle->getPeriodLabel() }}</span>
                                     @endif
                                 </p>
                                 @if($item->invoice_interval && $item->invoice_interval !== $item->billing_cycle)
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">Abrechnung: {{ $item->invoice_interval->getLabel() }}</p>
+                                    <p class="text-xs text-muted-foreground">Abrechnung: {{ $item->invoice_interval->getLabel() }}</p>
                                 @endif
                                 @if($item->hasPaymentTerms())
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">Zahlung: {{ $item->payment_terms }}</p>
+                                    <p class="text-xs text-muted-foreground">Zahlung: {{ $item->payment_terms }}</p>
                                 @endif
                             </div>
                         </div>
@@ -107,18 +107,18 @@
 
                 {{-- Optional Items --}}
                 @if($this->groupedItems['optional']->isNotEmpty())
-                    <div class="px-6 py-3 bg-gray-50 dark:bg-gray-800 border-t border-b border-gray-200 dark:border-gray-700">
-                        <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Optionale Leistungen</h3>
+                    <div class="px-6 py-3 bg-muted border-t border-b border-border">
+                        <h3 class="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Optionale Leistungen</h3>
                     </div>
 
                     @foreach($this->groupedItems['optional'] as $item)
-                        <div class="px-6 py-4 {{ ($selectedOptions[$item->id] ?? false) ? 'bg-primary-50 dark:bg-primary-900/20' : 'bg-gray-50 dark:bg-gray-800/50' }}">
+                        <div class="px-6 py-4 {{ ($selectedOptions[$item->id] ?? false) ? 'bg-accent/5' : 'bg-muted/50' }}">
                             <div class="flex items-start gap-4">
                                 @if($quote->canBeAccepted())
                                     <button
                                         type="button"
                                         wire:click="toggleOption({{ $item->id }})"
-                                        class="mt-0.5 flex-shrink-0 w-5 h-5 rounded border-2 {{ ($selectedOptions[$item->id] ?? false) ? 'bg-green-600 border-green-600' : 'border-gray-300 dark:border-gray-600 bg-background hover:border-gray-400' }} flex items-center justify-center transition-colors cursor-pointer"
+                                        class="mt-0.5 flex-shrink-0 w-5 h-5 rounded border-2 {{ ($selectedOptions[$item->id] ?? false) ? 'bg-green-600 border-green-600' : 'border-border bg-background hover:border-muted-foreground' }} flex items-center justify-center transition-colors cursor-pointer"
                                     >
                                         @if($selectedOptions[$item->id] ?? false)
                                             <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 12 12">
@@ -127,7 +127,7 @@
                                         @endif
                                     </button>
                                 @else
-                                    <div class="mt-0.5 flex-shrink-0 w-5 h-5 rounded border-2 {{ ($selectedOptions[$item->id] ?? false) ? 'bg-green-600 border-green-600' : 'border-gray-300 dark:border-gray-600' }} flex items-center justify-center">
+                                    <div class="mt-0.5 flex-shrink-0 w-5 h-5 rounded border-2 {{ ($selectedOptions[$item->id] ?? false) ? 'bg-green-600 border-green-600' : 'border-border' }} flex items-center justify-center">
                                         @if($selectedOptions[$item->id] ?? false)
                                             <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 12 12">
                                                 <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z"/>
@@ -137,15 +137,15 @@
                                 @endif
 
                                 <div class="flex-1">
-                                    <h3 class="font-medium text-gray-900 dark:text-white">{{ $item->name }}</h3>
+                                    <h3 class="font-medium text-foreground">{{ $item->name }}</h3>
                                     @if($item->description)
-                                        <div class="mt-1 text-xs text-gray-600 dark:text-gray-400 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
+                                        <div class="mt-1 text-xs text-muted-foreground [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
                                     @endif
                                     @if($item->hasDetailedTerms())
                                         <button
                                             type="button"
                                             wire:click="showTerms({{ $item->id }})"
-                                            class="mt-2 inline-flex items-center text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                                            class="mt-2 inline-flex items-center text-xs text-accent hover:text-accent/80 font-medium"
                                         >
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -156,19 +156,19 @@
                                 </div>
                                 <div class="ml-4 text-right shrink-0 w-[28%]">
                                     @if($item->quantity > 1)
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ number_format($item->quantity, 0) }} {{ $item->unit }} &times; {{ number_format($item->unit_price, 2, ',', '.') }} &euro;</p>
+                                        <p class="text-sm text-muted-foreground">{{ number_format($item->quantity, 0) }} {{ $item->unit }} &times; {{ number_format($item->unit_price, 2, ',', '.') }} &euro;</p>
                                     @endif
-                                    <p class="font-medium {{ ($selectedOptions[$item->id] ?? false) ? 'text-primary-700 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400' }}">
+                                    <p class="font-medium {{ ($selectedOptions[$item->id] ?? false) ? 'text-accent' : 'text-muted-foreground' }}">
                                         +{{ number_format($item->total_price, 2, ',', '.') }} &euro;
                                         @if($item->billing_cycle)
                                             <span class="text-sm font-normal">{{ $item->billing_cycle->getPeriodLabel() }}</span>
                                         @endif
                                     </p>
                                     @if($item->invoice_interval && $item->invoice_interval !== $item->billing_cycle)
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">Abrechnung: {{ $item->invoice_interval->getLabel() }}</p>
+                                        <p class="text-xs text-muted-foreground">Abrechnung: {{ $item->invoice_interval->getLabel() }}</p>
                                     @endif
                                     @if($item->hasPaymentTerms())
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">Zahlung: {{ $item->payment_terms }}</p>
+                                        <p class="text-xs text-muted-foreground">Zahlung: {{ $item->payment_terms }}</p>
                                     @endif
                                 </div>
                             </div>
@@ -178,25 +178,25 @@
 
                 {{-- Option Groups (A/B Selection) --}}
                 @foreach($this->groupedItems['option_groups'] as $group => $items)
-                    <div class="px-6 py-3 bg-gray-50 dark:bg-gray-800 border-t border-b border-gray-200 dark:border-gray-700">
-                        <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Option wählen: {{ ucfirst(str_replace('_', ' ', $group)) }}</h3>
+                    <div class="px-6 py-3 bg-muted border-t border-b border-border">
+                        <h3 class="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Option wählen: {{ ucfirst(str_replace('_', ' ', $group)) }}</h3>
                     </div>
 
                     @foreach($items as $item)
-                        <div class="px-6 py-4 {{ ($optionGroupSelections[$group] ?? null) === $item->id ? 'bg-primary-50 dark:bg-primary-900/20' : 'bg-gray-50 dark:bg-gray-800/50' }}">
+                        <div class="px-6 py-4 {{ ($optionGroupSelections[$group] ?? null) === $item->id ? 'bg-accent/5' : 'bg-muted/50' }}">
                             <div class="flex items-start gap-4">
                                 @if($quote->canBeAccepted())
                                     <button
                                         type="button"
                                         wire:click="selectOptionGroup('{{ $group }}', {{ $item->id }})"
-                                        class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full border-2 {{ ($optionGroupSelections[$group] ?? null) === $item->id ? 'border-green-600' : 'border-gray-300 dark:border-gray-600 bg-background hover:border-gray-400' }} flex items-center justify-center transition-colors cursor-pointer"
+                                        class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full border-2 {{ ($optionGroupSelections[$group] ?? null) === $item->id ? 'border-green-600' : 'border-border bg-background hover:border-muted-foreground' }} flex items-center justify-center transition-colors cursor-pointer"
                                     >
                                         @if(($optionGroupSelections[$group] ?? null) === $item->id)
                                             <div class="w-2.5 h-2.5 rounded-full bg-green-600"></div>
                                         @endif
                                     </button>
                                 @else
-                                    <div class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full border-2 {{ ($optionGroupSelections[$group] ?? null) === $item->id ? 'border-green-600' : 'border-gray-300 dark:border-gray-600' }} flex items-center justify-center">
+                                    <div class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full border-2 {{ ($optionGroupSelections[$group] ?? null) === $item->id ? 'border-green-600' : 'border-border' }} flex items-center justify-center">
                                         @if(($optionGroupSelections[$group] ?? null) === $item->id)
                                             <div class="w-2.5 h-2.5 rounded-full bg-green-600"></div>
                                         @endif
@@ -204,15 +204,15 @@
                                 @endif
 
                                 <div class="flex-1">
-                                    <h3 class="font-medium text-gray-900 dark:text-white">{{ $item->name }}</h3>
+                                    <h3 class="font-medium text-foreground">{{ $item->name }}</h3>
                                     @if($item->description)
-                                        <div class="mt-1 text-xs text-gray-600 dark:text-gray-400 [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
+                                        <div class="mt-1 text-xs text-muted-foreground [&_p]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-0.5 [&_li]:ml-0">{!! $item->description !!}</div>
                                     @endif
                                     @if($item->hasDetailedTerms())
                                         <button
                                             type="button"
                                             wire:click="showTerms({{ $item->id }})"
-                                            class="mt-2 inline-flex items-center text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                                            class="mt-2 inline-flex items-center text-xs text-accent hover:text-accent/80 font-medium"
                                         >
                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -223,19 +223,19 @@
                                 </div>
                                 <div class="ml-4 text-right shrink-0 w-[28%]">
                                     @if($item->quantity > 1)
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ number_format($item->quantity, 0) }} {{ $item->unit }} &times; {{ number_format($item->unit_price, 2, ',', '.') }} &euro;</p>
+                                        <p class="text-sm text-muted-foreground">{{ number_format($item->quantity, 0) }} {{ $item->unit }} &times; {{ number_format($item->unit_price, 2, ',', '.') }} &euro;</p>
                                     @endif
-                                    <p class="font-medium {{ ($optionGroupSelections[$group] ?? null) === $item->id ? 'text-primary-700 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400' }}">
+                                    <p class="font-medium {{ ($optionGroupSelections[$group] ?? null) === $item->id ? 'text-accent' : 'text-muted-foreground' }}">
                                         {{ number_format($item->total_price, 2, ',', '.') }} &euro;
                                         @if($item->billing_cycle)
                                             <span class="text-sm font-normal">{{ $item->billing_cycle->getPeriodLabel() }}</span>
                                         @endif
                                     </p>
                                     @if($item->invoice_interval && $item->invoice_interval !== $item->billing_cycle)
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">Abrechnung: {{ $item->invoice_interval->getLabel() }}</p>
+                                        <p class="text-xs text-muted-foreground">Abrechnung: {{ $item->invoice_interval->getLabel() }}</p>
                                     @endif
                                     @if($item->hasPaymentTerms())
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">Zahlung: {{ $item->payment_terms }}</p>
+                                        <p class="text-xs text-muted-foreground">Zahlung: {{ $item->payment_terms }}</p>
                                     @endif
                                 </div>
                             </div>
@@ -245,18 +245,18 @@
             </div>
 
             {{-- Total Summary --}}
-            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+            <div class="px-6 py-4 bg-muted border-t border-border">
                 <div class="flex justify-end">
                     <div class="w-64 space-y-2">
-                        <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                        <div class="flex justify-between text-sm text-muted-foreground">
                             <span>Netto</span>
                             <span>{{ number_format($this->currentTotals['subtotal'], 2, ',', '.') }} &euro;</span>
                         </div>
-                        <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                        <div class="flex justify-between text-sm text-muted-foreground">
                             <span>MwSt. ({{ number_format($quote->tax_rate, 0) }}%)</span>
                             <span>{{ number_format($this->currentTotals['tax_amount'], 2, ',', '.') }} &euro;</span>
                         </div>
-                        <div class="flex justify-between text-lg font-semibold text-gray-900 dark:text-white pt-2 border-t border-gray-300 dark:border-gray-600">
+                        <div class="flex justify-between text-lg font-semibold text-foreground pt-2 border-t border-border">
                             <span>Gesamt</span>
                             <span>{{ number_format($this->currentTotals['total'], 2, ',', '.') }} &euro;</span>
                         </div>
@@ -309,7 +309,7 @@
         <div class="flex flex-wrap items-center justify-between gap-4">
             <a
                 href="{{ route('quotes.pdf', ['token' => $quote->token]) }}"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-500 text-gray-700 dark:text-white font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                class="inline-flex items-center px-4 py-2 border border-border text-foreground font-medium rounded-lg hover:bg-muted transition-colors"
                 target="_blank"
             >
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
