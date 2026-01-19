@@ -341,15 +341,16 @@
             role="dialog"
             aria-modal="true"
         >
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                {{-- Background overlay --}}
-                <div
-                    class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"
-                    wire:click="hideAcceptForm"
-                ></div>
+            {{-- Background overlay --}}
+            <div
+                class="fixed inset-0 bg-black/60 backdrop-blur-sm"
+                wire:click="hideAcceptForm"
+            ></div>
 
+            {{-- Modal Container --}}
+            <div class="flex min-h-full items-center justify-center p-4">
                 {{-- Modal panel --}}
-                <div class="inline-block align-bottom bg-background rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full">
+                <div class="relative w-full max-w-xl bg-background rounded-lg text-left overflow-hidden shadow-xl">
                     {{-- Header --}}
                     <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-between">
@@ -570,15 +571,16 @@
             role="dialog"
             aria-modal="true"
         >
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                {{-- Background overlay --}}
-                <div
-                    class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"
-                    wire:click="hideTerms"
-                ></div>
+            {{-- Background overlay --}}
+            <div
+                class="fixed inset-0 bg-black/60 backdrop-blur-sm"
+                wire:click="hideTerms"
+            ></div>
 
+            {{-- Modal Container --}}
+            <div class="flex min-h-full items-center justify-center p-4">
                 {{-- Modal panel --}}
-                <div class="inline-block align-bottom bg-background rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                <div class="relative w-full max-w-2xl bg-background rounded-lg text-left overflow-hidden shadow-xl">
                     {{-- Header --}}
                     <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-between">
@@ -633,15 +635,16 @@
             role="dialog"
             aria-modal="true"
         >
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                {{-- Background overlay --}}
-                <div
-                    class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 transition-opacity"
-                    wire:click="$set('showAgbModal', false)"
-                ></div>
+            {{-- Background overlay --}}
+            <div
+                class="fixed inset-0 bg-black/60 backdrop-blur-sm"
+                wire:click="$set('showAgbModal', false)"
+            ></div>
 
+            {{-- Modal Container --}}
+            <div class="flex min-h-full items-center justify-center p-4">
                 {{-- Modal panel --}}
-                <div class="inline-block align-bottom bg-background rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                <div class="relative w-full max-w-2xl bg-background rounded-lg text-left overflow-hidden shadow-xl">
                     {{-- Header --}}
                     <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-between">
