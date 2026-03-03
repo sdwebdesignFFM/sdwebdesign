@@ -6,7 +6,10 @@ use App\Filament\Resources\WorkLogs\Pages\ManageWorkLogs;
 use App\Models\Client;
 use App\Models\Task;
 use App\Models\WorkLog;
+use App\Services\WorkLog\WorkLogService;
 use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -16,6 +19,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
@@ -25,6 +29,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class WorkLogResource extends Resource
 {
@@ -193,11 +198,54 @@ class WorkLogResource extends Resource
                     ->visible(fn (WorkLog $record) => ! $record->is_billed),
                 ViewAction::make()
                     ->visible(fn (WorkLog $record) => $record->is_billed),
+                Action::make('mark_as_billed')
+                    ->label('Als abgerechnet markieren')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Als abgerechnet markieren')
+                    ->modalDescription('Soll dieser Eintrag als abgerechnet markiert werden (ohne Rechnungserstellung)?')
+                    ->visible(fn (WorkLog $record) => ! $record->is_billed)
+                    ->action(function (WorkLog $record) {
+                        app(WorkLogService::class)->markAsBilled([$record->id]);
+
+                        Notification::make()
+                            ->title('Als abgerechnet markiert')
+                            ->success()
+                            ->send();
+                    }),
                 DeleteAction::make()
                     ->visible(fn (WorkLog $record) => ! $record->is_billed),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    BulkAction::make('mark_as_billed')
+                        ->label('Als abgerechnet markieren')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->modalHeading('Ausgewählte als abgerechnet markieren')
+                        ->modalDescription('Sollen die ausgewählten Einträge als abgerechnet markiert werden (ohne Rechnungserstellung)?')
+                        ->action(function (Collection $records) {
+                            $unbilledIds = $records->filter(fn ($record) => ! $record->is_billed)->pluck('id')->toArray();
+
+                            if (empty($unbilledIds)) {
+                                Notification::make()
+                                    ->title('Keine offenen Einträge ausgewählt')
+                                    ->warning()
+                                    ->send();
+
+                                return;
+                            }
+
+                            $count = app(WorkLogService::class)->markAsBilled($unbilledIds);
+
+                            Notification::make()
+                                ->title("{$count} Einträge als abgerechnet markiert")
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion(),
                     DeleteBulkAction::make()
                         ->before(function ($records) {
                             // Only allow deleting unbilled entries

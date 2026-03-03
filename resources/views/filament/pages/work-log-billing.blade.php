@@ -2,6 +2,18 @@
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {{-- Left Column: Unbilled Summary --}}
         <div>
+            {{-- Month Filter --}}
+            <div class="mb-4">
+                <select
+                    wire:model.live="filterMonth"
+                    class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                >
+                    @foreach($this->getFilterMonthOptions() as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <x-filament::section>
                 <x-slot name="heading">
                     Offene Abrechnungen
@@ -200,6 +212,22 @@
                             </span>
                             <span wire:loading wire:target="createInvoice">
                                 Erstelle Rechnung...
+                            </span>
+                        </x-filament::button>
+
+                        <x-filament::button
+                            wire:click="markAsBilled"
+                            wire:loading.attr="disabled"
+                            :disabled="empty($selectedWorkLogIds)"
+                            color="success"
+                            size="lg"
+                            icon="heroicon-o-check-circle"
+                        >
+                            <span wire:loading.remove wire:target="markAsBilled">
+                                Als abgerechnet markieren
+                            </span>
+                            <span wire:loading wire:target="markAsBilled">
+                                Markiere...
                             </span>
                         </x-filament::button>
 

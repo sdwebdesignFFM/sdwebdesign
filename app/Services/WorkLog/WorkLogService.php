@@ -164,6 +164,21 @@ class WorkLogService
     }
 
     /**
+     * Mark work logs as billed without creating an invoice.
+     *
+     * @param  array<int>  $workLogIds
+     */
+    public function markAsBilled(array $workLogIds): int
+    {
+        return WorkLog::whereIn('id', $workLogIds)
+            ->unbilled()
+            ->update([
+                'is_billed' => true,
+                'updated_at' => now(),
+            ]);
+    }
+
+    /**
      * Get statistics for a client.
      *
      * @return array{total_hours_unbilled: float, total_amount_unbilled: float, total_hours_billed: float, total_amount_billed: float}

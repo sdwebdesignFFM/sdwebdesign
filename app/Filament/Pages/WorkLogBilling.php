@@ -11,6 +11,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Url;
 
 class WorkLogBilling extends Page
 {
@@ -21,6 +22,9 @@ class WorkLogBilling extends Page
     protected static \UnitEnum|string|null $navigationGroup = 'Zeiterfassung';
 
     protected static ?int $navigationSort = 2;
+
+    #[Url]
+    public ?string $filterMonth = null;
 
     public ?int $selectedClientId = null;
 
@@ -40,7 +44,30 @@ class WorkLogBilling extends Page
 
     public function getUnbilledSummary(): Collection
     {
-        return app(WorkLogService::class)->getUnbilledSummary();
+        $summary = app(WorkLogService::class)->getUnbilledSummary();
+
+        if ($this->filterMonth) {
+            $summary = $summary->filter(
+                fn ($item) => $item['month']->format('Y-m') === $this->filterMonth
+            )->values();
+        }
+
+        return $summary;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getFilterMonthOptions(): array
+    {
+        $months = ['' => 'Alle Monate'];
+        for ($i = 0; $i < 12; $i++) {
+            $date = now()->subMonths($i);
+            $key = $date->format('Y-m');
+            $months[$key] = $date->translatedFormat('F Y');
+        }
+
+        return $months;
     }
 
     public function getSelectedEntries(): Collection
@@ -128,6 +155,29 @@ class WorkLogBilling extends Page
     public function deselectAllEntries(): void
     {
         $this->selectedWorkLogIds = [];
+    }
+
+    public function markAsBilled(): void
+    {
+        if (empty($this->selectedWorkLogIds)) {
+            Notification::make()
+                ->title('Keine Einträge ausgewählt')
+                ->body('Bitte wählen Sie mindestens einen Eintrag aus.')
+                ->warning()
+                ->send();
+
+            return;
+        }
+
+        $count = app(WorkLogService::class)->markAsBilled($this->selectedWorkLogIds);
+
+        Notification::make()
+            ->title('Als abgerechnet markiert')
+            ->body("{$count} Einträge wurden als abgerechnet markiert.")
+            ->success()
+            ->send();
+
+        $this->clearSelection();
     }
 
     public function createInvoice(): void
