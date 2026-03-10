@@ -7,6 +7,7 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -39,10 +40,24 @@ class WorkLogsRelationManager extends RelationManager
                     ->required(),
 
                 TextInput::make('title')
-                    ->label('Beschreibung')
-                    ->placeholder('Was wurde erledigt?')
+                    ->label('Titel')
+                    ->placeholder('z.B. Blogbeitrag angelegt')
                     ->required()
                     ->maxLength(255)
+                    ->columnSpanFull(),
+
+                RichEditor::make('description')
+                    ->label('Beschreibung')
+                    ->placeholder('Was wurde erledigt?')
+                    ->toolbarButtons([
+                        'bold',
+                        'italic',
+                        'underline',
+                        'strike',
+                        'bulletList',
+                        'orderedList',
+                        'link',
+                    ])
                     ->columnSpanFull(),
             ]);
     }
@@ -57,8 +72,14 @@ class WorkLogsRelationManager extends RelationManager
                     ->sortable(),
 
                 TextColumn::make('title')
-                    ->label('Beschreibung')
+                    ->label('Titel')
                     ->limit(50),
+
+                TextColumn::make('description')
+                    ->label('Beschreibung')
+                    ->html()
+                    ->limit(80)
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('duration_formatted')
                     ->label('Dauer')
