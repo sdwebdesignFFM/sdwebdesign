@@ -284,8 +284,8 @@ class Page extends Model
             self::TYPE_SEA => $prefix.($locale === 'en' ? '/search-engine-advertising' : '/suchmaschinenwerbung'),
             self::TYPE_MAINTENANCE => $prefix.($locale === 'en' ? '/hosting-maintenance' : '/betrieb-hosting-wartung'),
             self::TYPE_ACCESSIBILITY => $prefix.($locale === 'en' ? '/accessibility' : '/barrierefreiheit'),
-            self::TYPE_LOCAL_HUB => '/in/',
-            self::TYPE_LOCAL => '/in/'.$this->slug.'/',
+            self::TYPE_LOCAL_HUB => '/in',
+            self::TYPE_LOCAL => '/in/'.$this->slug,
             default => $prefix.'/'.$this->slug,
         };
     }

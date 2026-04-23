@@ -18,28 +18,28 @@ if (! function_exists('localized_route')) {
 if (! function_exists('alternate_locale_url')) {
     /**
      * Get the URL for the current page in an alternate locale.
+     *
+     * When $strict is true, returns null if no equivalent route exists in
+     * the target locale — use this for hreflang tags, which should never
+     * point at a non-equivalent fallback (Google flags those as unconfirmed
+     * pairs in Search Console). For UX surfaces like a language switcher,
+     * leave $strict off so the user still has somewhere to go.
      */
-    function alternate_locale_url(string $locale): string
+    function alternate_locale_url(string $locale, bool $strict = false): ?string
     {
-        $currentLocale = app()->getLocale();
+        $fallback = $locale === 'de' ? url('/') : url('/en');
         $currentRouteName = request()->route()?->getName();
 
         if (! $currentRouteName) {
-            return $locale === 'de' ? url('/') : url('/en');
+            return $strict ? null : $fallback;
         }
 
-        // Extract the base route name (without locale prefix)
         $baseName = preg_replace('/^(de|en)\./', '', $currentRouteName);
-
-        // Get route parameters
         $parameters = request()->route()?->parameters() ?? [];
-
-        // Build the new route name
         $newRouteName = $locale.'.'.$baseName;
 
-        // Check if the route exists
         if (! \Illuminate\Support\Facades\Route::has($newRouteName)) {
-            return $locale === 'de' ? url('/') : url('/en');
+            return $strict ? null : $fallback;
         }
 
         return route($newRouteName, $parameters);

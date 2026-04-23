@@ -161,7 +161,7 @@
                 {{-- Lokale Expertise --}}
                 @if(app()->getLocale() === 'de')
                 <div class="mt-8">
-                    <a href="/in/" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    <a href="/in" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
                         <x-frontend.icon name="map-pin" class="w-4 h-4" />
                         Lokale Expertise im Rhein-Main-Gebiet
                     </a>

@@ -15,12 +15,22 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
 
-    <link rel="canonical" href="{{ url()->current() }}" />
+    {{-- Canonical is emitted by SEOMeta::generate() above; do not duplicate here. --}}
 
-    {{-- hreflang Tags for SEO --}}
-    <link rel="alternate" hreflang="de" href="{{ alternate_locale_url('de') }}" />
-    <link rel="alternate" hreflang="en" href="{{ alternate_locale_url('en') }}" />
-    <link rel="alternate" hreflang="x-default" href="{{ alternate_locale_url('de') }}" />
+    {{-- hreflang Tags for SEO — only emit when a true equivalent exists --}}
+    @php
+        $hreflangDe = alternate_locale_url('de', strict: true);
+        $hreflangEn = alternate_locale_url('en', strict: true);
+    @endphp
+    @if ($hreflangDe)
+    <link rel="alternate" hreflang="de" href="{{ $hreflangDe }}" />
+    @endif
+    @if ($hreflangEn)
+    <link rel="alternate" hreflang="en" href="{{ $hreflangEn }}" />
+    @endif
+    @if ($hreflangDe)
+    <link rel="alternate" hreflang="x-default" href="{{ $hreflangDe }}" />
+    @endif
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 

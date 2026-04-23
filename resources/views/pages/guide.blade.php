@@ -299,4 +299,13 @@
             </div>
         </div>
     </section>
+
+    {{-- BlogPosting Schema --}}
+    @isset($blogPostingSchema)
+    @push('scripts')
+    <script type="application/ld+json">
+    {!! json_encode($blogPostingSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+    @endpush
+    @endisset
 </x-layouts.frontend>

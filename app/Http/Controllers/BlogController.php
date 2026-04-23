@@ -76,10 +76,61 @@ class BlogController extends Controller
         OpenGraph::setDescription($article->meta_description ?? $article->excerpt);
         OpenGraph::addProperty('type', 'article');
         OpenGraph::addProperty('article:published_time', $article->published_at?->toIso8601String());
-        JsonLd::setType('Article');
-        JsonLd::setTitle($article->meta_title ?? $article->title);
-        JsonLd::setDescription($article->meta_description ?? $article->excerpt);
 
-        return view('pages.blog.show', compact('article', 'relatedArticles'));
+        $blogPostingSchema = $this->buildBlogPostingSchema($article);
+
+        return view('pages.blog.show', compact('article', 'relatedArticles', 'blogPostingSchema'));
+    }
+
+    /**
+     * Build the full BlogPosting schema. We emit this as a raw <script> in the
+     * view so all required Article rich-result fields are actually present —
+     * the JsonLd facade was previously emitting a bare "Article" with no dates,
+     * author, or publisher, which disqualifies the page from rich results.
+     *
+     * @return array<string, mixed>
+     */
+    private function buildBlogPostingSchema(BlogArticle $article): array
+    {
+        $settings = \App\Models\Setting::first();
+        $baseUrl = rtrim(config('app.url'), '/');
+        if (! str_contains($baseUrl, '.test') && ! str_contains($baseUrl, 'localhost')) {
+            $baseUrl = preg_replace('#^http://#', 'https://', $baseUrl);
+        }
+
+        $url = $baseUrl.'/ratgeber/'.$article->getTranslation('slug', 'de');
+        $orgId = $baseUrl.'/#organization';
+
+        return array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'BlogPosting',
+            'mainEntityOfPage' => [
+                '@type' => 'WebPage',
+                '@id' => $url,
+            ],
+            'headline' => $article->meta_title ?? $article->title,
+            'description' => $article->meta_description ?? $article->excerpt,
+            'url' => $url,
+            'datePublished' => $article->published_at?->toIso8601String(),
+            'dateModified' => ($article->updated_at ?? $article->published_at)?->toIso8601String(),
+            'inLanguage' => 'de-DE',
+            'author' => [
+                '@type' => 'Organization',
+                '@id' => $orgId,
+                'name' => $settings?->company_name ?? 'sdWebdesign',
+                'url' => $baseUrl,
+            ],
+            'publisher' => [
+                '@type' => 'Organization',
+                '@id' => $orgId,
+                'name' => $settings?->company_name ?? 'sdWebdesign',
+                'url' => $baseUrl,
+                'logo' => [
+                    '@type' => 'ImageObject',
+                    'url' => $baseUrl.'/apple-touch-icon.png',
+                ],
+            ],
+            'image' => $baseUrl.'/apple-touch-icon.png',
+        ], fn ($v) => $v !== null && $v !== '');
     }
 }

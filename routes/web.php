@@ -3,8 +3,8 @@
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
-use Spatie\Sitemap\SitemapGenerator;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,14 +113,8 @@ Route::prefix('angebot')->group(function () {
     Route::get('/{token}/angenommen', [QuoteController::class, 'accepted'])->name('quotes.accepted');
 });
 
-// Sitemap Route
-Route::get('/sitemap.xml', function () {
-    return response(
-        SitemapGenerator::create(config('app.url'))->getSitemap()->render(),
-        200,
-        ['Content-Type' => 'application/xml']
-    );
-})->name('sitemap');
+// Sitemap Route — built from DB, forces https on prod hostnames.
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 
 // robots.txt Route
 Route::get('/robots.txt', function () {

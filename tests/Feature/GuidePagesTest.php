@@ -232,4 +232,32 @@ class GuidePagesTest extends TestCase
         $response->assertStatus(200);
         $response->assertDontSee('page=2');
     }
+
+    public function test_guide_page_emits_blog_posting_schema(): void
+    {
+        $response = $this->get('/ratgeber/website-vs-webanwendung');
+
+        $response->assertStatus(200);
+
+        $html = $response->getContent();
+        preg_match_all('#<script type="application/ld\+json">(.*?)</script>#s', $html, $matches);
+
+        $blogPosting = null;
+        foreach ($matches[1] as $jsonText) {
+            $data = json_decode(trim($jsonText), true);
+            if (isset($data['@type']) && $data['@type'] === 'BlogPosting') {
+                $blogPosting = $data;
+                break;
+            }
+        }
+
+        $this->assertNotNull($blogPosting, 'Guide page must emit a BlogPosting schema block');
+        $this->assertArrayHasKey('headline', $blogPosting);
+        $this->assertArrayHasKey('datePublished', $blogPosting);
+        $this->assertArrayHasKey('dateModified', $blogPosting);
+        $this->assertArrayHasKey('author', $blogPosting);
+        $this->assertArrayHasKey('publisher', $blogPosting);
+        $this->assertSame('Organization', $blogPosting['publisher']['@type']);
+        $this->assertArrayHasKey('logo', $blogPosting['publisher']);
+    }
 }

@@ -35,37 +35,37 @@
         $solutionLinks = [
             [
                 'title' => 'Unternehmenswebsites',
-                'url' => '/loesungen/websites/',
+                'url' => '/loesungen/websites',
                 'teaser' => 'Klare, schnelle Websites mit Substanz – vom Einstieg bis zur erweiterbaren Lösung.',
                 'icon' => 'globe',
             ],
             [
                 'title' => 'Digitale Plattformen',
-                'url' => '/loesungen/plattformen/',
+                'url' => '/loesungen/plattformen',
                 'teaser' => 'Interne Tools, Portale und individuelle Geschäftslogik für strukturierte Abläufe.',
                 'icon' => 'layers',
             ],
             [
                 'title' => 'E-Commerce',
-                'url' => '/loesungen/e-commerce/',
+                'url' => '/loesungen/e-commerce',
                 'teaser' => 'B2C/B2B-Shops und integrierte Shop-Lösungen mit Fokus auf Performance.',
                 'icon' => 'shopping-cart',
             ],
             [
                 'title' => 'Mobile Anwendungen',
-                'url' => '/loesungen/mobile-anwendungen/',
+                'url' => '/loesungen/mobile-anwendungen',
                 'teaser' => 'iOS, PWA und mobile Erweiterungen als Teil Ihrer Systemlösung.',
                 'icon' => 'device-phone-mobile',
             ],
             [
                 'title' => 'SEO',
-                'url' => '/seo/',
+                'url' => '/suchmaschinenoptimierung',
                 'teaser' => 'Technische SEO und Content-Struktur – nachhaltig auffindbar statt kurzfristiger Tricks.',
                 'icon' => 'magnifying-glass',
             ],
             [
                 'title' => 'SEA',
-                'url' => '/sea/',
+                'url' => '/suchmaschinenwerbung',
                 'teaser' => 'Google Ads als skalierbarer Kanal – mit starken Landingpages und sauberem Tracking.',
                 'icon' => 'currency-euro',
             ],
@@ -83,7 +83,7 @@
             </li>
             <li class="text-muted-foreground/50">→</li>
             <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                <a href="/in/" itemprop="item" class="hover:text-foreground transition-colors">
+                <a href="/in" itemprop="item" class="hover:text-foreground transition-colors">
                     <span itemprop="name">Standorte</span>
                 </a>
                 <meta itemprop="position" content="2" />
@@ -241,7 +241,7 @@
 
             {{-- Back to Hub Link --}}
             <div class="mt-8 text-center">
-                <a href="/in/" class="inline-flex items-center gap-2 text-[0.9375rem] text-muted-foreground hover:text-foreground transition-colors">
+                <a href="/in" class="inline-flex items-center gap-2 text-[0.9375rem] text-muted-foreground hover:text-foreground transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="m15 18-6-6 6-6"/>
                     </svg>
@@ -250,6 +250,15 @@
             </div>
         </div>
     </section>
+
+    {{-- LocalBusiness / ProfessionalService Schema --}}
+    @isset($localBusinessSchema)
+    @push('scripts')
+    <script type="application/ld+json">
+    {!! json_encode($localBusinessSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+    @endpush
+    @endisset
 
     {{-- FAQ Schema for Local SEO --}}
     @push('scripts')

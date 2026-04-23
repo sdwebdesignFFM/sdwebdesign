@@ -140,7 +140,7 @@ class LocalPagesTest extends TestCase
     {
         $page = Page::where('type', Page::TYPE_LOCAL)->first();
 
-        $this->assertEquals('/in/bad-homburg/', $page->getUrl());
+        $this->assertEquals('/in/bad-homburg', $page->getUrl());
     }
 
     public function test_nonexistent_local_page_returns_404(): void
@@ -176,17 +176,61 @@ class LocalPagesTest extends TestCase
         $response->assertSee('Webagentur Bad Homburg: Websites, Shops &amp; Systeme', false);
     }
 
+    public function test_local_page_does_not_emit_english_hreflang(): void
+    {
+        // /in/* pages have no English equivalent — hreflang tags pointing at
+        // /en would be an unconfirmed pair in GSC, so they must be absent.
+        $response = $this->get('/in/bad-homburg');
+
+        $response->assertStatus(200);
+        $this->assertStringNotContainsString('hreflang="en"', $response->getContent());
+    }
+
+    public function test_local_page_emits_complete_local_business_schema(): void
+    {
+        $response = $this->get('/in/bad-homburg');
+
+        $response->assertStatus(200);
+
+        $html = $response->getContent();
+        preg_match_all('#<script type="application/ld\+json">(.*?)</script>#s', $html, $matches);
+
+        // Find the ProfessionalService block (not FAQPage, not BreadcrumbList)
+        $localBusiness = null;
+        foreach ($matches[1] as $jsonText) {
+            $data = json_decode(trim($jsonText), true);
+            if (isset($data['@type']) && $data['@type'] === 'ProfessionalService') {
+                $localBusiness = $data;
+                break;
+            }
+        }
+
+        $this->assertNotNull($localBusiness, 'Local page must emit a ProfessionalService schema block');
+
+        // Verify all the previously-lost fields are now present.
+        $this->assertArrayHasKey('@id', $localBusiness);
+        $this->assertStringEndsWith('#organization', $localBusiness['@id']);
+        $this->assertArrayHasKey('geo', $localBusiness);
+        $this->assertArrayHasKey('latitude', $localBusiness['geo']);
+        $this->assertArrayHasKey('longitude', $localBusiness['geo']);
+        $this->assertArrayHasKey('openingHoursSpecification', $localBusiness);
+        $this->assertArrayHasKey('hasOfferCatalog', $localBusiness);
+        $this->assertArrayHasKey('areaServed', $localBusiness);
+        $this->assertSame('Bad Homburg', $localBusiness['areaServed']['name']);
+        $this->assertArrayHasKey('logo', $localBusiness);
+    }
+
     public function test_local_page_links_work(): void
     {
         $response = $this->get('/in/bad-homburg');
 
         $response->assertStatus(200);
-        $response->assertSee('/loesungen/websites/');
-        $response->assertSee('/loesungen/plattformen/');
-        $response->assertSee('/loesungen/e-commerce/');
-        $response->assertSee('/loesungen/mobile-anwendungen/');
-        $response->assertSee('/seo/');
-        $response->assertSee('/sea/');
+        $response->assertSee('/loesungen/websites');
+        $response->assertSee('/loesungen/plattformen');
+        $response->assertSee('/loesungen/e-commerce');
+        $response->assertSee('/loesungen/mobile-anwendungen');
+        $response->assertSee('/suchmaschinenoptimierung');
+        $response->assertSee('/suchmaschinenwerbung');
     }
 
     public function test_local_page_links_back_to_hub(): void
@@ -194,7 +238,7 @@ class LocalPagesTest extends TestCase
         $response = $this->get('/in/bad-homburg');
 
         $response->assertStatus(200);
-        $response->assertSee('/in/');
+        $response->assertSee('href="/in"', false);
         $response->assertSee('Weitere Standorte im Rhein-Main-Gebiet');
     }
 
@@ -325,7 +369,7 @@ class LocalPagesTest extends TestCase
             'content' => ['de' => []],
         ]);
 
-        $this->assertEquals('/in/', $page->getUrl());
+        $this->assertEquals('/in', $page->getUrl());
     }
 
     public function test_local_hub_without_page_returns_404(): void

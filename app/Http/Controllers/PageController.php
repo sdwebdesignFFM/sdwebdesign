@@ -318,7 +318,9 @@ class PageController extends Controller
             ->limit(3)
             ->get();
 
-        return view('pages.guide', compact('page', 'relatedSolutions', 'otherGuides'));
+        $blogPostingSchema = $this->buildGuideBlogPostingSchema($page);
+
+        return view('pages.guide', compact('page', 'relatedSolutions', 'otherGuides', 'blogPostingSchema'));
     }
 
     public function seo(): View
@@ -403,7 +405,6 @@ class PageController extends Controller
         }
 
         $this->setSeoMeta($page);
-        $this->setLocalBusinessJsonLd($page);
         $this->setLocalBreadcrumbsJsonLd($page);
 
         // Get all solution hubs for linking
@@ -417,7 +418,9 @@ class PageController extends Controller
         $seoPage = Page::findByType(Page::TYPE_SEO);
         $seaPage = Page::findByType(Page::TYPE_SEA);
 
-        return view('pages.local', compact('page', 'solutionHubs', 'seoPage', 'seaPage'));
+        $localBusinessSchema = $this->buildLocalBusinessSchema($page);
+
+        return view('pages.local', compact('page', 'solutionHubs', 'seoPage', 'seaPage', 'localBusinessSchema'));
     }
 
     private function setSeoMeta(Page $page): void
@@ -474,49 +477,121 @@ class PageController extends Controller
         JsonLd::addValue('itemListElement', $items);
     }
 
-    private function setLocalBusinessJsonLd(Page $page): void
+    /**
+     * Build the BlogPosting schema for a guide page so it becomes
+     * eligible for Article rich results.
+     *
+     * @return array<string, mixed>
+     */
+    private function buildGuideBlogPostingSchema(Page $page): array
+    {
+        $settings = \App\Models\Setting::first();
+        $baseUrl = rtrim(config('app.url'), '/');
+        if (! str_contains($baseUrl, '.test') && ! str_contains($baseUrl, 'localhost')) {
+            $baseUrl = preg_replace('#^http://#', 'https://', $baseUrl);
+        }
+
+        $url = $baseUrl.$page->getUrl();
+        $orgId = $baseUrl.'/#organization';
+
+        return array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'BlogPosting',
+            'mainEntityOfPage' => [
+                '@type' => 'WebPage',
+                '@id' => $url,
+            ],
+            'headline' => $page->meta_title ?? $page->title,
+            'description' => $page->meta_description,
+            'url' => $url,
+            'datePublished' => $page->created_at?->toIso8601String(),
+            'dateModified' => ($page->updated_at ?? $page->created_at)?->toIso8601String(),
+            'inLanguage' => 'de-DE',
+            'author' => [
+                '@type' => 'Organization',
+                '@id' => $orgId,
+                'name' => $settings?->company_name ?? 'sdWebdesign',
+                'url' => $baseUrl,
+            ],
+            'publisher' => [
+                '@type' => 'Organization',
+                '@id' => $orgId,
+                'name' => $settings?->company_name ?? 'sdWebdesign',
+                'url' => $baseUrl,
+                'logo' => [
+                    '@type' => 'ImageObject',
+                    'url' => $baseUrl.'/apple-touch-icon.png',
+                ],
+            ],
+            'image' => $baseUrl.'/apple-touch-icon.png',
+        ], fn ($v) => $v !== null && $v !== '');
+    }
+
+    /**
+     * Build the LocalBusiness / ProfessionalService schema for a local landing page.
+     *
+     * Emitted as a raw <script type="application/ld+json"> block in the view so the
+     * full nested structure (geo, openingHours, hasOfferCatalog, sameAs) survives —
+     * the JsonLd facade collapses some of these on output.
+     *
+     * @return array<string, mixed>
+     */
+    private function buildLocalBusinessSchema(Page $page): array
     {
         $settings = \App\Models\Setting::first();
         $city = $page->getSection('city', $page->title);
+        $baseUrl = rtrim(config('app.url'), '/');
 
-        // Build comprehensive LocalBusiness schema
+        // Force https on production hostnames; keep dev URLs (.test, localhost) as-is.
+        if (! str_contains($baseUrl, '.test') && ! str_contains($baseUrl, 'localhost')) {
+            $baseUrl = preg_replace('#^http://#', 'https://', $baseUrl);
+        }
+
+        $address = array_filter([
+            '@type' => 'PostalAddress',
+            'streetAddress' => $settings?->street,
+            'postalCode' => $settings?->postal_code,
+            'addressLocality' => $settings?->city,
+            'addressCountry' => 'DE',
+        ]);
+
+        $sameAs = array_values(array_filter([
+            $settings?->linkedin_url,
+            $settings?->xing_url,
+            $settings?->instagram_url,
+            $settings?->facebook_url,
+            $settings?->github_url,
+        ]));
+
         $schema = [
             '@context' => 'https://schema.org',
             '@type' => 'ProfessionalService',
-            '@id' => url($page->getUrl()).'#localbusiness',
+            '@id' => $baseUrl.'/#organization',
             'name' => $settings?->company_name ?? 'sdWebdesign',
+            'url' => $baseUrl,
+            'logo' => $baseUrl.'/apple-touch-icon.png',
+            'image' => $baseUrl.'/apple-touch-icon.png',
             'description' => $page->meta_description ?? "Webagentur für {$city}: Websites, Online-Shops und digitale Systeme",
-            'url' => url($page->getUrl()),
-            'telephone' => $settings?->mobile ?? $settings?->phone,
-            'email' => $settings?->email,
-            'address' => [
-                '@type' => 'PostalAddress',
-                'streetAddress' => $settings?->street,
-                'postalCode' => $settings?->postal_code,
-                'addressLocality' => $settings?->city,
-                'addressCountry' => 'DE',
-            ],
+            'address' => $address,
             'geo' => [
                 '@type' => 'GeoCoordinates',
-                'latitude' => '50.1109',
-                'longitude' => '8.6821',
+                'latitude' => 50.1109,
+                'longitude' => 8.6821,
             ],
             'areaServed' => [
                 '@type' => 'City',
                 'name' => $city,
             ],
+            'telephone' => $settings?->mobile ?? $settings?->phone,
+            'email' => $settings?->email,
             'priceRange' => '€€€',
-            'openingHoursSpecification' => [
+            'openingHoursSpecification' => [[
                 '@type' => 'OpeningHoursSpecification',
                 'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
                 'opens' => '08:00',
                 'closes' => '18:00',
-            ],
-            'sameAs' => array_filter([
-                $settings?->linkedin_url,
-                $settings?->xing_url,
-                $settings?->github_url,
-            ]),
+            ]],
+            'sameAs' => $sameAs,
             'hasOfferCatalog' => [
                 '@type' => 'OfferCatalog',
                 'name' => 'Webentwicklung & Digitale Lösungen',
@@ -530,15 +605,7 @@ class PageController extends Controller
             ],
         ];
 
-        // Use raw JSON-LD instead of the facade for more control
-        JsonLd::setType('ProfessionalService');
-        JsonLd::setTitle($settings?->company_name ?? 'sdWebdesign');
-        JsonLd::setDescription($page->meta_description ?? "Webagentur für {$city}");
-        JsonLd::addValue('address', $schema['address']);
-        JsonLd::addValue('areaServed', $schema['areaServed']);
-        JsonLd::addValue('telephone', $schema['telephone']);
-        JsonLd::addValue('email', $schema['email']);
-        JsonLd::addValue('priceRange', '€€€');
+        return array_filter($schema, fn ($v) => $v !== null && $v !== '' && $v !== []);
     }
 
     private function setLocalBreadcrumbsJsonLd(Page $page): void
