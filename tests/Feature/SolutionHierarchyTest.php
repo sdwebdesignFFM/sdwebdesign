@@ -510,4 +510,90 @@ class SolutionHierarchyTest extends TestCase
         $response->assertSee('Schritt 1');
         $response->assertSee('Kontakt aufnehmen');
     }
+
+    public function test_solution_hub_renders_package_contents_when_set(): void
+    {
+        Page::factory()->create([
+            'type' => Page::TYPE_SOLUTION_HUB,
+            'slug' => ['de' => 'gruenderpaket-frankfurt', 'en' => 'gruenderpaket-frankfurt'],
+            'title' => ['de' => 'Gründerpaket Frankfurt', 'en' => 'Founder Package Frankfurt'],
+            'is_active' => true,
+            'content' => [
+                'de' => [
+                    'hero' => ['title' => 'Gründerpaket Frankfurt'],
+                    'package' => [
+                        'headline' => 'Was Sie im Gründerpaket bekommen',
+                        'intro' => 'Alles aus einer Hand für einen professionellen Start.',
+                        'items' => [
+                            ['name' => 'Individuelle Website', 'description' => 'Responsive, DSGVO-konform'],
+                            ['name' => 'Logo & Corporate Identity', 'description' => 'Markenstart in 2 Wochen'],
+                            ['name' => 'E-Mail & Domain Setup', 'description' => 'Mit eigener Domain'],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $response = $this->get('/loesungen/gruenderpaket-frankfurt');
+
+        $response->assertStatus(200);
+        $response->assertSee('Was Sie im Gründerpaket bekommen');
+        $response->assertSee('Alles aus einer Hand für einen professionellen Start.');
+        $response->assertSee('Individuelle Website');
+        $response->assertSee('Logo &amp; Corporate Identity', false);
+        $response->assertSee('E-Mail &amp; Domain Setup', false);
+    }
+
+    public function test_solution_hub_renders_pricing_and_timeline_when_set(): void
+    {
+        Page::factory()->create([
+            'type' => Page::TYPE_SOLUTION_HUB,
+            'slug' => ['de' => 'gruenderpaket-frankfurt', 'en' => 'gruenderpaket-frankfurt'],
+            'title' => ['de' => 'Gründerpaket Frankfurt', 'en' => 'Founder Package Frankfurt'],
+            'is_active' => true,
+            'content' => [
+                'de' => [
+                    'hero' => ['title' => 'Gründerpaket Frankfurt'],
+                    'pricing' => [
+                        'label' => 'Gründerpaket ab 4.500 €',
+                        'note' => 'Transparent kalkuliert',
+                    ],
+                    'timeline' => [
+                        'label' => '4–6 Wochen bis Launch',
+                        'note' => 'Von Briefing bis Go-Live',
+                    ],
+                ],
+            ],
+        ]);
+
+        $response = $this->get('/loesungen/gruenderpaket-frankfurt');
+
+        $response->assertStatus(200);
+        $response->assertSee('Gründerpaket ab 4.500 €');
+        $response->assertSee('Transparent kalkuliert');
+        $response->assertSee('4–6 Wochen bis Launch');
+        $response->assertSee('Von Briefing bis Go-Live');
+    }
+
+    public function test_solution_hub_hides_package_block_when_not_set(): void
+    {
+        // Standard solution hubs (e.g. /loesungen/websites) should not show
+        // the Paket-Inhalt UI — it's scoped to bundle/package hubs only.
+        Page::factory()->create([
+            'type' => Page::TYPE_SOLUTION_HUB,
+            'slug' => ['de' => 'plain-hub', 'en' => 'plain-hub'],
+            'title' => ['de' => 'Plain Hub', 'en' => 'Plain Hub'],
+            'is_active' => true,
+            'content' => [
+                'de' => ['hero' => ['title' => 'Plain Hub']],
+            ],
+        ]);
+
+        $response = $this->get('/loesungen/plain-hub');
+
+        $response->assertStatus(200);
+        // The pricing/timeline label microcopy must not appear on standard hubs
+        $response->assertDontSee('uppercase tracking-wider text-muted-foreground mb-2">Preis<', false);
+        $response->assertDontSee('uppercase tracking-wider text-muted-foreground mb-2">Zeitrahmen<', false);
+    }
 }

@@ -19,6 +19,8 @@ class HubPageForm
         return [
             self::getHeroTab(),
             self::getIntroTab(),
+            self::getPackageContentsTab(),
+            self::getPricingTimelineTab(),
             self::getWhenUsefulTab(),
             self::getUseCaseCategoriesTab(),
             self::getCardsIntroTab(),
@@ -273,6 +275,85 @@ class HubPageForm
                         Textarea::make('content.growth.text')
                             ->label('Text')
                             ->rows(4),
+                    ]),
+            ]);
+    }
+
+    /**
+     * Optional tab used on bundle/package hubs (e.g. Gründerpaket) —
+     * renders a checklist of what's included in the offering. Empty on
+     * standard solution hubs so nothing shows up there.
+     */
+    private static function getPackageContentsTab(): Tab
+    {
+        return Tab::make('Paket-Inhalt')
+            ->icon(Heroicon::OutlinedCheckBadge)
+            ->schema([
+                Section::make('Was ist im Paket enthalten')
+                    ->description('Optional — nur für Paket-/Bundle-Hubs (z.B. Gründerpaket). Checkliste der enthaltenen Leistungen. Leer lassen bei normalen Solution-Hubs.')
+                    ->schema([
+                        TextInput::make('content.package.headline')
+                            ->label('Überschrift')
+                            ->placeholder('z.B. Was Sie im Gründerpaket bekommen'),
+
+                        Textarea::make('content.package.intro')
+                            ->label('Einleitungstext')
+                            ->rows(2)
+                            ->placeholder('z.B. Alle Leistungen, die Sie für einen professionellen Start brauchen — aus einer Hand, mit einem Ansprechpartner.'),
+
+                        Repeater::make('content.package.items')
+                            ->label('Enthaltene Leistungen')
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Leistung')
+                                    ->required()
+                                    ->placeholder('z.B. Individuelle Website (5 Seiten)'),
+                                Textarea::make('description')
+                                    ->label('Kurzbeschreibung')
+                                    ->rows(2)
+                                    ->placeholder('z.B. Responsive, DSGVO-konform, Impressum & Datenschutz inklusive'),
+                            ])
+                            ->columns(2)
+                            ->reorderable()
+                            ->collapsible()
+                            ->defaultItems(0)
+                            ->addActionLabel('Leistung hinzufügen'),
+                    ]),
+            ]);
+    }
+
+    /**
+     * Optional tab — renders a price range + timeline signal block. For
+     * founder/package pages this is the #1 bounce-reduction block: shows
+     * buyers what they're in for before they have to contact anyone.
+     */
+    private static function getPricingTimelineTab(): Tab
+    {
+        return Tab::make('Preis & Timeline')
+            ->icon(Heroicon::OutlinedCurrencyEuro)
+            ->schema([
+                Section::make('Preissignal')
+                    ->description('Optional — ein sichtbarer Preisanker reduziert Bounce-Rate erheblich. Nutze einen Rahmen ("ab X €") oder eine Range, keine Fixpreise.')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('content.pricing.label')
+                            ->label('Preis-Anker')
+                            ->placeholder('z.B. Gründerpaket ab 4.500 €'),
+                        TextInput::make('content.pricing.note')
+                            ->label('Preis-Zusatz')
+                            ->placeholder('z.B. Transparent kalkuliert — Abhängig von Umfang & Anforderungen'),
+                    ]),
+
+                Section::make('Timeline')
+                    ->description('Wie lange dauert so ein Projekt? Gründer hassen Unsicherheit — eine klare Zeitspanne senkt den Einstiegswiderstand.')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('content.timeline.label')
+                            ->label('Projektdauer')
+                            ->placeholder('z.B. 4–6 Wochen bis Launch'),
+                        TextInput::make('content.timeline.note')
+                            ->label('Zusatz')
+                            ->placeholder('z.B. Von Briefing bis Go-Live'),
                     ]),
             ]);
     }

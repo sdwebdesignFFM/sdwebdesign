@@ -18,6 +18,15 @@
         $relatedGuideSlugs = $page->getSection('related_guides', []);
         $cta = $page->getSection('cta');
 
+        // Optional bundle-hub blocks (used on Gründerpaket etc.) — render only when set.
+        $package = $page->getSection('package', []);
+        $packageItems = is_array($package['items'] ?? null) ? $package['items'] : [];
+        $hasPackage = ! empty($packageItems);
+
+        $pricing = $page->getSection('pricing', []);
+        $timeline = $page->getSection('timeline', []);
+        $hasPricingOrTimeline = ! empty($pricing['label']) || ! empty($timeline['label']);
+
         // Fetch related guides
         $relatedGuidePages = collect();
         foreach ($relatedGuideSlugs as $guideSlug) {
@@ -83,6 +92,72 @@
             </div>
         </div>
     </section>
+
+    {{-- Pricing + Timeline signal — renders only when set (bundle hubs like Gründerpaket) --}}
+    @if($hasPricingOrTimeline)
+    <section class="py-10 border-b border-border bg-muted/5">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="max-w-[900px] flex flex-col md:flex-row gap-6 md:gap-10">
+                @if(! empty($pricing['label']))
+                <div class="flex-1">
+                    <div class="text-[0.75rem] uppercase tracking-wider text-muted-foreground mb-2">Preis</div>
+                    <div class="text-[1.25rem] font-medium">{{ $pricing['label'] }}</div>
+                    @if(! empty($pricing['note']))
+                    <div class="text-[0.875rem] text-muted-foreground mt-1">{{ $pricing['note'] }}</div>
+                    @endif
+                </div>
+                @endif
+                @if(! empty($timeline['label']))
+                <div class="flex-1">
+                    <div class="text-[0.75rem] uppercase tracking-wider text-muted-foreground mb-2">Zeitrahmen</div>
+                    <div class="text-[1.25rem] font-medium">{{ $timeline['label'] }}</div>
+                    @if(! empty($timeline['note']))
+                    <div class="text-[0.875rem] text-muted-foreground mt-1">{{ $timeline['note'] }}</div>
+                    @endif
+                </div>
+                @endif
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- Package contents checklist — bundle hubs (Gründerpaket) only --}}
+    @if($hasPackage)
+    <section class="py-16 border-b border-border">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="max-w-[900px]">
+                @if(! empty($package['headline']))
+                <h2 class="mb-4">{{ $package['headline'] }}</h2>
+                @endif
+                @if(! empty($package['intro']))
+                <p class="text-[1rem] text-muted-foreground mb-10 max-w-[700px]">{{ $package['intro'] }}</p>
+                @endif
+
+                <ul class="grid md:grid-cols-2 gap-x-10 gap-y-5">
+                    @foreach($packageItems as $item)
+                        @php
+                            $itemName = $item['name'] ?? null;
+                            $itemDescription = $item['description'] ?? null;
+                        @endphp
+                        @if($itemName)
+                        <li class="flex items-start gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-accent shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 6 9 17l-5-5"/>
+                            </svg>
+                            <div>
+                                <div class="font-medium">{{ $itemName }}</div>
+                                @if($itemDescription)
+                                <div class="text-[0.9375rem] text-muted-foreground leading-relaxed mt-1">{{ $itemDescription }}</div>
+                                @endif
+                            </div>
+                        </li>
+                        @endif
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    </section>
+    @endif
 
     {{-- Challenge & Approach Section --}}
     @if(($challenge['title'] ?? false) || ($approach['title'] ?? false))
