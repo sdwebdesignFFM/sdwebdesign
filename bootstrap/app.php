@@ -19,9 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'locale' => SetLocale::class,
         ]);
 
-        // Handle 301 redirects for old blog URLs and normalize trailing slashes.
-        // RedirectTrailingSlash runs first so HandleRedirects sees normalized paths.
-        $middleware->web(prepend: [
+        // Redirect middleware must run globally — if we register only on the
+        // `web` group, unmatched URLs (e.g. legacy /services/... pages) would
+        // 404 before the redirect table is consulted.
+        $middleware->prepend([
             RedirectTrailingSlash::class,
             HandleRedirects::class,
         ]);

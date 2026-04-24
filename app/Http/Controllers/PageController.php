@@ -428,6 +428,11 @@ class PageController extends Controller
         $title = $page->meta_title ?? $page->title;
         $description = $page->meta_description ?? '';
 
+        // Strip a manual brand suffix — the SEO package appends it automatically.
+        // Historically editors typed "| sdWebdesign" into meta_title in Filament,
+        // producing a duplicated "Foo | sdWebdesign | sdWebdesign" in the rendered title.
+        $title = preg_replace('/\s*\|\s*sd\s?webdesign\s*$/iu', '', $title);
+
         SEOMeta::setTitle($title);
         if ($description) {
             SEOMeta::setDescription($description);
@@ -435,6 +440,14 @@ class PageController extends Controller
         OpenGraph::setTitle($title);
         if ($description) {
             OpenGraph::setDescription($description);
+        }
+
+        // Per-page noindex toggle (content.meta.noindex). Used to keep pages
+        // accessible via direct link while removing them from Google's index —
+        // typically for thin/duplicate local landing pages that are still
+        // accessible but shouldn't compete with the featured ones.
+        if ($page->getSection('meta.noindex') === true) {
+            SEOMeta::setRobots('noindex, follow');
         }
     }
 

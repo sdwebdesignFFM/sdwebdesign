@@ -176,6 +176,26 @@ class LocalPagesTest extends TestCase
         $response->assertSee('Webagentur Bad Homburg: Websites, Shops &amp; Systeme', false);
     }
 
+    public function test_meta_title_does_not_double_brand_suffix(): void
+    {
+        // Editors historically typed "| sdWebdesign" into meta_title; the package
+        // appends it too. The controller must strip the manual suffix so the final
+        // <title> doesn't end with "| sdWebdesign | sdWebdesign".
+        $page = Page::where('slug->de', 'bad-homburg')->first();
+        $page->update([
+            'meta_title' => ['de' => 'Webagentur Bad Homburg | sdWebdesign'],
+        ]);
+
+        $response = $this->get('/in/bad-homburg');
+
+        $html = $response->getContent();
+        preg_match('#<title>(.*?)</title>#', $html, $m);
+        $title = $m[1] ?? '';
+
+        $this->assertStringNotContainsString('sdWebdesign | sdWebdesign', $title);
+        $this->assertStringContainsString('Webagentur Bad Homburg', $title);
+    }
+
     public function test_local_page_does_not_emit_english_hreflang(): void
     {
         // /in/* pages have no English equivalent — hreflang tags pointing at
@@ -184,6 +204,118 @@ class LocalPagesTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertStringNotContainsString('hreflang="en"', $response->getContent());
+    }
+
+    /**
+     * Merge extra content keys into the Bad Homburg page's DE content,
+     * preserving the translatable wrapper. Direct `content` assignment
+     * bypasses the HasTranslations trait's locale handling.
+     */
+    private function mergeBadHomburgContent(array $extras): void
+    {
+        $page = Page::where('slug->de', 'bad-homburg')->first();
+        $existing = $page->getTranslation('content', 'de') ?? [];
+        $page->setTranslation('content', 'de', array_merge($existing, $extras));
+        $page->save();
+    }
+
+    public function test_noindex_flag_emits_robots_noindex_meta(): void
+    {
+        $this->mergeBadHomburgContent(['meta' => ['noindex' => true]]);
+
+        $response = $this->get('/in/bad-homburg');
+
+        $response->assertStatus(200);
+        $this->assertMatchesRegularExpression(
+            '#<meta[^>]*name="robots"[^>]*content="[^"]*noindex[^"]*"#i',
+            $response->getContent()
+        );
+    }
+
+    public function test_page_without_noindex_flag_is_indexable(): void
+    {
+        $response = $this->get('/in/bad-homburg');
+
+        $response->assertStatus(200);
+        $this->assertDoesNotMatchRegularExpression(
+            '#<meta[^>]*name="robots"[^>]*content="[^"]*noindex[^"]*"#i',
+            $response->getContent()
+        );
+    }
+
+    public function test_trust_bar_renders_when_values_are_set(): void
+    {
+        $this->mergeBadHomburgContent([
+            'trust' => [
+                'project_count' => '50+',
+                'years_in_business' => 'seit 2015',
+                'rating_label' => '4,9/5 auf Google',
+            ],
+        ]);
+
+        $response = $this->get('/in/bad-homburg');
+
+        $response->assertStatus(200);
+        $response->assertSee('50+');
+        $response->assertSee('seit 2015');
+        $response->assertSee('4,9/5 auf Google');
+    }
+
+    public function test_trust_bar_is_hidden_when_values_are_empty(): void
+    {
+        $response = $this->get('/in/bad-homburg');
+
+        $response->assertStatus(200);
+        $response->assertDontSee('uppercase tracking-wider">Projekte<', false);
+    }
+
+    public function test_price_anchor_renders_only_when_set(): void
+    {
+        $this->mergeBadHomburgContent([
+            'trust' => [
+                'price_anchor_label' => 'Websites ab 3.000 €',
+                'price_anchor_note' => 'Transparent kalkuliert',
+            ],
+        ]);
+
+        $response = $this->get('/in/bad-homburg');
+
+        $response->assertSee('Websites ab 3.000 €');
+        $response->assertSee('Transparent kalkuliert');
+    }
+
+    public function test_cases_block_renders_named_references(): void
+    {
+        $this->mergeBadHomburgContent([
+            'cases' => [
+                'items' => [
+                    ['name' => 'Acme Finanz GmbH', 'industry' => 'Finanzberatung', 'description' => 'Unternehmenswebsite'],
+                    ['name' => 'Beta Consulting', 'industry' => 'Beratung', 'description' => 'Portal mit Kundenbereich'],
+                ],
+            ],
+        ]);
+
+        $response = $this->get('/in/bad-homburg');
+
+        $response->assertSee('Acme Finanz GmbH');
+        $response->assertSee('Finanzberatung');
+        $response->assertSee('Beta Consulting');
+        $response->assertSee('Ausgewählte Projekte aus Bad Homburg');
+    }
+
+    public function test_city_usp_block_renders_when_set(): void
+    {
+        $this->mergeBadHomburgContent([
+            'city_usp' => [
+                'headline' => 'Erfahrung im Hochtaunus-Mittelstand',
+                'text' => 'Viele unserer Bad Homburg-Kunden kommen aus Finanz- und Beratungsumfeld.',
+            ],
+        ]);
+
+        $response = $this->get('/in/bad-homburg');
+
+        $response->assertSee('Erfahrung im Hochtaunus-Mittelstand');
+        $response->assertSee('Viele unserer Bad Homburg-Kunden');
     }
 
     public function test_local_page_emits_complete_local_business_schema(): void

@@ -13,6 +13,20 @@
         $localSignal = $page->getSection('local_signal', []);
         $cta = $page->getSection('cta', []);
 
+        // New content blocks (all optional — render only when pflegt).
+        $trust = $page->getSection('trust', []);
+        $cityUsp = $page->getSection('city_usp', []);
+        $cases = $page->getSection('cases.items', []);
+        $techStack = $page->getSection('tech_stack', []);
+
+        $hasTrustBar = ! empty($trust['project_count'])
+            || ! empty($trust['years_in_business'])
+            || ! empty($trust['rating_label']);
+        $hasPriceAnchor = ! empty($trust['price_anchor_label']);
+        $hasCityUsp = ! empty($cityUsp['headline']) || ! empty($cityUsp['text']);
+        $hasCases = ! empty($cases) && is_array($cases);
+        $hasTechStack = ! empty($techStack['items']) && is_array($techStack['items']);
+
         // Default texts with variable replacement
         $defaultIntroHeadline = "Webagentur für {$city} – Websites, Shops & digitale Systeme";
         $defaultIntroText = "Wir unterstützen Unternehmen aus {$city} und dem {$region} bei professionellen Unternehmenswebsites, E-Commerce-Lösungen und individuellen Webanwendungen. Unser Fokus liegt auf sauberer Technik, klarer Struktur und Lösungen, die mit Ihren Anforderungen wachsen.";
@@ -125,9 +139,72 @@
                     {{ $localContext['text'] }}
                 </p>
                 @endif
+
+                {{-- Trust-Bar: concrete numbers signal E-E-A-T to Google and trust to users --}}
+                @if($hasTrustBar)
+                <div class="mt-10 grid sm:grid-cols-3 gap-6 max-w-[750px] border-t border-border pt-8">
+                    @if(! empty($trust['project_count']))
+                    <div>
+                        <div class="text-[1.5rem] font-semibold mb-1">{{ $trust['project_count'] }}</div>
+                        <div class="text-[0.8125rem] text-muted-foreground uppercase tracking-wider">Projekte</div>
+                    </div>
+                    @endif
+                    @if(! empty($trust['years_in_business']))
+                    <div>
+                        <div class="text-[1.5rem] font-semibold mb-1">{{ $trust['years_in_business'] }}</div>
+                        <div class="text-[0.8125rem] text-muted-foreground uppercase tracking-wider">Am Markt</div>
+                    </div>
+                    @endif
+                    @if(! empty($trust['rating_label']))
+                    <div>
+                        <div class="text-[1.5rem] font-semibold mb-1">{{ $trust['rating_label'] }}</div>
+                        <div class="text-[0.8125rem] text-muted-foreground uppercase tracking-wider">Bewertung</div>
+                    </div>
+                    @endif
+                </div>
+                @endif
+
+                {{-- Price anchor: prominently visible, not buried in FAQ schema --}}
+                @if($hasPriceAnchor)
+                <div class="mt-8 inline-flex items-baseline gap-3 px-5 py-3 border border-accent/30 bg-accent/5">
+                    <span class="text-[1.125rem] font-medium">{{ $trust['price_anchor_label'] }}</span>
+                    @if(! empty($trust['price_anchor_note']))
+                    <span class="text-[0.875rem] text-muted-foreground">{{ $trust['price_anchor_note'] }}</span>
+                    @endif
+                </div>
+                @endif
             </div>
         </div>
     </section>
+
+    {{-- Stadt-USP: the one block that must differ per city — Google rewards this --}}
+    @if($hasCityUsp)
+    <section class="max-w-[1400px] mx-auto px-6 py-20 border-t border-border">
+        <div class="max-w-[900px]">
+            <div class="motion motion-fade-up">
+                @if(! empty($cityUsp['headline']))
+                <h2 class="mb-6">{{ $cityUsp['headline'] }}</h2>
+                @endif
+                @if(! empty($cityUsp['text']))
+                <p class="text-[1.0625rem] leading-relaxed text-muted-foreground mb-6">{{ $cityUsp['text'] }}</p>
+                @endif
+                @if(! empty($cityUsp['bullets']) && is_array($cityUsp['bullets']))
+                <ul class="space-y-3 mt-6">
+                    @foreach($cityUsp['bullets'] as $bullet)
+                        @php $bulletText = is_array($bullet) ? ($bullet['bullet'] ?? '') : $bullet; @endphp
+                        @if($bulletText)
+                        <li class="flex items-start gap-3 text-[0.9375rem]">
+                            <span class="mt-1.5 w-1.5 h-1.5 bg-accent shrink-0"></span>
+                            <span>{{ $bulletText }}</span>
+                        </li>
+                        @endif
+                    @endforeach
+                </ul>
+                @endif
+            </div>
+        </div>
+    </section>
+    @endif
 
     {{-- Solutions Block --}}
     <section class="max-w-[1400px] mx-auto px-6 py-20 border-t border-border">
@@ -170,6 +247,76 @@
             </div>
         </div>
     </section>
+
+    {{-- Named Cases / Referenzen — the single biggest gap vs top-ranking competitors --}}
+    @if($hasCases)
+    <section class="max-w-[1400px] mx-auto px-6 py-20 border-t border-border">
+        <div class="max-w-[1100px]">
+            <div class="motion motion-fade-up mb-12">
+                <h2 class="mb-4">Ausgewählte Projekte aus {{ $city }} und dem {{ $region }}</h2>
+                <p class="text-[1rem] text-muted-foreground max-w-[700px]">
+                    Ein Auszug aus Projekten, die wir für Unternehmen aus der Region umgesetzt haben.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($cases as $index => $case)
+                    @php
+                        $caseName = $case['name'] ?? null;
+                        $caseIndustry = $case['industry'] ?? null;
+                        $caseDescription = $case['description'] ?? null;
+                        $caseLink = $case['link'] ?? null;
+                    @endphp
+                    @if($caseName)
+                    <div class="motion motion-fade-up motion-delay-{{ ($index % 4) + 1 }}">
+                        @php $wrapperTag = $caseLink ? 'a' : 'div'; @endphp
+                        <{{ $wrapperTag }}
+                            @if($caseLink) href="{{ $caseLink }}" @endif
+                            class="block h-full p-6 border-2 border-border @if($caseLink) hover:border-foreground transition-all hover:shadow-lg @endif bg-background">
+                            @if($caseIndustry)
+                            <div class="inline-flex items-center gap-1.5 mb-4 px-2.5 py-1 bg-accent/5 border border-accent/20 rounded-sm">
+                                <span class="text-[0.6875rem] text-accent uppercase tracking-wider font-medium">{{ $caseIndustry }}</span>
+                            </div>
+                            @endif
+                            <h3 class="text-[1.125rem] font-medium mb-3">{{ $caseName }}</h3>
+                            @if($caseDescription)
+                            <p class="text-[0.9375rem] text-muted-foreground leading-relaxed">{{ $caseDescription }}</p>
+                            @endif
+                        </{{ $wrapperTag }}>
+                    </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- Technology Stack — trust signal for technical decision-makers --}}
+    @if($hasTechStack)
+    <section class="max-w-[1400px] mx-auto px-6 py-20 border-t border-border bg-muted/5">
+        <div class="max-w-[1100px]">
+            <div class="motion motion-fade-up mb-10">
+                <h2 class="mb-4">{{ $techStack['headline'] ?? 'Unser Technologie-Stack' }}</h2>
+            </div>
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                @foreach($techStack['items'] as $tech)
+                    @php
+                        $techName = $tech['name'] ?? null;
+                        $techDescription = $tech['description'] ?? null;
+                    @endphp
+                    @if($techName)
+                    <div class="p-5 border border-border bg-background">
+                        <div class="font-medium mb-1">{{ $techName }}</div>
+                        @if($techDescription)
+                        <div class="text-[0.8125rem] text-muted-foreground">{{ $techDescription }}</div>
+                        @endif
+                    </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
 
     {{-- Why / Vorgehen Section --}}
     <section class="max-w-[1400px] mx-auto px-6 py-20 border-t border-border bg-muted/5">
