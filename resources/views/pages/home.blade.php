@@ -820,4 +820,22 @@
         </div>
     </section>
     @endif
+
+    {{-- Organization + WebSite Schema — declares the agency entity and
+         makes the site eligible for the Sitelinks Search Box. --}}
+    @isset($organizationSchema)
+    @push('scripts')
+    <script type="application/ld+json">
+    {!! json_encode($organizationSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+    @endpush
+    @endisset
+
+    @isset($websiteSchema)
+    @push('scripts')
+    <script type="application/ld+json">
+    {!! json_encode($websiteSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+    @endpush
+    @endisset
 </x-layouts.frontend>

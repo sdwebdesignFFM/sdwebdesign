@@ -154,9 +154,19 @@
                         $contactEmail = $info['email'] ?? $settings->email ?? null;
                         $contactPhone = $info['phone'] ?? $settings->mobile ?? $settings->phone ?? null;
                         $phoneHours = $info['phone_hours'] ?? $settings->business_hours ?? null;
-                        $contactLocation = $info['location'] ?? (($settings->city || $settings->country)
-                            ? trim(($settings->city ?? '') . "\n" . ($settings->country ?? ''))
-                            : null);
+                        // Render the full postal address (street + postal code + city + country),
+                        // not just city/country — NAP must match the Impressum and GBP profile
+                        // exactly, otherwise citation verification tools flag the business as
+                        // inconsistent and Google suppresses local-pack visibility.
+                        $contactLocation = $info['location'] ?? (function () use ($settings) {
+                            $lines = array_filter([
+                                $settings->street ?? null,
+                                trim(($settings->postal_code ?? '').' '.($settings->city ?? '')) ?: null,
+                                $settings->country ?? null,
+                            ]);
+
+                            return $lines ? implode("\n", $lines) : null;
+                        })();
                     @endphp
 
                     <div class="space-y-6">
@@ -413,4 +423,13 @@
             </div>
         </div>
     </div>
+
+    {{-- Organization Schema — /kontakt is the canonical local-intent page --}}
+    @isset($organizationSchema)
+    @push('scripts')
+    <script type="application/ld+json">
+    {!! json_encode($organizationSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+    @endpush
+    @endisset
 </x-layouts.frontend>

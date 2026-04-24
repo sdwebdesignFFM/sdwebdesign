@@ -21,10 +21,11 @@ class PageController extends Controller
         }
 
         $this->setSeoMeta($page);
-        JsonLd::setType('WebSite');
-        JsonLd::setTitle($page->meta_title ?? $page->title);
 
-        return view('pages.home', compact('page'));
+        $organizationSchema = $this->buildOrganizationSchema();
+        $websiteSchema = $this->buildWebsiteSchema();
+
+        return view('pages.home', compact('page', 'organizationSchema', 'websiteSchema'));
     }
 
     public function solutions(): View
@@ -138,7 +139,12 @@ class PageController extends Controller
 
         $this->setSeoMeta($page);
 
-        return view('pages.contact', compact('page'));
+        // /kontakt is the strongest local-intent page on the site; emit
+        // the organization entity here too so it's cross-verifiable with
+        // the homepage and with the GBP profile (shared @id).
+        $organizationSchema = $this->buildOrganizationSchema();
+
+        return view('pages.contact', compact('page', 'organizationSchema'));
     }
 
     public function contactSubmit(Request $request): RedirectResponse
@@ -491,6 +497,105 @@ class PageController extends Controller
     }
 
     /**
+     * Canonical base URL used when emitting JSON-LD. Forces https on
+     * production hostnames in case APP_URL is misconfigured; leaves local
+     * dev hostnames (.test, localhost) untouched so fixtures still work.
+     */
+    private function schemaBaseUrl(): string
+    {
+        $url = rtrim(config('app.url'), '/');
+
+        if (str_contains($url, '.test') || str_contains($url, 'localhost')) {
+            return $url;
+        }
+
+        if (! str_starts_with($url, 'https://')) {
+            $url = 'https://'.preg_replace('#^https?://#', '', $url);
+        }
+
+        return $url;
+    }
+
+    /**
+     * Organization schema — the authoritative entity for this site.
+     * Reused as a referenced @id from LocalBusiness, BlogPosting,
+     * Article author/publisher, and any other schema that points at
+     * the agency as the owning organization.
+     *
+     * @return array<string, mixed>
+     */
+    private function buildOrganizationSchema(): array
+    {
+        $settings = \App\Models\Setting::first();
+        $baseUrl = $this->schemaBaseUrl();
+
+        $address = array_filter([
+            '@type' => 'PostalAddress',
+            'streetAddress' => $settings?->street,
+            'postalCode' => $settings?->postal_code,
+            'addressLocality' => $settings?->city,
+            'addressCountry' => 'DE',
+        ]);
+
+        $sameAs = array_values(array_filter([
+            $settings?->linkedin_url,
+            $settings?->xing_url,
+            $settings?->instagram_url,
+            $settings?->facebook_url,
+            $settings?->github_url,
+            $settings?->twitter_url,
+        ]));
+
+        return array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            '@id' => $baseUrl.'/#organization',
+            'name' => $settings?->company_name ?? 'sdWebdesign',
+            'url' => $baseUrl,
+            'logo' => [
+                '@type' => 'ImageObject',
+                'url' => $baseUrl.'/apple-touch-icon.png',
+            ],
+            'image' => $baseUrl.'/apple-touch-icon.png',
+            'address' => $address,
+            'email' => $settings?->email,
+            'telephone' => $settings?->mobile ?? $settings?->phone,
+            'sameAs' => $sameAs,
+        ], fn ($v) => $v !== null && $v !== '' && $v !== []);
+    }
+
+    /**
+     * WebSite schema with SearchAction so Google is eligible to show
+     * a Sitelinks Search Box for the site. Targets the /ratgeber
+     * search (implemented by BlogController::index via ?search=).
+     *
+     * @return array<string, mixed>
+     */
+    private function buildWebsiteSchema(): array
+    {
+        $baseUrl = $this->schemaBaseUrl();
+        $settings = \App\Models\Setting::first();
+
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            '@id' => $baseUrl.'/#website',
+            'url' => $baseUrl,
+            'name' => $settings?->company_name ?? 'sdWebdesign',
+            'inLanguage' => 'de-DE',
+            'publisher' => ['@id' => $baseUrl.'/#organization'],
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => [
+                    '@type' => 'EntryPoint',
+                    'urlTemplate' => $baseUrl.'/ratgeber?search={search_term_string}',
+                ],
+                'query-input' => 'required name=search_term_string',
+            ],
+        ];
+    }
+
+    /**
      * Build the BlogPosting schema for a guide page so it becomes
      * eligible for Article rich results.
      *
@@ -499,10 +604,7 @@ class PageController extends Controller
     private function buildGuideBlogPostingSchema(Page $page): array
     {
         $settings = \App\Models\Setting::first();
-        $baseUrl = rtrim(config('app.url'), '/');
-        if (! str_contains($baseUrl, '.test') && ! str_contains($baseUrl, 'localhost')) {
-            $baseUrl = preg_replace('#^http://#', 'https://', $baseUrl);
-        }
+        $baseUrl = $this->schemaBaseUrl();
 
         $url = $baseUrl.$page->getUrl();
         $orgId = $baseUrl.'/#organization';
@@ -553,12 +655,7 @@ class PageController extends Controller
     {
         $settings = \App\Models\Setting::first();
         $city = $page->getSection('city', $page->title);
-        $baseUrl = rtrim(config('app.url'), '/');
-
-        // Force https on production hostnames; keep dev URLs (.test, localhost) as-is.
-        if (! str_contains($baseUrl, '.test') && ! str_contains($baseUrl, 'localhost')) {
-            $baseUrl = preg_replace('#^http://#', 'https://', $baseUrl);
-        }
+        $baseUrl = $this->schemaBaseUrl();
 
         $address = array_filter([
             '@type' => 'PostalAddress',
@@ -588,8 +685,10 @@ class PageController extends Controller
             'address' => $address,
             'geo' => [
                 '@type' => 'GeoCoordinates',
-                'latitude' => 50.1109,
-                'longitude' => 8.6821,
+                // Hannah-Arendt-Str. 29, 60438 Frankfurt am Main (Kalbach-Riedberg).
+                // Schema geo must match GBP pin within ~100m or Google ignores the entity.
+                'latitude' => 50.18430,
+                'longitude' => 8.65870,
             ],
             'areaServed' => [
                 '@type' => 'City',
