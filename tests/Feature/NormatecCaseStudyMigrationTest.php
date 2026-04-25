@@ -152,6 +152,26 @@ class NormatecCaseStudyMigrationTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('/\d+\s*Millionen?\s*€/i', $serialized);
     }
 
+    public function test_normatec_detail_page_renders_without_template_errors(): void
+    {
+        // The first version of this migration set tech_stack and impact_results
+        // as nested arrays — the reference-detail template iterates those as
+        // flat strings, which crashed htmlspecialchars(). The fix migration
+        // (2026_04_25_125731) corrects the shape. This test guards against
+        // regressing it.
+        $this->seedExistingReferencePages();
+        $this->runMigration();
+
+        $fixMigration = require database_path('migrations/2026_04_25_125731_fix_normatec_section_structures.php');
+        $fixMigration->up();
+
+        $response = $this->get('/referenzen/zeiterfassung-einsatzplanung');
+
+        $response->assertStatus(200);
+        $response->assertSee('Normatec');
+        $response->assertSee('Workforce-Management');
+    }
+
     public function test_migration_is_idempotent(): void
     {
         $this->seedExistingReferencePages();
