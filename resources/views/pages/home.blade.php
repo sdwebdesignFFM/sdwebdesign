@@ -1,6 +1,7 @@
 <x-layouts.frontend>
     @php
         $hero = $page->getSection('hero');
+        $approach = $page->getSection('approach');
         $problem = $page->getSection('problem');
         $solutions = $page->getSection('solutions');
         $principles = $page->getSection('principles');
@@ -100,6 +101,83 @@
             </div>
         </div>
     </section>
+
+    {{-- Approach Section — Senior PO claim + lead case teaser --}}
+    @if($approach['title'] ?? false)
+    <section class="max-w-[1400px] mx-auto px-6 py-24 border-t border-border">
+        <div class="grid lg:grid-cols-2 gap-16 lg:gap-20 items-start">
+
+            {{-- Left column: Anspruch + Bio --}}
+            <div class="motion motion-fade-up">
+                @if($approach['badge'] ?? false)
+                <div class="inline-block px-3 py-1.5 mb-6 border border-border">
+                    <p class="text-[0.75rem] uppercase tracking-wider text-muted-foreground">{{ $approach['badge'] }}</p>
+                </div>
+                @endif
+
+                <h2 class="mb-8 text-[1.75rem] leading-tight max-w-[520px]">{{ $approach['title'] }}</h2>
+
+                @if($approach['text'] ?? false)
+                <div class="text-[1.0625rem] text-muted-foreground leading-relaxed space-y-4 max-w-[560px]">
+                    {!! nl2br(e($approach['text'])) !!}
+                </div>
+                @endif
+
+                @if(($approach['cta_text'] ?? false) && ($approach['cta_link'] ?? false))
+                <a href="{{ $approach['cta_link'] }}"
+                   class="inline-flex items-center gap-2 mt-8 text-[0.9375rem] font-medium border-b border-foreground/20 hover:border-foreground transition-colors pb-1">
+                    {{ $approach['cta_text'] }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                    </svg>
+                </a>
+                @endif
+            </div>
+
+            {{-- Right column: lead case teaser --}}
+            @if($approach['case_teaser'] ?? false)
+            @php $case = $approach['case_teaser']; @endphp
+            <div class="motion motion-fade-up motion-delay-1">
+                <a href="{{ $case['link'] ?? '#' }}"
+                   class="group block p-8 lg:p-10 border-2 border-border hover:border-foreground bg-background transition-all hover:shadow-lg">
+
+                    @if($case['label'] ?? false)
+                    <div class="inline-flex items-center gap-2 mb-6 px-2.5 py-1 bg-accent/5 border border-accent/20 rounded-sm">
+                        <span class="text-[0.6875rem] text-accent uppercase tracking-wider font-medium">{{ $case['label'] }}</span>
+                    </div>
+                    @endif
+
+                    @if($case['title'] ?? false)
+                    <h3 class="text-[1.375rem] mb-4 leading-tight group-hover:text-accent transition-colors">{{ $case['title'] }}</h3>
+                    @endif
+
+                    @if($case['description'] ?? false)
+                    <p class="text-[0.9375rem] text-muted-foreground leading-relaxed mb-6">
+                        {{ $case['description'] }}
+                    </p>
+                    @endif
+
+                    @if($case['tags'] ?? false)
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        @foreach($case['tags'] as $tag)
+                        <span class="px-2.5 py-1 text-[0.75rem] font-mono border border-border bg-muted/20">{{ $tag }}</span>
+                        @endforeach
+                    </div>
+                    @endif
+
+                    <span class="inline-flex items-center gap-2 text-[0.875rem] font-medium group-hover:gap-3 transition-all">
+                        Case Study lesen
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+            @endif
+
+        </div>
+    </section>
+    @endif
 
     {{-- Problem Section --}}
     @if($problem['title'] ?? false)
