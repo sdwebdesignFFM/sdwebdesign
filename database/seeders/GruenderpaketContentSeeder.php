@@ -117,6 +117,14 @@ TXT;
                         'icon' => 'rocket-launch',
                     ],
                     'intro' => ['text' => $intro],
+                    'challenge' => [
+                        'title' => 'Was wir tatsächlich für Sie bauen',
+                        'text' => 'Eine Marke ist mehr als ein Logo, eine Website mehr als Pixel auf einem Bildschirm. Bevor wir konfigurieren, gestalten oder Code schreiben, hören wir zu: Was bieten Sie an, für wen, mit welchem Anspruch? Was unterscheidet Ihr Versprechen vom Wettbewerb? Wer soll sich in Ihrem Auftritt wiedererkennen?',
+                    ],
+                    'approach' => [
+                        'title' => 'Unser kreativer, individueller Prozess',
+                        'text' => 'Aus Ihrem Briefing entsteht keine Template-Anwendung, sondern ein zusammenhängender Auftritt: Logo, Farben, Typografie, Website-Struktur, Tonalität — alles aus einer Idee abgeleitet, alles konsistent über Touchpoints hinweg. Sie identifizieren sich am Ende mit dem Ergebnis, weil es Ihre Geschichte erzählt — nicht eine generische, sondern Ihre eigene.',
+                    ],
                     'package' => [
                         'headline' => 'Was Sie im Gründerpaket bekommen',
                         'intro' => 'Alles, was ein professioneller digitaler Start in Frankfurt wirklich braucht — aus einer Hand, zum Festpreis, mit einem Ansprechpartner. Keine Zusatzrechnungen für selbstverständliche Dinge wie Impressum oder DSGVO.',
@@ -239,12 +247,10 @@ TXT;
      */
     private function spokeWebsiteExistenzgruender(): array
     {
-        $intro = <<<'TXT'
-Die meisten Websites, die frisch gegründete Unternehmen ans Netz bringen, sind technisch halbfertig und rechtlich auf Kante genäht. Das merkt niemand — bis ein Kunde sich beschwert, eine Abmahnung ins Haus flattert, oder Google die Seite nach einem Update nicht mehr findet.
+        $whyNativeText = <<<'TXT'
+Wir bauen Websites, die nicht aussehen wie Templates, weil wir keine sind: Bevor wir die erste Zeile Code schreiben oder das erste Bild platzieren, verstehen wir, was Sie wirklich anbieten, für wen Sie es anbieten, und worin sich Ihr Versprechen vom Wettbewerb unterscheidet. Aus diesem Verständnis entsteht eine Website, in der sich Ihre zukünftigen Kunden wiedererkennen — und Sie selbst auch.
 
-Die Gründer-Website, die wir bauen, ist bewusst keine Baukasten-Lösung und bewusst keine Konzern-Plattform. Sie ist das, was in der Einstiegsphase wirklich Sinn macht: eine klare, schnelle, professionell aussehende Website, deren Technik und Rechtstexte stimmen, und die Sie selbst pflegen können — ohne bei jeder Textänderung einen Entwickler anzurufen.
-
-Diese Seite ist Bestandteil unseres Gründerpakets für Frankfurt — oder als Einzelleistung buchbar, wenn Sie Logo und Rechtstexte bereits haben.
+Eine Gründer-Website ist kein Selbstzweck. Sie ist die digitale Verkörperung Ihrer Positionierung: derselbe Ton, dieselbe Klarheit, dieselbe Haltung wie in Ihrem ersten Kennenlern-Gespräch. Konsistent durch Startseite, Leistungs-Seiten und Über-uns. Technisch sauber im Hintergrund, damit Performance, SEO und Rechtssicherheit nicht zu nachträglichen Baustellen werden.
 TXT;
 
         $differentiation = <<<'TXT'
@@ -275,8 +281,18 @@ TXT;
                         'subtitle' => 'Eine Gründer-Website hat zwei Aufgaben: die ersten Kunden gewinnen und rechtlich nicht angreifbar sein. Beides bauen wir für Frankfurter Gründerinnen und Gründer von Anfang an sauber auf — ohne Baukasten-Optik, ohne Plugin-Chaos, ohne Überraschungen am Launch-Tag.',
                         'icon' => 'globe',
                     ],
-                    'intro' => ['text' => $intro],
-                    'when_useful' => [
+                    'why_native' => [
+                        'title' => 'Was wir für Sie bauen',
+                        'text' => $whyNativeText,
+                        'items' => [
+                            'Verstehen statt vermuten — wir starten mit Ihrer Positionierung, nicht mit einem Template',
+                            'Individueller Auftritt, der zu Ihrer Marke und Ihrer Sprache passt',
+                            'Konsistente visuelle und sprachliche Linie über alle Seiten hinweg',
+                            'Technisches Fundament, das mit Ihrem Wachstum mitgeht',
+                            'Sie können die Inhalte selbst pflegen — ohne Entwickler-Abhängigkeit',
+                        ],
+                    ],
+                    'when' => [
                         'title' => 'Wann ist diese Lösung die richtige?',
                         'intro' => 'Die Existenzgründer-Website ist für den konkreten Anwendungsfall gemacht, in dem Sie jetzt stecken:',
                         'conditions' => [
@@ -288,12 +304,19 @@ TXT;
                         ],
                         'note' => 'Wenn Ihr Projekt hochkomplex ist — etwa ein mehrsprachiger Online-Shop mit Lagerintegration oder ein Kundenportal mit Login-Bereichen — dann ist die Gründer-Website nicht das Richtige. Dafür haben wir dedizierte Lösungen.',
                     ],
-                    'use_case_categories' => [
-                        ['title' => 'Leistungs-Seiten, die Kunden tatsächlich lesen', 'description' => 'Keine generischen Wir-sind-innovativ-Floskeln, sondern klare Beschreibungen: Was genau machen Sie, für wen, in welchem Rahmen, zu welchem Ergebnis. Eine gute Gründer-Website beantwortet diese Fragen in 30 Sekunden.', 'items' => []],
-                        ['title' => 'Kontakt und Buchung ohne Reibungsverluste', 'description' => 'Kontaktformular, direkte Mailadresse, Telefonnummer — alles auffindbar in drei Sekunden. Bei Bedarf ein Kalender-Link (Calendly, Cal.com) für direkte Terminbuchung ohne E-Mail-Ping-Pong.', 'items' => []],
-                        ['title' => 'Über-uns-Seite, die Vertrauen schafft', 'description' => 'Wer steht hinter dem Unternehmen, welche Qualifikation, welche Geschichte. Genau die Information, die Kunden in der frühen Bewertungsphase suchen. Gerade bei Einzelunternehmern oder Freiberuflern ist das die wichtigste Seite nach der Startseite.', 'items' => []],
-                        ['title' => 'Rechtssicherheit von Anfang an', 'description' => 'Impressum, Datenschutzerklärung, Cookie-Banner — auf Ihre Gründungsform zugeschnitten, nicht aus einem Generator kopiert.', 'items' => []],
-                        ['title' => 'Lokale Sichtbarkeit', 'description' => 'Lokale Keywords, strukturierte Daten (LocalBusiness-Schema), Google Business Profile-Anbindung. Von Tag 1 auffindbar für Nutzer aus Ihrer Stadt.', 'items' => []],
+                    'features' => [
+                        'title' => 'Was eine gute Gründer-Website leistet',
+                        'intro' => 'Diese Bausteine sorgen dafür, dass Sie nicht nur online sind, sondern tatsächlich die ersten Kunden gewinnen:',
+                        'items' => [
+                            'Leistungs-Seiten, die in 30 Sekunden klar machen, was Sie tun und für wen',
+                            'Über-uns-Seite, die Vertrauen schafft — wichtig vor allem bei Einzelunternehmern',
+                            'Reibungsfreier Kontakt: Formular, Mail, Telefon, optional Kalender-Buchung',
+                            'Lokale Sichtbarkeit mit LocalBusiness-Schema und Anbindung ans Google Business Profile',
+                            'Cookie-Banner mit echter Consent-Lösung (nicht nur dekorativ)',
+                            'Impressum & Datenschutz auf Ihre Gründungsform zugeschnitten',
+                            'Performance-Optimierung — schnelle Ladezeiten auch auf Mobilgeräten',
+                            'Saubere SEO-Basis: Meta-Struktur, Sitemap, strukturierte Daten',
+                        ],
                     ],
                     'process' => [
                         'title' => 'Wie die Website entsteht',
@@ -341,12 +364,12 @@ TXT;
      */
     private function spokeLogoCorporateIdentity(): array
     {
-        $intro = <<<'TXT'
-Die meisten Gründer fangen mit einem Logo aus Fiverr an, nehmen dafür eine zufällige Schriftart vom ersten Google-Treffer, und entdecken nach drei Monaten, dass das Ganze auf der Visitenkarte anders aussieht als auf der Website, und dass der Druck der Rechnungen in Graustufen wie ein zerknitterter Kartonabdruck wirkt.
+        $whyNativeText = <<<'TXT'
+Eine Marke ist mehr als ein Logo. Sie ist die optische Verdichtung dessen, wofür Ihr Unternehmen steht — und das, woran Ihre Kunden sich erinnern, wenn sie an Sie denken. Bevor wir auch nur einen Strich zeichnen, verstehen wir, wer Sie sind, wer Ihre Kunden sind, und welche Position Sie im Markt einnehmen wollen.
 
-Der Grund ist nie das Logo selbst. Der Grund ist, dass keine Farbsystematik existiert, keine Typografie-Hierarchie, keine klaren Regeln, wann was wie verwendet wird. Genau das ist Corporate Identity — und genau das bauen wir für Sie auf, in zwei Wochen, mit einem PDF-Manual, das Ihrem Steuerberater, Ihrem Notar, Ihrer Druckerei oder einem späteren Marketing-Dienstleister reicht, um alles richtig zu machen.
+Daraus entsteht ein durchgängiges visuelles System: Logo, Farben, Typografie, Bildsprache. Nicht aus einem Template, nicht aus einer Bibliothek, sondern individuell für Sie entwickelt. Mit einem Style-Mini-Manual als PDF, das jeder spätere Drucker, Grafiker oder Marketing-Dienstleister versteht und konsistent anwenden kann — von der Visitenkarte bis zur Website, vom Social-Media-Profil bis zur Fahrzeugbeschriftung.
 
-Diese Seite beschreibt die Einzelleistung Logo & Corporate Identity für Gründer. Im Gründerpaket Frankfurt ist sie mit Website und digitaler Geschäftsausstattung kombiniert — aber sie ist auch separat buchbar.
+Das Ergebnis: ein Auftritt, in dem Sie sich selbst wiederfinden — und in dem sich Ihre Wunschkunden wiederfinden.
 TXT;
 
         $differentiation = <<<'TXT'
@@ -381,8 +404,19 @@ TXT;
                         'subtitle' => 'Ein Logo ist nicht nur ein Bild. Es ist das Zeichen, das Ihre Rechnung, Ihre Visitenkarte, Ihre Website, Ihren Social-Media-Auftritt und Ihre Fahrzeugbeschriftung zusammenhält. Wir liefern Gründerinnen und Gründern in Frankfurt ein vollständiges Markensystem — nicht nur ein Logo —, damit alles von Tag 1 konsistent wirkt.',
                         'icon' => 'sparkles',
                     ],
-                    'intro' => ['text' => $intro],
-                    'when_useful' => [
+                    'why_native' => [
+                        'title' => 'Wie wir Ihre Marke entwickeln',
+                        'text' => $whyNativeText,
+                        'items' => [
+                            'Markenkern verstehen — wer Sie sind und was Sie versprechen',
+                            'Wettbewerb analysieren — damit Ihr Auftritt wirklich differenziert',
+                            'Visuelle Sprache entwickeln — individuell, nicht Template',
+                            'Konsistenz von Anfang an — Logo, Farben, Schriften greifen ineinander',
+                            'Klare Anwendungsregeln im PDF-Manual für alle späteren Touchpoints',
+                            'Sie identifizieren sich mit dem Ergebnis — und Ihre Kunden auch',
+                        ],
+                    ],
+                    'when' => [
                         'title' => 'Wann brauchen Sie mehr als nur ein Logo?',
                         'intro' => 'Ein reines Logo reicht, wenn Sie heute gründen und morgen nie wieder etwas drucken oder online veröffentlichen. In allen anderen Fällen lohnt sich ein Markensystem:',
                         'conditions' => [
@@ -393,11 +427,17 @@ TXT;
                             'Ihr Auftritt soll professionell wirken, nicht zusammengeklickt.',
                         ],
                     ],
-                    'use_case_categories' => [
-                        ['title' => 'Logo-System', 'description' => 'Das Logo ist der Kern. Wir liefern immer mehrere Varianten: das Haupt-Logo, eine reduzierte Version für kleine Anwendungen (Favicon, Social-Profil-Bild), eine einzeilige Horizontal-Version für schlanke Layouts, eine einfarbige Schwarzweiß-Variante für Druckkosten-Reduzierung.', 'items' => ['Wortmarke (nur Schriftzug)', 'Wort-Bild-Marke (Schriftzug plus Symbol)', 'Monogramm (Initialen als Zeichen)']],
-                        ['title' => 'Farb-System', 'description' => 'Eine Primär-Farbe, zwei bis vier Akzent-/Sekundär-Farben, dazu Neutraltöne (Schwarz, Weiß, Grautöne) für Text und Hintergründe. Jede Farbe mit Hex-Wert, RGB-Wert, CMYK-Wert (für Druck), und Pantone-Empfehlung, falls nötig.', 'items' => []],
-                        ['title' => 'Typografie-System', 'description' => 'Eine Haupt-Schriftart für Überschriften, eine gut lesbare Schriftart für Fließtext, eine System-Fallback-Schriftart für E-Mail-Signaturen und Microsoft-Dokumente. Dazu klare Größen-Hierarchien.', 'items' => []],
-                        ['title' => 'Style-Mini-Manual (PDF)', 'description' => 'Ein 8–12-seitiges PDF, das Ihrem Dienstleister in 5 Minuten erklärt, wie er Ihre Marke anwenden soll. Logo-Regeln, Farb-Paletten, Schriftart-Regeln, Bildstil-Richtlinien.', 'items' => []],
+                    'features' => [
+                        'title' => 'Was zu einem Markensystem für Gründer gehört',
+                        'intro' => 'Vier Bausteine — gemeinsam ergeben sie einen Auftritt, der konsistent wirkt und sich praktisch anwenden lässt:',
+                        'items' => [
+                            'Logo-System mit allen Varianten (Wortmarke, Wort-Bild-Marke, horizontale & quadratische Form, einfarbig, invertiert)',
+                            'Farb-System mit Primär-, Sekundär- und Neutraltönen (Hex, RGB, CMYK, Pantone)',
+                            'Typografie-System mit Haupt- und Body-Schrift plus System-Fallback',
+                            'Style-Mini-Manual als PDF (8–12 Seiten) für Dienstleister, Drucker und spätere Agenturen',
+                            'Favicon und Social-Media-Profilbilder in den Plattform-Formaten',
+                            'Alle Quelldateien (SVG, PNG, PDF, AI/Figma) zur freien Weiterverwendung',
+                        ],
                     ],
                     'process' => [
                         'title' => 'Wie Ihr Markensystem entsteht',
@@ -448,14 +488,12 @@ TXT;
      */
     private function spokeDigitaleGeschaeftsausstattung(): array
     {
-        $intro = <<<'TXT'
-Digitale Geschäftsausstattung klingt nach Buzzword. Gemeint ist damit aber etwas sehr Konkretes: die Sammlung der digitalen Werkzeuge und Infrastrukturen, ohne die Sie als moderner Gründer heute nicht rechtssicher und professionell arbeiten können. Domain, Business-E-Mail, Rechtstexte, Cloud-Speicher, Buchhaltung, CRM-Grundlage, Social-Media-Handles — und mehr.
+        $whyNativeText = <<<'TXT'
+Wir richten Gründern eine digitale Arbeitsumgebung ein, die vom ersten Tag funktioniert — und nicht nach drei Monaten in halbfertigen Tool-Setups, doppelten Rechnungen und vergessenen Passwörtern endet. Bevor wir konfigurieren, hören wir zu: Was bauen Sie auf? Wer arbeitet später mit? Welche Branche, welche Verpflichtungen, welche Schnittstellen?
 
-Viele Gründer erledigen das Stück für Stück, über Wochen verteilt, mit dem Ergebnis, dass die einzelnen Komponenten nicht gut zusammenpassen. Die E-Mail läuft bei einem Provider, die Domain bei einem anderen, das DSGVO-Setup ist fragmentarisch, und der Steuerberater-Zugang muss manuell ans CRM gebastelt werden.
+Aus diesen Antworten leitet sich der Stack ab — kein Standard-Pack, sondern eine auf Sie zugeschnittene Auswahl von Werkzeugen, die nahtlos ineinandergreifen: Domain und E-Mail beim selben deutschen Provider, Cloud passend zur Datenschutz-Stufe Ihrer Branche, Buchhaltungs-Tool, das Ihr Steuerberater bereits kennt, CRM auf Gründer-Volumen dimensioniert.
 
-Wir machen das anders: Die gesamte digitale Geschäftsausstattung wird in einem Stück aufgesetzt, aufeinander abgestimmt und sauber dokumentiert — damit Sie vom ersten Tag arbeitsfähig sind, und damit ein späterer Steuerberater, Dienstleister oder Angestellter Zugänge und Setups ohne Rätselraten übernehmen kann.
-
-Diese Lösung ist Bestandteil des Gründerpakets Frankfurt oder als Einzelleistung verfügbar.
+Das Ergebnis ist eine konsistente, dokumentierte digitale Basis, in der Sie sich auskennen — und die spätere Mitarbeiter oder Dienstleister ohne Rätselraten übernehmen können.
 TXT;
 
         $differentiation = <<<'TXT'
@@ -494,8 +532,19 @@ TXT;
                         'subtitle' => 'Eine Website allein macht Sie noch nicht arbeitsfähig. Es gehört eine Reihe von digitalen Bausteinen dazu, die zusammen die Basis Ihrer unternehmerischen Tätigkeit bilden. Wir erklären, welche davon wirklich wichtig sind — und liefern sie Gründerinnen und Gründern in Frankfurt als Komplettpaket.',
                         'icon' => 'squares-2x2',
                     ],
-                    'intro' => ['text' => $intro],
-                    'when_useful' => [
+                    'why_native' => [
+                        'title' => 'Wie wir Ihre digitale Basis aufbauen',
+                        'text' => $whyNativeText,
+                        'items' => [
+                            'Bestandsaufnahme zuerst — was Sie schon haben, was wegfällt, was hinzukommt',
+                            'Stack auf Ihre Branche, Datenschutz-Stufe und Wachstumserwartung zugeschnitten',
+                            'Alle Tool-Lizenzen auf Ihren Konten — keine Abhängigkeit von uns',
+                            'Saubere Verbindungen zwischen den Komponenten (Domain ↔ E-Mail ↔ Cloud ↔ CRM)',
+                            'Zentraler Passwort-Safe und Kurz-Handbuch — Übergabe-fähig an spätere Dienstleister',
+                            'Sie kennen Ihr System und können es selbst pflegen',
+                        ],
+                    ],
+                    'when' => [
                         'title' => 'Wann brauchen Sie eine strukturierte digitale Geschäftsausstattung?',
                         'intro' => 'Für manche Gründer reicht tatsächlich eine Website plus eine E-Mail-Adresse. Für die meisten — und für alle, die wachsen wollen — ist mehr sinnvoll:',
                         'conditions' => [
@@ -506,15 +555,19 @@ TXT;
                             'Sie wollen vermeiden, nach einem Jahr drei halbfertige Tool-Setups parallel laufen zu haben.',
                         ],
                     ],
-                    'use_case_categories' => [
-                        ['title' => 'Domain & Business-E-Mail', 'description' => 'Ihre Wunschdomain registriert (mit DNSSEC), professionelle E-Mail-Adressen (info@, ihr-name@, team@ bei Bedarf) auf einem DSGVO-konformen deutschen Provider, SPF/DKIM/DMARC korrekt gesetzt.', 'items' => []],
-                        ['title' => 'Cloud-Speicher & Kollaboration', 'description' => 'Einrichtung eines DSGVO-konformen Cloud-Dienstes (Nextcloud, Google Workspace oder Microsoft 365 in EU/Deutschland mit Auftragsverarbeitungsvertrag) als zentraler Dokumenten- und Kalender-Hub.', 'items' => []],
-                        ['title' => 'Rechtstexte & Compliance-Basis', 'description' => 'Impressum, Datenschutzerklärung, Cookie-Banner mit Consent-Management, optional Widerrufsbelehrung und AGB. Alles auf Ihre konkrete Gründungsform und Leistung zugeschnitten.', 'items' => []],
-                        ['title' => 'Buchhaltungs- & Rechnungs-Setup', 'description' => 'Einrichtung einer DATEV-kompatiblen Rechnungsstellung (Lexware, sevDesk, lexoffice) — sodass Ihr Frankfurter Steuerberater Ihre Zahlen direkt aus dem Tool ziehen kann.', 'items' => []],
-                        ['title' => 'Google Business Profile & lokale Sichtbarkeit', 'description' => 'Frankfurter Gründer werden online gefunden oder sie existieren für potenzielle Kunden nicht. Wir richten Ihr Google Business Profile komplett ein und verknüpfen es mit der Website.', 'items' => []],
-                        ['title' => 'Social-Media-Handles (Basis-Setup)', 'description' => 'LinkedIn-Unternehmensseite erstellen, Instagram-Handle sichern, Facebook-Seite einrichten (falls relevant), XING-Profil. Mit abgestimmten Profilbildern aus Ihrer Corporate Identity.', 'items' => []],
-                        ['title' => 'Einfaches CRM / Kontakt-Management', 'description' => 'Ein leichtgewichtiges CRM (HubSpot Free, Pipedrive Starter, Folk, Airtable), das Kontakte, Anfragen und Angebote zentralisiert. Kein Enterprise-CRM — etwas, das Sie selbst bedienen können.', 'items' => []],
-                        ['title' => 'Dokumentation & Passwort-Safe', 'description' => 'Ein strukturierter Passwort-Manager (1Password, Bitwarden) mit allen Zugängen, eine einfache Doku, wie welche Systeme zusammenhängen.', 'items' => []],
+                    'features' => [
+                        'title' => 'Die Bausteine Ihrer digitalen Geschäftsausstattung',
+                        'intro' => 'Acht Komponenten, die zusammen die digitale Basis Ihres Unternehmens bilden:',
+                        'items' => [
+                            'Domain & Business-E-Mail (DSGVO-konformer deutscher Provider, SPF/DKIM/DMARC korrekt)',
+                            'Cloud-Speicher & Kollaboration (Nextcloud, Google Workspace oder Microsoft 365 mit AVV)',
+                            'Rechtstexte & Compliance-Basis (Impressum, Datenschutz, Cookie-Banner)',
+                            'Buchhaltungs- & Rechnungs-Setup (DATEV-kompatibel — Ihr Steuerberater wird es lieben)',
+                            'Google Business Profile & lokale Sichtbarkeit (vollständig eingerichtet)',
+                            'Social-Media-Handles (LinkedIn-Unternehmensseite, Instagram, Facebook nach Bedarf)',
+                            'Einfaches CRM / Kontakt-Management (HubSpot Free, Pipedrive, Folk oder Airtable)',
+                            'Dokumentation & Passwort-Safe (1Password / Bitwarden + Übergabe-fähiges Handbuch)',
+                        ],
                     ],
                     'process' => [
                         'title' => 'So läuft das Setup ab',
@@ -562,12 +615,12 @@ TXT;
      */
     private function spokeSocialMediaSetup(): array
     {
-        $intro = <<<'TXT'
-Social-Media-Setup ist für Gründer eine Doppelfalle. Entweder Sie machen es richtig und tauchen in einen Strudel täglicher Content-Produktion, der Sie mehr Zeit kostet als Ihre eigentliche Kernleistung — oder Sie lassen es bleiben, und Ihre LinkedIn-Profile zeigt zwei Jahre später noch Gründer ohne Unternehmen.
+        $whyNativeText = <<<'TXT'
+Wir bauen Social-Media-Profile, die zu Ihrem Auftritt passen und Sie nicht in eine tägliche Content-Tretmühle zwingen. Bevor wir Profile anlegen, klären wir die wichtigste Frage: Wo ist Ihre Zielgruppe wirklich — und welche Plattformen können Sie ehrlich getrost ignorieren?
 
-Beides ist falsch. Was Sie in der Gründungs-Phase brauchen, ist ein sauberes Grund-Setup: Profile, die vollständig ausgefüllt sind und professionell wirken; ein konsistentes Branding, das zur Website und zum Logo passt; drei bis fünf erste Posts, die signalisieren, dass Sie aktiv sind; und eine realistische, minimal-invasive Content-Routine, die Sie in 30–60 Minuten pro Woche durchziehen können.
+Daraus entsteht ein konsistentes Setup: Profile, die vollständig und professionell ausgefüllt sind, Grafiken, die aus Ihrer Corporate Identity abgeleitet sind (kein Mischmasch aus Canva-Templates), und drei bis fünf Eröffnungs-Posts, die Ihre Stimme transportieren — nicht die einer KI oder eines Beraters.
 
-Genau das liefern wir — für Frankfurter Gründerinnen und Gründer, als Teil des Gründerpakets oder als Einzelleistung.
+Dazu eine realistische Content-Routine: 1 Post pro Woche, ein paar gezielte Reactions täglich, dazu eine Liste mit 20 thematischen Ideen, die zu Ihrer Gründung passen. So bleiben Sie sichtbar, ohne dass Social Media zu einer zweiten Vollzeit-Stelle wird.
 TXT;
 
         $differentiation = <<<'TXT'
@@ -604,8 +657,19 @@ TXT;
                         'subtitle' => 'Eigentlich bräuchten Sie als Gründer gar keine Social-Media-Präsenz — wenn da nicht die Tatsache wäre, dass zukünftige Kunden, Partner und Talente Sie dort suchen. Wir bauen ein schlankes, konsistentes Setup auf, das Sie nicht jeden Morgen unter Posting-Druck setzt.',
                         'icon' => 'chat-bubble-left-right',
                     ],
-                    'intro' => ['text' => $intro],
-                    'when_useful' => [
+                    'why_native' => [
+                        'title' => 'Wie wir Ihren Social-Media-Auftritt aufsetzen',
+                        'text' => $whyNativeText,
+                        'items' => [
+                            'Plattform-Wahl auf Basis Ihrer Zielgruppe — keine Aktivität auf Kanälen ohne Wirkung',
+                            'Branding aus Ihrer Corporate Identity — konsistent zur Website',
+                            'Vollständig ausgefüllte Profile (alle Felder, die Algorithmen bewerten)',
+                            'Eröffnungsposts in Ihrer Stimme — wir hören zu, bevor wir formulieren',
+                            'Realistische Content-Routine: 30–60 Minuten pro Woche',
+                            '20 vorbereitete Content-Ideen für die ersten 6 Monate',
+                        ],
+                    ],
+                    'when' => [
                         'title' => 'Wann lohnt sich Social Media für Gründer?',
                         'intro' => 'Nicht jede Gründung braucht Social Media. Aber die meisten profitieren davon:',
                         'conditions' => [
@@ -617,11 +681,16 @@ TXT;
                         ],
                         'note' => 'Wenn Ihre Zielgruppe ausschließlich über Google oder lokale Walk-Ins kommt, ist Social Media eine Zusatzkür. Wir sagen Ihnen im Briefing ehrlich, was sich lohnt.',
                     ],
-                    'use_case_categories' => [
-                        ['title' => 'LinkedIn — der B2B-Standard', 'description' => 'Für fast alle B2B-Gründer die wichtigste Plattform. Beratung, Agentur, Tech, Finanzen, freie Berufe — hier finden Sie Kunden, Kooperationspartner, Talente.', 'items' => ['Unternehmensberater', 'IT-Dienstleister', 'Agenturen', 'Coaches', 'Steuerberater', 'Anwälte', 'Immobilienmakler', 'Finanzberater']],
-                        ['title' => 'Instagram — Visuelles, Lokales, Lifestyle', 'description' => 'Stark für alles mit visueller Komponente: Handwerk, Gesundheit, Wellness, Gastronomie, Einzelhandel, Bildung. Auch für persönliche Marken oft besser als LinkedIn.', 'items' => ['Physiotherapeuten', 'Friseure', 'Handwerker mit Vorher-Nachher-Beispielen', 'Cafés', 'kleine Händler', 'Lifestyle-Coaches']],
-                        ['title' => 'Facebook — Lokal, Community, Event', 'description' => 'Hat an Sichtbarkeit verloren, ist aber für bestimmte Nischen noch wichtig: lokale Community-Arbeit, Events, ältere Zielgruppen, Gruppen.', 'items' => ['Lokale Vereine', 'Bürger-nahe Dienstleister', 'ältere Zielgruppe (50+)', 'lokale Events']],
-                        ['title' => 'XING — Deutschsprachiger B2B-Raum', 'description' => 'In Deutschland, Österreich, Schweiz immer noch relevant für klassischen B2B-Vertrieb und Recruiting. Parallel zu LinkedIn betreiben ist inzwischen üblich.', 'items' => ['Mittelständische B2B-Dienstleister', 'Vertriebs-orientierte Gründer', 'Personalberater']],
+                    'features' => [
+                        'title' => 'Welche Plattform für welche Gründer-Art',
+                        'intro' => 'Vier Plattformen, klare Zuordnung — wir empfehlen 2 bis 3 davon, nicht alle:',
+                        'items' => [
+                            'LinkedIn — der B2B-Standard für Beratung, Agentur, Tech, Finanzen, freie Berufe',
+                            'Instagram — visuell und lokal: Handwerk, Gesundheit, Wellness, Gastronomie, persönliche Marken',
+                            'Facebook — Community-orientiert: lokale Vereine, ältere Zielgruppen, Events',
+                            'XING — deutschsprachiger B2B-Raum, parallel zu LinkedIn üblich',
+                            'TikTok / YouTube / Threads — bewusst weglassen, außer Ihre Zielgruppe ist klar dort',
+                        ],
                     ],
                     'process' => [
                         'title' => 'Wie das Setup abläuft',

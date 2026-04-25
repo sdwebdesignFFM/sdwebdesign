@@ -109,6 +109,47 @@ class GruenderpaketContentSeederTest extends TestCase
         $response->assertSee('Schritt 0: Bevor der digitale Teil losgeht');
     }
 
+    public function test_solution_detail_spoke_renders_positive_intro_before_differentiation(): void
+    {
+        // The earlier seeder version put 'Warum nicht ein Fiverr-Logo?' (a negative
+        // differentiation block) directly after the hero on solution-detail pages,
+        // because solution-detail.blade.php ignored 'intro' / 'when_useful' keys.
+        // Verify the new whyNative + when + features blocks render *before* the
+        // differentiation block.
+        $this->seed(GruenderpaketContentSeeder::class);
+
+        $response = $this->get('/loesungen/gruenderpaket-frankfurt/logo-corporate-identity-gruender');
+        $response->assertStatus(200);
+
+        $html = $response->getContent();
+        preg_match_all('#<h2[^>]*>([^<]+)</h2>#', $html, $matches);
+        $headings = array_map('trim', $matches[1]);
+        $headings = array_values(array_filter($headings, fn ($h) => $h !== 'Angebot anfragen' && $h !== 'Das könnte Sie auch interessieren'));
+
+        // First content H2 must be the positive intro, NOT the differentiation
+        $this->assertNotEmpty($headings, 'Spoke must render at least one H2');
+        $this->assertSame('Wie wir Ihre Marke entwickeln', $headings[0],
+            'Spoke must render the positive whyNative block first, not the differentiation');
+
+        // Differentiation must come *after* whyNative in the page order
+        $whyNativePos = array_search('Wie wir Ihre Marke entwickeln', $headings);
+        $diffPos = array_search('Warum nicht ein Fiverr-Logo?', $headings);
+        $this->assertNotFalse($diffPos, 'Differentiation block must still render');
+        $this->assertGreaterThan($whyNativePos, $diffPos,
+            'Differentiation must come *after* the positive whyNative block');
+    }
+
+    public function test_pillar_renders_challenge_and_approach_blocks(): void
+    {
+        $this->seed(GruenderpaketContentSeeder::class);
+
+        $response = $this->get('/loesungen/gruenderpaket-frankfurt');
+        $response->assertStatus(200);
+
+        $response->assertSee('Was wir tatsächlich für Sie bauen');
+        $response->assertSee('Unser kreativer, individueller Prozess');
+    }
+
     public function test_seeder_updates_existing_page_instead_of_duplicating(): void
     {
         // Pre-create a page with the pillar slug but different content
