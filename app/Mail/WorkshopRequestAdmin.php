@@ -20,10 +20,13 @@ class WorkshopRequestAdmin extends Mailable
     public function envelope(): Envelope
     {
         $companySuffix = $this->request->company ? ' · '.$this->request->company : '';
+        $replyToName = trim((string) $this->request->name);
 
         return new Envelope(
             subject: 'Workshop-Anfrage Plattform-Discovery: '.$this->request->name.$companySuffix,
-            replyTo: [$this->request->email => $this->request->name],
+            replyTo: $replyToName !== ''
+                ? [$this->request->email => $replyToName]
+                : [$this->request->email],
         );
     }
 

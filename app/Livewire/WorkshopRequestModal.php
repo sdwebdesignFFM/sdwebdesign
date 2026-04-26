@@ -6,11 +6,13 @@ use App\Mail\WorkshopRequestAdmin;
 use App\Mail\WorkshopRequestConfirmation;
 use App\Models\Setting;
 use App\Models\WorkshopRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Throwable;
 
 class WorkshopRequestModal extends Component
 {
@@ -305,13 +307,30 @@ class WorkshopRequestModal extends Component
 
         $adminEmail = Setting::first()?->email ?? config('mail.from.address') ?? 'info@sdwebdesign.de';
 
-        Mail::to($adminEmail)->send(new WorkshopRequestAdmin($request));
-        Mail::to($request->email)->send(new WorkshopRequestConfirmation($request));
+        // Mail dispatch is wrapped in try/catch so a transient SMTP outage,
+        // an RFC-compliance error or a misconfigured from-address never
+        // takes the lead capture down with it. The lead row is already in
+        // the DB by the time we get here — Steffen can always see it via
+        // tinker or a future Filament resource even if no mail went out.
+        try {
+            Mail::to($adminEmail)->send(new WorkshopRequestAdmin($request));
+            $request->update(['admin_notified_at' => now()]);
+        } catch (Throwable $e) {
+            Log::error('WorkshopRequestAdmin mail failed', [
+                'lead_id' => $request->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
-        $request->update([
-            'admin_notified_at' => now(),
-            'confirmation_sent_at' => now(),
-        ]);
+        try {
+            Mail::to($request->email)->send(new WorkshopRequestConfirmation($request));
+            $request->update(['confirmation_sent_at' => now()]);
+        } catch (Throwable $e) {
+            Log::error('WorkshopRequestConfirmation mail failed', [
+                'lead_id' => $request->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         $this->isSubmitting = false;
         $this->isSubmitted = true;

@@ -124,6 +124,50 @@ class WorkshopRequestModalTest extends TestCase
         Mail::assertSent(WorkshopRequestConfirmation::class, fn ($m) => $m->hasTo('maria@beispielfirma.de'));
     }
 
+    public function test_submit_succeeds_and_persists_lead_when_mail_dispatch_throws(): void
+    {
+        Setting::create(['email' => 'admin@sdwebdesign.de']);
+
+        // Force the mail driver to throw on send. The lead must still land
+        // in the DB and the user must see the success state — we never
+        // 500 on a transient SMTP issue.
+        Mail::shouldReceive('to')->andReturnSelf();
+        Mail::shouldReceive('send')->andThrow(new \RuntimeException('SMTP exploded'));
+
+        Livewire::test(WorkshopRequestModal::class)
+            ->dispatch('openWorkshopRequestModal')
+            ->set('name', 'Anna Test')
+            ->set('email', 'anna@test.de')
+            ->set('phone', '0123456789')
+            ->set('consent', true)
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertSet('isSubmitted', true);
+
+        $lead = WorkshopRequest::firstWhere('email', 'anna@test.de');
+        $this->assertNotNull($lead, 'lead row must persist even when mail throws');
+        $this->assertNull($lead->admin_notified_at);
+        $this->assertNull($lead->confirmation_sent_at);
+    }
+
+    public function test_admin_mail_envelope_handles_blank_name_gracefully(): void
+    {
+        // The admin mailable used to pass replyTo: [email => name] with
+        // name possibly empty — Symfony's RFC parser objects to that.
+        // Now the empty-name branch falls back to a string-only address.
+        $request = WorkshopRequest::create([
+            'workshop_slug' => 'plattform-discovery',
+            'name' => '',
+            'email' => 'leer@test.de',
+        ]);
+
+        $envelope = (new WorkshopRequestAdmin($request))->envelope();
+
+        $this->assertNotEmpty($envelope->replyTo);
+        // No crash on construction is the actual assertion — getting here
+        // means Symfony was happy with the address shape.
+    }
+
     public function test_admin_mail_uses_request_email_as_reply_to(): void
     {
         Mail::fake();
