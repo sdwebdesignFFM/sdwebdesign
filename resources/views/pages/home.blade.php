@@ -295,16 +295,6 @@
                 $solutionAccordions = $solutions['accordions'] ?? [
                     [
                         'number' => '01',
-                        'icon' => 'globe',
-                        'title' => 'Unternehmenswebsites mit Substanz',
-                        'subtitle' => 'Professionelle Webauftritte, die heute passen – und morgen mitwachsen',
-                        'description' => 'Eine Unternehmenswebsite ist oft der erste Kontaktpunkt mit Ihrem Unternehmen. Sie soll Vertrauen schaffen, Inhalte klar vermitteln und technisch zuverlässig funktionieren – ohne unnötige Komplexität, aber mit einer Basis, die spätere Erweiterungen ermöglicht.',
-                        'suitable_for' => ['Unternehmenswebsites & Leistungsseiten', 'Relaunch bestehender Websites', 'SEO-orientierte Content-Strukturen'],
-                        'character' => ['Klarer Einstieg mit überschaubarem Budget', 'Sauber umgesetzt, performant & wartbar', 'Erweiterbar Richtung Shop, Portal oder Plattform'],
-                        'link' => '/loesungen/websites',
-                    ],
-                    [
-                        'number' => '02',
                         'icon' => 'layout-dashboard',
                         'title' => 'Digitale Plattformen & Webanwendungen',
                         'subtitle' => 'Zentrale Systeme für Prozesse, Daten und Zusammenarbeit',
@@ -314,7 +304,7 @@
                         'link' => '/loesungen/plattformen',
                     ],
                     [
-                        'number' => '03',
+                        'number' => '02',
                         'icon' => 'shopping-cart',
                         'title' => 'E-Commerce & Online-Shops',
                         'subtitle' => 'Verkaufen – integriert, performant und erweiterbar',
@@ -324,7 +314,7 @@
                         'link' => '/loesungen/e-commerce',
                     ],
                     [
-                        'number' => '04',
+                        'number' => '03',
                         'icon' => 'device-phone-mobile',
                         'title' => 'Mobile Anwendungen (iOS / Android / PWA)',
                         'subtitle' => 'Mobile Erweiterungen bestehender Systeme',
@@ -332,6 +322,16 @@
                         'suitable_for' => ['Native iOS- oder Android-Apps', 'Progressive Web Apps (PWA)', 'Mobile Companion- & Service-Apps'],
                         'character' => ['Integration statt Insellösung', 'Gemeinsame Datenbasis & Logik', 'Schrittweise ausbaubar'],
                         'link' => '/loesungen/mobile-anwendungen',
+                    ],
+                    [
+                        'number' => '04',
+                        'icon' => 'globe',
+                        'title' => 'Unternehmenswebsites mit Substanz',
+                        'subtitle' => 'Professionelle Webauftritte, die heute passen – und morgen mitwachsen',
+                        'description' => 'Eine Unternehmenswebsite ist oft der erste Kontaktpunkt mit Ihrem Unternehmen. Sie soll Vertrauen schaffen, Inhalte klar vermitteln und technisch zuverlässig funktionieren – ohne unnötige Komplexität, aber mit einer Basis, die spätere Erweiterungen ermöglicht.',
+                        'suitable_for' => ['Unternehmenswebsites & Leistungsseiten', 'Relaunch bestehender Websites', 'SEO-orientierte Content-Strukturen'],
+                        'character' => ['Klarer Einstieg mit überschaubarem Budget', 'Sauber umgesetzt, performant & wartbar', 'Erweiterbar Richtung Shop, Portal oder Plattform'],
+                        'link' => '/loesungen/websites',
                     ],
                 ];
             @endphp
