@@ -675,6 +675,41 @@
     </section>
     @endif
 
+    {{-- Optional Whitepaper / Resource Promo Block --}}
+    @php($whitepaperPromo = $page->getSection('whitepaper_promo'))
+    @if($whitepaperPromo['title'] ?? false)
+    <section class="py-16 border-t border-border bg-muted/10">
+        <div class="max-w-[1400px] mx-auto px-6">
+            <div class="max-w-[1100px]">
+                <div class="motion motion-fade-up grid lg:grid-cols-[1fr_auto] gap-8 items-center p-8 lg:p-10 border border-border bg-background">
+                    <div>
+                        @if($whitepaperPromo['label'] ?? false)
+                        <p class="text-[0.75rem] uppercase tracking-widest text-muted-foreground mb-3">
+                            {{ $whitepaperPromo['label'] }}
+                        </p>
+                        @endif
+                        <h3 class="text-[1.25rem] font-medium mb-3">{{ $whitepaperPromo['title'] }}</h3>
+                        @if($whitepaperPromo['text'] ?? false)
+                        <p class="text-[0.9375rem] text-muted-foreground leading-relaxed max-w-[640px]">
+                            {{ $whitepaperPromo['text'] }}
+                        </p>
+                        @endif
+                    </div>
+                    @if($whitepaperPromo['link'] ?? false)
+                    <a
+                        href="{{ $whitepaperPromo['link'] }}"
+                        class="shrink-0 inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background hover:bg-foreground/90 transition-all text-[0.9375rem]"
+                    >
+                        {{ $whitepaperPromo['button_text'] ?? 'Whitepaper ansehen' }}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
+
     {{-- Betrieb & Wartung Section --}}
     <x-frontend.maintenance-block variant="compact" />
 

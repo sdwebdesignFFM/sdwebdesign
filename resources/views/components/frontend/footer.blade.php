@@ -119,6 +119,13 @@
                             {{ app()->getLocale() === 'de' ? 'Ratgeber' : 'Guides' }}
                         </a>
                     </li>
+                    @if(app()->getLocale() === 'de')
+                    <li>
+                        <a href="/whitepaper/eigene-plattform-vs-standard-software" class="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                            Whitepaper · Plattform vs. Standard
+                        </a>
+                    </li>
+                    @endif
                     <li>
                         <a href="{{ localized_route('maintenance') }}" class="text-sm text-muted-foreground hover:text-foreground transition-colors">
                             {{ app()->getLocale() === 'de' ? 'Betrieb & Wartung' : 'Hosting & Maintenance' }}
