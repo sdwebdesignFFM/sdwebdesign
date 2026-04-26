@@ -53,6 +53,9 @@
 
         {{-- Global Contact Modal --}}
         <livewire:contact-modal />
+
+        {{-- Global Workshop-Request Modal (Discovery-Workshop & future workshops) --}}
+        <livewire:workshop-request-modal />
     </div>
 
     @livewireScripts

@@ -777,9 +777,21 @@
 
                             {{-- Buttons --}}
                             <div class="flex flex-col sm:flex-row gap-3">
+                                @php
+                                    $rawModalEvent = $cta['modal_event'] ?? 'openContactModal';
+                                    // Whitelist event name to alnum + underscore — content
+                                    // is editor-controlled, never let it inject JS.
+                                    $modalEvent = preg_match('/^[A-Za-z0-9_]+$/', (string) $rawModalEvent)
+                                        ? $rawModalEvent
+                                        : 'openContactModal';
+                                    $modalPayload = $cta['modal_payload'] ?? null;
+                                    $dispatchExpr = $modalPayload && is_array($modalPayload)
+                                        ? "Livewire.dispatch('{$modalEvent}', ".json_encode($modalPayload, JSON_HEX_QUOT | JSON_HEX_APOS).')'
+                                        : "Livewire.dispatch('{$modalEvent}')";
+                                @endphp
                                 <button
                                     type="button"
-                                    onclick="Livewire.dispatch('openContactModal')"
+                                    onclick="{!! $dispatchExpr !!}"
                                     class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all text-[0.9375rem]"
                                 >
                                     {{ $cta['button_text'] ?? (app()->getLocale() === 'en' ? 'Get in touch' : 'Jetzt Kontakt aufnehmen') }}
