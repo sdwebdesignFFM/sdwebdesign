@@ -363,6 +363,16 @@
                                     {{ $step['description'] }}
                                 </p>
                                 @endif
+                                @if(! empty($step['items']) && is_array($step['items']))
+                                <ul class="mt-3 space-y-2">
+                                    @foreach($step['items'] as $stepItem)
+                                    <li class="flex items-start gap-2 text-[0.875rem]">
+                                        <x-frontend.icon name="check-circle" class="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                                        <span>{{ $stepItem }}</span>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                                @endif
                             </div>
                         </div>
                         @endforeach

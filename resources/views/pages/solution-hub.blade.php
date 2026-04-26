@@ -308,11 +308,20 @@
                 @php
                     $childHero = $child->getSection('hero');
                     $rawFeatures = $child->getSection('features', []);
-                    // Support both old format (array of strings) and new format (object with items)
+                    // Support old format (array of strings) and new format (object with items).
+                    // Card preview only renders flat strings — anything else (e.g. nested
+                    // phase objects) is filtered out so a child page cannot crash the hub.
                     $childFeatures = is_array($rawFeatures) && isset($rawFeatures['items'])
                         ? $rawFeatures['items']
-                        : (is_array($rawFeatures) && !isset($rawFeatures['title']) ? $rawFeatures : []);
+                        : (is_array($rawFeatures) && ! isset($rawFeatures['title']) ? $rawFeatures : []);
+                    $childFeatures = array_values(array_filter(
+                        is_array($childFeatures) ? $childFeatures : [],
+                        fn ($f) => is_string($f) || is_numeric($f)
+                    ));
                     $childIdealFor = $child->getSection('ideal_for');
+                    if (! is_string($childIdealFor) && ! is_numeric($childIdealFor)) {
+                        $childIdealFor = null;
+                    }
                 @endphp
                 <a href="{{ $child->getUrl() }}" class="motion motion-fade-up block group border border-border hover:border-foreground hover:shadow-lg transition-all bg-background p-8">
                     {{-- Header --}}
