@@ -126,7 +126,9 @@ class PageController extends Controller
 
         $this->setSeoMeta($page);
 
-        return view('pages.about', compact('page'));
+        $personSchema = $this->buildFounderPersonSchema($page);
+
+        return view('pages.about', compact('page', 'personSchema'));
     }
 
     public function contact(): View
@@ -560,6 +562,48 @@ class PageController extends Controller
             'address' => $address,
             'email' => $settings?->email,
             'telephone' => $settings?->mobile ?? $settings?->phone,
+            'sameAs' => $sameAs,
+        ], fn ($v) => $v !== null && $v !== '' && $v !== []);
+    }
+
+    /**
+     * Person schema for the about page — anchors Steffen as the named
+     * principal of the agency. The sameAs ladder (LinkedIn, Xing, GitHub)
+     * lets AI search engines and Google's Knowledge Graph cross-verify
+     * the identity, which is part of the Phase D personal-brand strategy.
+     *
+     * Pulls the LinkedIn URL from the first team member's `linkedin`
+     * field, falling back to the global Settings.linkedin_url so editors
+     * can override per-person via Filament without losing the org-wide
+     * profile link.
+     *
+     * @return array<string, mixed>
+     */
+    private function buildFounderPersonSchema(Page $page): array
+    {
+        $settings = \App\Models\Setting::first();
+        $baseUrl = $this->schemaBaseUrl();
+
+        $members = $page->getSection('team', [])['members'] ?? [];
+        $founder = collect($members)->first(fn ($m) => ($m['name'] ?? null) === 'Steffen Fasselt')
+            ?? ($members[0] ?? []);
+
+        $sameAs = array_values(array_filter([
+            $founder['linkedin'] ?? null,
+            $settings?->linkedin_url,
+            $settings?->xing_url,
+            $settings?->github_url,
+        ]));
+
+        return array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'Person',
+            '@id' => $baseUrl.'/ueber-uns#steffen-fasselt',
+            'name' => $founder['name'] ?? 'Steffen Fasselt',
+            'jobTitle' => $founder['role'] ?? 'Senior Product Owner & Plattform-Architekt',
+            'description' => $founder['description'] ?? null,
+            'url' => $baseUrl.'/ueber-uns',
+            'worksFor' => ['@id' => $baseUrl.'/#organization'],
             'sameAs' => $sameAs,
         ], fn ($v) => $v !== null && $v !== '' && $v !== []);
     }
