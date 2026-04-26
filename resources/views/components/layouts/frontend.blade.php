@@ -60,6 +60,20 @@
 
     @livewireScripts
     <script>
+        // Global delegated handler for any element marked with data-modal-event.
+        // Avoids escaping issues that come from inlining JSON inside onclick="…".
+        document.addEventListener('click', function (event) {
+            const trigger = event.target.closest('[data-modal-event]');
+            if (! trigger) return;
+            const eventName = trigger.dataset.modalEvent;
+            if (! eventName || typeof Livewire === 'undefined') return;
+            let payload = null;
+            if (trigger.dataset.modalPayload) {
+                try { payload = JSON.parse(trigger.dataset.modalPayload); } catch (e) { payload = null; }
+            }
+            payload ? Livewire.dispatch(eventName, payload) : Livewire.dispatch(eventName);
+        });
+
         // Disable Livewire's built-in 419 dialog and auto-refresh instead
         document.addEventListener('livewire:init', () => {
             Livewire.hook('request', ({ fail }) => {

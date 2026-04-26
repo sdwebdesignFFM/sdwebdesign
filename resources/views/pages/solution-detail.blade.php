@@ -13,6 +13,19 @@
         $scenarios = $page->getSection('scenarios', []);
         $nextSteps = $page->getSection('next_steps');
         $cta = $page->getSection('cta');
+        $hideMaintenance = (bool) $page->getSection('hide_maintenance_block', false);
+
+        // Modal trigger config used by both the hero CTA (if hero.cta_text is
+        // set) and the bottom CTA section. Whitelist the event name so editor
+        // content can't inject arbitrary JS via dispatchers.
+        $rawModalEvent = $cta['modal_event'] ?? 'openContactModal';
+        $modalEvent = preg_match('/^[A-Za-z0-9_]+$/', (string) $rawModalEvent)
+            ? $rawModalEvent
+            : 'openContactModal';
+        $modalPayload = $cta['modal_payload'] ?? null;
+        $modalPayloadJson = ($modalPayload && is_array($modalPayload))
+            ? json_encode($modalPayload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+            : null;
 
         // Legacy support for old content structure
         $challenge = $page->getSection('challenge');
@@ -82,6 +95,25 @@
                         <p class="text-[1rem] text-muted-foreground leading-relaxed">
                             {{ $hero['description'] }}
                         </p>
+                        @endif
+
+                        {{-- Optional Hero CTA — rendered when hero.cta_text is set,
+                             dispatches the same modal event as the bottom CTA. --}}
+                        @if($hero['cta_text'] ?? false)
+                        <div class="mt-8 flex flex-col sm:flex-row gap-3 items-start">
+                            <button
+                                type="button"
+                                data-modal-event="{{ $modalEvent }}"
+                                @if($modalPayloadJson) data-modal-payload="{{ $modalPayloadJson }}" @endif
+                                class="inline-flex items-center justify-center gap-3 px-6 py-3 bg-foreground text-background hover:bg-foreground/90 transition-all text-[0.9375rem]"
+                            >
+                                {{ $hero['cta_text'] }}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                            </button>
+                            @if($hero['cta_subtext'] ?? false)
+                            <span class="text-[0.875rem] text-muted-foreground sm:py-3">{{ $hero['cta_subtext'] }}</span>
+                            @endif
+                        </div>
                         @endif
                     </div>
                 </div>
@@ -738,8 +770,10 @@
     </section>
     @endif
 
-    {{-- Betrieb & Wartung Section --}}
+    {{-- Betrieb & Wartung Section — opt-out via hide_maintenance_block on the page --}}
+    @unless($hideMaintenance)
     <x-frontend.maintenance-block variant="compact" />
+    @endunless
 
     {{-- CTA Section --}}
     @php
@@ -777,21 +811,10 @@
 
                             {{-- Buttons --}}
                             <div class="flex flex-col sm:flex-row gap-3">
-                                @php
-                                    $rawModalEvent = $cta['modal_event'] ?? 'openContactModal';
-                                    // Whitelist event name to alnum + underscore — content
-                                    // is editor-controlled, never let it inject JS.
-                                    $modalEvent = preg_match('/^[A-Za-z0-9_]+$/', (string) $rawModalEvent)
-                                        ? $rawModalEvent
-                                        : 'openContactModal';
-                                    $modalPayload = $cta['modal_payload'] ?? null;
-                                    $dispatchExpr = $modalPayload && is_array($modalPayload)
-                                        ? "Livewire.dispatch('{$modalEvent}', ".json_encode($modalPayload, JSON_HEX_QUOT | JSON_HEX_APOS).')'
-                                        : "Livewire.dispatch('{$modalEvent}')";
-                                @endphp
                                 <button
                                     type="button"
-                                    onclick="{!! $dispatchExpr !!}"
+                                    data-modal-event="{{ $modalEvent }}"
+                                    @if($modalPayloadJson) data-modal-payload="{{ $modalPayloadJson }}" @endif
                                     class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all text-[0.9375rem]"
                                 >
                                     {{ $cta['button_text'] ?? (app()->getLocale() === 'en' ? 'Get in touch' : 'Jetzt Kontakt aufnehmen') }}

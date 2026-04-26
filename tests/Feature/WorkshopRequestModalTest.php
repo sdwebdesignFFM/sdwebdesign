@@ -168,15 +168,17 @@ class WorkshopRequestModalTest extends TestCase
         $body = $this->get('/loesungen/plattformen/plattform-discovery')
             ->assertStatus(200)
             ->getContent();
-        $this->assertStringContainsString("Livewire.dispatch('openContactModal')", $body);
-        $this->assertStringNotContainsString("Livewire.dispatch('openWorkshopRequestModal'", $body);
+        $this->assertStringContainsString('data-modal-event="openContactModal"', $body);
+        $this->assertStringNotContainsString('data-modal-event="openWorkshopRequestModal"', $body);
 
         $route = require database_path('migrations/2026_04_26_111206_route_discovery_cta_to_workshop_modal.php');
         $route->up();
 
         $body = $this->get('/loesungen/plattformen/plattform-discovery')->getContent();
-        $this->assertStringContainsString("Livewire.dispatch('openWorkshopRequestModal'", $body);
-        $this->assertStringContainsString('"slug":"plattform-discovery"', $body);
+        $this->assertStringContainsString('data-modal-event="openWorkshopRequestModal"', $body);
+        // Payload is HTML-escaped inside the data-* attribute (browser parses
+        // it back to JSON on read), so look for the escaped form.
+        $this->assertStringContainsString('&quot;slug&quot;:&quot;plattform-discovery&quot;', $body);
     }
 
     public function test_other_solution_detail_pages_still_use_generic_contact_modal(): void
@@ -205,9 +207,7 @@ class WorkshopRequestModalTest extends TestCase
 
         $body = $this->get('/loesungen/plattformen/kundenportal')->assertStatus(200)->getContent();
 
-        $this->assertStringContainsString("Livewire.dispatch('openContactModal')", $body);
-        // The modal listener for openWorkshopRequestModal is always present in the
-        // global layout, so check the dispatch *call* is absent rather than the name.
-        $this->assertStringNotContainsString("Livewire.dispatch('openWorkshopRequestModal'", $body);
+        $this->assertStringContainsString('data-modal-event="openContactModal"', $body);
+        $this->assertStringNotContainsString('data-modal-event="openWorkshopRequestModal"', $body);
     }
 }
