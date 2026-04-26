@@ -592,6 +592,17 @@
                 <p class="text-[1rem] text-muted-foreground mb-6">
                     {{ $solutions['microcopy'] ?? (app()->getLocale() === 'en' ? 'Not sure which entry point makes sense? We help with the assessment – no obligation.' : 'Unsicher, welcher Einstieg sinnvoll ist? Wir helfen bei der Einordnung – unverbindlich.') }}
                 </p>
+                @if($solutions['microcopy_link'] ?? false)
+                <a
+                    href="{{ $solutions['microcopy_link'] }}"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background hover:bg-foreground/90 transition-all text-[0.9375rem]"
+                >
+                    {{ $solutions['microcopy_button'] ?? (app()->getLocale() === 'en' ? 'Discuss project' : 'Projekt besprechen') }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                    </svg>
+                </a>
+                @else
                 <button
                     type="button"
                     onclick="Livewire.dispatch('openContactModal')"
@@ -602,6 +613,7 @@
                         <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
                     </svg>
                 </button>
+                @endif
             </div>
         </div>
     </section>
