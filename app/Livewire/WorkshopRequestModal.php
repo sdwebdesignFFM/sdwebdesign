@@ -305,7 +305,13 @@ class WorkshopRequestModal extends Component
             'user_agent' => substr((string) request()->userAgent(), 0, 191),
         ]);
 
-        $adminEmail = Setting::first()?->email ?? config('mail.from.address') ?? 'info@sdwebdesign.de';
+        // Use first non-empty value — Setting::email may be persisted as ''
+        // which the null-coalesce operator wouldn't replace.
+        $adminEmail = collect([
+            Setting::first()?->email,
+            config('mail.from.address'),
+            'info@sdwebdesign.de',
+        ])->first(fn ($v) => is_string($v) && trim($v) !== '');
 
         // Mail dispatch is wrapped in try/catch so a transient SMTP outage,
         // an RFC-compliance error or a misconfigured from-address never

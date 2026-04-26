@@ -20,13 +20,16 @@ class WorkshopRequestAdmin extends Mailable
     public function envelope(): Envelope
     {
         $companySuffix = $this->request->company ? ' · '.$this->request->company : '';
-        $replyToName = trim((string) $this->request->name);
 
+        // Reply-To is a plain email string — no display-name attached.
+        // Symfony's Address parser rejects names containing characters
+        // like commas, parentheses or apostrophes (RFC 2822 "phrase"
+        // restrictions), which crashed live submits with non-trivial
+        // names. The visitor email is already validated as a valid
+        // address, so this branch is always safe.
         return new Envelope(
             subject: 'Workshop-Anfrage Plattform-Discovery: '.$this->request->name.$companySuffix,
-            replyTo: $replyToName !== ''
-                ? [$this->request->email => $replyToName]
-                : [$this->request->email],
+            replyTo: [$this->request->email],
         );
     }
 

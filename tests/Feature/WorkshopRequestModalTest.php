@@ -152,9 +152,6 @@ class WorkshopRequestModalTest extends TestCase
 
     public function test_admin_mail_envelope_handles_blank_name_gracefully(): void
     {
-        // The admin mailable used to pass replyTo: [email => name] with
-        // name possibly empty — Symfony's RFC parser objects to that.
-        // Now the empty-name branch falls back to a string-only address.
         $request = WorkshopRequest::create([
             'workshop_slug' => 'plattform-discovery',
             'name' => '',
@@ -164,8 +161,63 @@ class WorkshopRequestModalTest extends TestCase
         $envelope = (new WorkshopRequestAdmin($request))->envelope();
 
         $this->assertNotEmpty($envelope->replyTo);
-        // No crash on construction is the actual assertion — getting here
-        // means Symfony was happy with the address shape.
+    }
+
+    /**
+     * Reproduces the live 500: a name with characters that fail RFC-2822
+     * "phrase" validation (commas, parens, apostrophes). Sending the full
+     * Mailable through the real (faked) mailer exercises the same code
+     * path that crashed live — Mail::fake() short-circuits delivery but
+     * still constructs the envelope and message exactly like real send.
+     *
+     * @dataProvider tricky_name_provider
+     */
+    public function test_admin_mail_survives_tricky_names_in_reply_to(string $trickyName): void
+    {
+        $request = WorkshopRequest::create([
+            'workshop_slug' => 'plattform-discovery',
+            'name' => $trickyName,
+            'email' => 'tricky@test.de',
+        ]);
+
+        Mail::fake();
+        // Must not throw — the previous code crashed on these names.
+        Mail::to('admin@sdwebdesign.de')->send(new WorkshopRequestAdmin($request));
+
+        Mail::assertSent(WorkshopRequestAdmin::class);
+    }
+
+    public static function tricky_name_provider(): array
+    {
+        return [
+            'name with comma' => ['Müller, Anna'],
+            'name with parens' => ['Anna (CEO)'],
+            'name with apostrophe' => ["O'Brien"],
+            'name with semicolon' => ['Test; Inc'],
+            'name with angle brackets' => ['<Anna>'],
+            'name with at sign' => ['anna@test'],
+            'empty name' => [''],
+            'whitespace name' => ['   '],
+        ];
+    }
+
+    public function test_admin_email_falls_back_when_setting_is_empty_string(): void
+    {
+        // Empty string in Setting must not crash Mail::to('').
+        Setting::create(['email' => '']);
+        config(['mail.from.address' => 'fallback@example.com']);
+
+        Livewire::test(WorkshopRequestModal::class)
+            ->dispatch('openWorkshopRequestModal')
+            ->set('name', 'OK')
+            ->set('email', 'visitor@test.de')
+            ->set('phone', '0123456789')
+            ->set('consent', true)
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertSet('isSubmitted', true);
+
+        $this->assertNotNull(WorkshopRequest::firstWhere('email', 'visitor@test.de'));
     }
 
     public function test_admin_mail_uses_request_email_as_reply_to(): void
