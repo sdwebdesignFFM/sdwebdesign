@@ -29,6 +29,14 @@ class SitemapController extends Controller
                 $this->addPageUrls($sitemap, $page, $baseUrl);
             }
 
+            // Static lead-magnet pages (whitepapers etc.) — registered
+            // via routes/web.php, not as Page records.
+            $sitemap->add(
+                Url::create($baseUrl.'/whitepaper/eigene-plattform-vs-standard-software')
+                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                    ->setPriority(0.8)
+            );
+
             foreach (BlogArticle::published()->get() as $article) {
                 $deSlug = $article->getTranslation('slug', 'de');
                 if ($deSlug) {

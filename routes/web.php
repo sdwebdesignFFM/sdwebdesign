@@ -52,6 +52,10 @@ Route::middleware('locale:de')->group(function () {
     // Local Landing Pages Hub & Detail
     Route::get('/in', [PageController::class, 'localHub'])->name('de.local.hub');
     Route::get('/in/{slug}', [PageController::class, 'localLanding'])->name('de.local');
+
+    // Whitepaper / Lead Magnets
+    Route::get('/whitepaper/eigene-plattform-vs-standard-software', [\App\Http\Controllers\WhitepaperController::class, 'platformVsStandard'])
+        ->name('de.whitepaper.platform-vs-standard');
 });
 
 /*

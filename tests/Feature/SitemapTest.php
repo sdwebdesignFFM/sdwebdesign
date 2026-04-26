@@ -37,6 +37,20 @@ class SitemapTest extends TestCase
         $response->assertSee('<loc>https://sdwebdesign.de/in/frankfurt-am-main</loc>', false);
     }
 
+    public function test_sitemap_contains_whitepaper_landing_page(): void
+    {
+        Config::set('app.url', 'https://sdwebdesign.de');
+        $this->seedMinimalPages();
+
+        $response = $this->get('/sitemap.xml');
+
+        $response->assertStatus(200);
+        $response->assertSee(
+            '<loc>https://sdwebdesign.de/whitepaper/eigene-plattform-vs-standard-software</loc>',
+            false
+        );
+    }
+
     public function test_sitemap_forces_https_on_production_hostname_even_when_app_url_is_http(): void
     {
         // Misconfigured production env: APP_URL still on http
