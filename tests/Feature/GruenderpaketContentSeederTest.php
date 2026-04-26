@@ -146,8 +146,11 @@ class GruenderpaketContentSeederTest extends TestCase
         $response = $this->get('/loesungen/gruenderpaket-frankfurt');
         $response->assertStatus(200);
 
+        // Challenge block (red/X) — should be a pain anchor
+        $response->assertSee('Was Sie woanders typisch bekommen');
+        $response->assertSee('Generator-Impressum');
+        // Approach block (green/check) — positive promise
         $response->assertSee('Was wir tatsächlich für Sie bauen');
-        $response->assertSee('Unser kreativer, individueller Prozess');
     }
 
     public function test_seeder_updates_existing_page_instead_of_duplicating(): void

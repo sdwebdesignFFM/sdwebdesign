@@ -118,12 +118,12 @@ TXT;
                     ],
                     'intro' => ['text' => $intro],
                     'challenge' => [
-                        'title' => 'Was wir tatsächlich für Sie bauen',
-                        'text' => 'Eine Marke ist mehr als ein Logo, eine Website mehr als Pixel auf einem Bildschirm. Bevor wir konfigurieren, gestalten oder Code schreiben, hören wir zu: Was bieten Sie an, für wen, mit welchem Anspruch? Was unterscheidet Ihr Versprechen vom Wettbewerb? Wer soll sich in Ihrem Auftritt wiedererkennen?',
+                        'title' => 'Was Sie woanders typisch bekommen',
+                        'text' => 'Template-Baukasten statt Beratung. Fünf Freelancer parallel koordinieren — eine Person für Logo, eine für Website, eine für Cookie-Banner, eine für Hosting. Generator-Impressum mit Abmahnungs-Risiko. Versprochene Festpreise, die im Detail nachverhandelt werden. Kein fester Ansprechpartner, der Verantwortung über das ganze Setup übernimmt.',
                     ],
                     'approach' => [
-                        'title' => 'Unser kreativer, individueller Prozess',
-                        'text' => 'Aus Ihrem Briefing entsteht keine Template-Anwendung, sondern ein zusammenhängender Auftritt: Logo, Farben, Typografie, Website-Struktur, Tonalität — alles aus einer Idee abgeleitet, alles konsistent über Touchpoints hinweg. Sie identifizieren sich am Ende mit dem Ergebnis, weil es Ihre Geschichte erzählt — nicht eine generische, sondern Ihre eigene.',
+                        'title' => 'Was wir tatsächlich für Sie bauen',
+                        'text' => 'Aus Ihrem Briefing entsteht keine Template-Anwendung, sondern ein zusammenhängender Auftritt: Logo, Farben, Typografie, Website-Struktur, Tonalität — alles aus einer Idee abgeleitet, alles konsistent über Touchpoints hinweg. Ein Festpreis, ein Ansprechpartner, ein verbindlicher Starttermin. Sie identifizieren sich am Ende mit dem Ergebnis, weil es Ihre Geschichte erzählt — nicht eine generische, sondern Ihre eigene.',
                     ],
                     'package' => [
                         'headline' => 'Was Sie im Gründerpaket bekommen',
