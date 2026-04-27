@@ -41,7 +41,21 @@ class B2BPlatformRatgeberSeeder extends Seeder
 
     private function ensureCostArticle(): void
     {
-        if (BlogArticle::where('slug->de', 'was-kostet-b2b-plattform')->exists()) {
+        $existing = BlogArticle::where('slug->de', 'was-kostet-b2b-plattform')->first();
+        if ($existing) {
+            if (! $existing->is_published
+                || $existing->published_at === null
+                || $existing->published_at->isFuture()
+            ) {
+                $existing->update([
+                    'is_published' => true,
+                    'published_at' => now()->subDay(),
+                ]);
+                $this->command?->info('  • re-published existing /ratgeber/was-kostet-b2b-plattform');
+            } else {
+                $this->command?->info('  • /ratgeber/was-kostet-b2b-plattform already exists and is published');
+            }
+
             return;
         }
 
@@ -130,7 +144,21 @@ TXT;
 
     private function ensureAgencyArticle(): void
     {
-        if (BlogArticle::where('slug->de', 'software-agentur-frankfurt-mittelstand')->exists()) {
+        $existing = BlogArticle::where('slug->de', 'software-agentur-frankfurt-mittelstand')->first();
+        if ($existing) {
+            if (! $existing->is_published
+                || $existing->published_at === null
+                || $existing->published_at->isFuture()
+            ) {
+                $existing->update([
+                    'is_published' => true,
+                    'published_at' => now()->subHours(2),
+                ]);
+                $this->command?->info('  • re-published existing /ratgeber/software-agentur-frankfurt-mittelstand');
+            } else {
+                $this->command?->info('  • /ratgeber/software-agentur-frankfurt-mittelstand already exists and is published');
+            }
+
             return;
         }
 
