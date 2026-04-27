@@ -43,18 +43,15 @@ class B2BPlatformRatgeberSeeder extends Seeder
     {
         $existing = BlogArticle::where('slug->de', 'was-kostet-b2b-plattform')->first();
         if ($existing) {
-            if (! $existing->is_published
-                || $existing->published_at === null
-                || $existing->published_at->isFuture()
-            ) {
-                $existing->update([
-                    'is_published' => true,
-                    'published_at' => now()->subDay(),
-                ]);
-                $this->command?->info('  • re-published existing /ratgeber/was-kostet-b2b-plattform');
-            } else {
-                $this->command?->info('  • /ratgeber/was-kostet-b2b-plattform already exists and is published');
-            }
+            // Refresh published_at so this article sits at the top of the
+            // /ratgeber list (sorted DESC). Older Gründerpaket articles
+            // were seeded with now()-timestamps and pushed our newer
+            // strategic posts down the list.
+            $existing->update([
+                'is_published' => true,
+                'published_at' => now()->subMinutes(5),
+            ]);
+            $this->command?->info('  • refreshed /ratgeber/was-kostet-b2b-plattform (published_at = now-5min)');
 
             return;
         }
@@ -146,18 +143,13 @@ TXT;
     {
         $existing = BlogArticle::where('slug->de', 'software-agentur-frankfurt-mittelstand')->first();
         if ($existing) {
-            if (! $existing->is_published
-                || $existing->published_at === null
-                || $existing->published_at->isFuture()
-            ) {
-                $existing->update([
-                    'is_published' => true,
-                    'published_at' => now()->subHours(2),
-                ]);
-                $this->command?->info('  • re-published existing /ratgeber/software-agentur-frankfurt-mittelstand');
-            } else {
-                $this->command?->info('  • /ratgeber/software-agentur-frankfurt-mittelstand already exists and is published');
-            }
+            // Refresh published_at so this article sits at position 2
+            // on /ratgeber (just after the cost article).
+            $existing->update([
+                'is_published' => true,
+                'published_at' => now()->subMinutes(2),
+            ]);
+            $this->command?->info('  • refreshed /ratgeber/software-agentur-frankfurt-mittelstand (published_at = now-2min)');
 
             return;
         }
