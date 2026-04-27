@@ -49,9 +49,9 @@ class B2BPlatformRatgeberSeeder extends Seeder
             // strategic posts down the list.
             $existing->update([
                 'is_published' => true,
-                'published_at' => now()->subMinutes(5),
+                'published_at' => now()->subMinutes(2),
             ]);
-            $this->command?->info('  • refreshed /ratgeber/was-kostet-b2b-plattform (published_at = now-5min)');
+            $this->command?->info('  • refreshed /ratgeber/was-kostet-b2b-plattform (published_at = now-2min, position 1)');
 
             return;
         }
@@ -147,9 +147,9 @@ TXT;
             // on /ratgeber (just after the cost article).
             $existing->update([
                 'is_published' => true,
-                'published_at' => now()->subMinutes(2),
+                'published_at' => now()->subMinutes(5),
             ]);
-            $this->command?->info('  • refreshed /ratgeber/software-agentur-frankfurt-mittelstand (published_at = now-2min)');
+            $this->command?->info('  • refreshed /ratgeber/software-agentur-frankfurt-mittelstand (published_at = now-5min, position 2)');
 
             return;
         }
