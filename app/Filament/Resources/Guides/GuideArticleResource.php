@@ -108,6 +108,13 @@ class GuideArticleResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('sort_order')
+                    ->label('Position')
+                    ->sortable()
+                    ->alignCenter()
+                    ->badge()
+                    ->color('gray')
+                    ->tooltip('Niedrigere Zahl = weiter oben auf /ratgeber. Per Drag & Drop änderbar (Sortier-Modus oben rechts) oder direkt in der Bearbeiten-Maske.'),
                 TextColumn::make('title')
                     ->label('Titel')
                     ->searchable()
@@ -127,7 +134,8 @@ class GuideArticleResource extends Resource
                 TextColumn::make('updated_at')
                     ->label('Aktualisiert')
                     ->dateTime('d.m.Y')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('guide_category_id')
@@ -139,6 +147,7 @@ class GuideArticleResource extends Resource
             ])
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
+            ->paginated(false)
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
