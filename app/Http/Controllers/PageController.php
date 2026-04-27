@@ -431,10 +431,36 @@ class PageController extends Controller
         return view('pages.local', compact('page', 'solutionHubs', 'seoPage', 'seaPage', 'localBusinessSchema'));
     }
 
+    /**
+     * Defensive guard for translatable text fields: Spatie's Translatable
+     * deserialises JSON columns automatically, but if an editor pasted a
+     * literal `{"de":"…","en":"…"}` string into Filament's plain-text
+     * field (instead of using the per-locale translation field), the
+     * column ends up double-encoded and we get the raw JSON in $title.
+     * This unwraps that case and picks the current locale's value.
+     */
+    private function resolveTranslatedString(mixed $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+        if (is_array($value)) {
+            return $value[app()->getLocale()] ?? ($value['de'] ?? (array_values($value)[0] ?? null));
+        }
+        if (is_string($value) && str_starts_with(trim($value), '{') && str_contains($value, '"de"')) {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                return $decoded[app()->getLocale()] ?? ($decoded['de'] ?? (array_values($decoded)[0] ?? $value));
+            }
+        }
+
+        return is_string($value) ? $value : (string) $value;
+    }
+
     private function setSeoMeta(Page $page): void
     {
-        $title = $page->meta_title ?? $page->title;
-        $description = $page->meta_description ?? '';
+        $title = $this->resolveTranslatedString($page->meta_title) ?? $this->resolveTranslatedString($page->title) ?? '';
+        $description = $this->resolveTranslatedString($page->meta_description) ?? '';
 
         // Strip a manual brand suffix — the SEO package appends it automatically.
         // Historically editors typed "| sdWebdesign" into meta_title in Filament,
