@@ -85,7 +85,7 @@ HTML;
             'slug' => ['de' => 'website-erstellen-lassen-kosten', 'en' => 'website-cost-guide'],
             'title' => ['de' => 'Was kostet eine professionelle Website? Realistische Preise 2026', 'en' => 'What does a professional website cost? Realistic prices 2026'],
             'meta_title' => ['de' => 'Website erstellen lassen: Kosten 2026 — realistische Preisspannen'],
-            'meta_description' => ['de' => 'Was kostet es, eine professionelle Website erstellen zu lassen? Realistische Preisspannen 2026 für Starter-Website, WordPress/CMS, individuelle Website und Shop — plus laufende Kosten und Spartipps.'],
+            'meta_description' => ['de' => 'Was kostet es, eine professionelle Website erstellen zu lassen? Webdesign-Preise 2026 im Überblick: realistische Spannen für Starter-Website, WordPress/CMS, individuelle Website und Shop — plus laufende Kosten und Spartipps.'],
             'content' => [
                 'de' => [
                     'hero' => [
@@ -96,7 +96,7 @@ HTML;
                     'sections' => [
                         ['title' => 'Die kurze Antwort: realistische Preisspannen 2026', 'content' => $sectionRanges],
                         ['title' => 'Die sieben Faktoren, die den Preis wirklich bestimmen', 'content' => $sectionDrivers],
-                        ['title' => 'Baukasten, Freelancer oder Agentur?', 'content' => $sectionProviders],
+                        ['title' => 'Webdesign-Preise im Vergleich: Baukasten, Freelancer oder Agentur?', 'content' => $sectionProviders],
                         ['title' => 'Die laufenden Kosten: Hosting, Wartung, Pflege', 'content' => $sectionRunning],
                         ['title' => 'Warum die billigste Website oft die teuerste ist', 'content' => $sectionCheap],
                         ['title' => 'Wo Sie sparen können — und wo besser nicht', 'content' => $sectionSaving],
