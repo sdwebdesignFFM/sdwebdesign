@@ -104,6 +104,36 @@ class Setting extends Model
     }
 
     /**
+     * Get the phone number cleaned for use in a tel: link (digits and leading plus only).
+     */
+    public function getPhoneLinkAttribute(): ?string
+    {
+        if (empty($this->phone)) {
+            return null;
+        }
+
+        return preg_replace('/[^0-9+]/', '', $this->phone);
+    }
+
+    /**
+     * Get the phone number in a human-readable format (e.g. "+49 152 53822114").
+     */
+    public function getFormattedPhoneAttribute(): ?string
+    {
+        $clean = $this->phone_link;
+
+        if ($clean === null) {
+            return null;
+        }
+
+        if (preg_match('/^\+49(\d{3})(\d+)$/', $clean, $matches)) {
+            return "+49 {$matches[1]} {$matches[2]}";
+        }
+
+        return $this->phone;
+    }
+
+    /**
      * Check if admin signature is configured for auto counter-signing.
      */
     public function hasAdminSignature(): bool

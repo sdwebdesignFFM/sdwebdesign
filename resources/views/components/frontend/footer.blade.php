@@ -15,23 +15,24 @@
                 <p class="text-sm text-muted-foreground leading-relaxed mb-6">
                     {{ __('footer.tagline') }}
                 </p>
-                <div class="space-y-2 text-sm text-muted-foreground">
-                    <p>{{ $settings->city ?? 'Frankfurt am Main' }}</p>
-                    <x-frontend.obfuscated-contact
-                        type="email"
-                        :value="$settings->email ?? 'info@sdwebdesign.de'"
-                        :showIcon="false"
-                        class="block hover:text-foreground transition-colors"
-                    />
-                    @if($settings->phone ?? false)
-                    <x-frontend.obfuscated-contact
-                        type="phone"
-                        :value="$settings->phone"
-                        :showIcon="false"
-                        class="block hover:text-foreground transition-colors"
-                    />
+                <address class="space-y-1 text-sm text-muted-foreground not-italic">
+                    @if($settings->street ?? false)
+                    <p>{{ $settings->street }}</p>
                     @endif
-                </div>
+                    <p>{{ trim(($settings->postal_code ?? '').' '.($settings->city ?? 'Frankfurt am Main')) }}</p>
+                    @if($settings->phone ?? false)
+                    <p>
+                        <a href="tel:{{ $settings->phone_link }}" class="block hover:text-foreground transition-colors">
+                            {{ $settings->formatted_phone }}
+                        </a>
+                    </p>
+                    @endif
+                    <p>
+                        <a href="mailto:{{ $settings->email ?? 'info@sdwebdesign.de' }}" class="block hover:text-foreground transition-colors">
+                            {{ $settings->email ?? 'info@sdwebdesign.de' }}
+                        </a>
+                    </p>
+                </address>
 
                 {{-- Social Media Icons --}}
                 @if(($settings->linkedin_url ?? false) || ($settings->xing_url ?? false) || ($settings->instagram_url ?? false) || ($settings->github_url ?? false))
@@ -78,8 +79,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ localized_route('solutions.show', ['slug' => 'prozessdigitalisierung']) }}" class="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                            {{ app()->getLocale() === 'de' ? 'Prozessdigitalisierung' : 'Process Digitization' }}
+                        <a href="{{ localized_route('solutions.show', ['slug' => 'prozessautomatisierung']) }}" class="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                            {{ app()->getLocale() === 'de' ? 'Prozessautomatisierung' : 'Process Automation' }}
                         </a>
                     </li>
                     <li>
@@ -93,7 +94,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ localized_route('solutions.show', ['slug' => 'ios-app-entwicklung']) }}" class="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        <a href="{{ localized_route('solutions.show', ['slug' => 'ios-apps']) }}" class="text-sm text-muted-foreground hover:text-foreground transition-colors">
                             {{ app()->getLocale() === 'de' ? 'iOS App Entwicklung' : 'iOS App Development' }}
                         </a>
                     </li>
@@ -176,6 +177,41 @@
                 @endif
             </div>
         </div>
+
+        {{-- Webdesign in Ihrer Region (nur DE, /in-Seiten sind DE-only) --}}
+        @if(app()->getLocale() === 'de')
+        @php
+            $regionLinks = [
+                'frankfurt-am-main' => 'Webdesign Frankfurt',
+                'offenbach' => 'Offenbach',
+                'bad-homburg' => 'Bad Homburg',
+                'darmstadt' => 'Darmstadt',
+                'mainz' => 'Mainz',
+                'hanau' => 'Hanau',
+                'bensheim' => 'Bensheim',
+            ];
+        @endphp
+        <div class="mt-16 pt-8 border-t border-border">
+            <h4 class="text-sm font-medium uppercase tracking-wider mb-6">Webdesign in Ihrer Region</h4>
+            <ul class="flex flex-wrap gap-x-6 gap-y-3">
+                @foreach($regionLinks as $slug => $label)
+                <li>
+                    <a href="/in/{{ $slug }}" class="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {{ $label }}
+                    </a>
+                </li>
+                @endforeach
+                <li>
+                    <a href="/in" class="inline-flex items-center gap-1 text-sm text-foreground hover:text-accent transition-colors">
+                        Alle Standorte
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        @endif
 
         {{-- Bottom Bar --}}
         <div class="mt-16 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">

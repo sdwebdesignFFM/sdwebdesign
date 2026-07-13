@@ -120,25 +120,38 @@ class Page extends Model
     public static function findBySlug(string $slug): ?self
     {
         $locale = app()->getLocale();
-        $fallbackLocale = 'de';
 
         return Cache::remember(
             "page.{$locale}.{$slug}",
             now()->addHours(24),
-            function () use ($locale, $fallbackLocale, $slug) {
+            function () use ($locale, $slug) {
                 // Try current locale first
                 $page = self::active()
                     ->where("slug->{$locale}", $slug)
                     ->first();
 
-                // Fallback to default locale if not found
-                if (! $page && $locale !== $fallbackLocale) {
-                    $page = self::active()
-                        ->where("slug->{$fallbackLocale}", $slug)
-                        ->first();
+                if ($page) {
+                    return $page;
                 }
 
-                return $page;
+                // Then any other configured locale. This makes an article
+                // resolvable through a foreign locale's slug so the controller
+                // can issue a canonical 301 redirect (avoids duplicate URLs).
+                foreach (config('app.available_locales', ['de', 'en']) as $otherLocale) {
+                    if ($otherLocale === $locale) {
+                        continue;
+                    }
+
+                    $page = self::active()
+                        ->where("slug->{$otherLocale}", $slug)
+                        ->first();
+
+                    if ($page) {
+                        return $page;
+                    }
+                }
+
+                return null;
             }
         );
     }

@@ -116,8 +116,16 @@
                 </a>
             </div>
 
-            {{-- Mobile: Language Switcher + Menu Button --}}
+            {{-- Mobile: CTA + Language Switcher + Menu Button --}}
             <div class="lg:hidden flex items-center gap-3">
+                {{-- Compact CTA (always visible on mobile) --}}
+                <a
+                    href="{{ localized_route('contact') }}"
+                    class="btn-primary text-sm py-2 px-4"
+                >
+                    {{ __('navigation.cta_short') }}
+                </a>
+
                 {{-- Compact Language Switcher --}}
                 <div class="flex items-center gap-1 text-sm">
                     <a

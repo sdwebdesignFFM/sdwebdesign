@@ -10,6 +10,10 @@
     {!! Twitter::generate() !!}
     {!! JsonLd::generate() !!}
 
+    @foreach (($pageSchemas ?? []) as $pageSchema)
+        <script type="application/ld+json">{!! json_encode($pageSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
+    @endforeach
+
     {{-- Favicons --}}
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">

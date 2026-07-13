@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\HandleRedirects;
 use App\Http\Middleware\RedirectTrailingSlash;
+use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\SetPublicCacheHeaders;
 use Illuminate\Foundation\Application;
@@ -27,9 +28,13 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleRedirects::class,
         ]);
 
-        // Override Laravel's default no-store cache headers on public pages.
+        // Override Laravel's default no-store cache headers on public pages,
+        // and append security response headers (HSTS, Referrer-Policy,
+        // Permissions-Policy, X-Content-Type-Options) to all web responses,
+        // including the Filament admin panel under /admin.
         $middleware->web(append: [
             SetPublicCacheHeaders::class,
+            SecurityHeaders::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

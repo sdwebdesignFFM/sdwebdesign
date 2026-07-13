@@ -32,6 +32,20 @@
                         {{ $hero['text'] }}
                     </p>
                     @endif
+
+                    <div class="mt-10 flex flex-wrap gap-4">
+                        <button
+                            type="button"
+                            onclick="Livewire.dispatch('openContactModal')"
+                            class="group px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all flex items-center gap-2"
+                        >
+                            {{ __('navigation.cta_consultation') }}
+                            <span class="inline-block animate-bounce-x">→</span>
+                        </button>
+                        <a href="{{ localized_route('contact') }}" class="px-8 py-4 border border-border hover:border-foreground transition-colors">
+                            {{ __('navigation.contact') }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -12,23 +12,31 @@ class BlogArticleTest extends TestCase
 
     public function test_published_scope_returns_only_published_articles(): void
     {
-        BlogArticle::factory()->published()->count(3)->create();
-        BlogArticle::factory()->create(['is_published' => false]);
+        // Data migrations seed additional published articles, so count relative
+        // to that baseline instead of assuming an empty table.
+        $baseline = BlogArticle::published()->count();
+
+        $published = BlogArticle::factory()->published()->count(3)->create();
+        $draft = BlogArticle::factory()->create(['is_published' => false]);
 
         $publishedArticles = BlogArticle::published()->get();
 
-        $this->assertCount(3, $publishedArticles);
+        $this->assertCount($baseline + 3, $publishedArticles);
+        $this->assertTrue($published->pluck('id')->diff($publishedArticles->pluck('id'))->isEmpty());
+        $this->assertFalse($publishedArticles->pluck('id')->contains($draft->id));
     }
 
     public function test_by_category_scope_filters_by_category(): void
     {
+        $baseline = BlogArticle::byCategory('Technologie')->count();
+
         BlogArticle::factory()->create(['category' => 'Technologie']);
         BlogArticle::factory()->create(['category' => 'Technologie']);
         BlogArticle::factory()->create(['category' => 'Strategie']);
 
         $techArticles = BlogArticle::byCategory('Technologie')->get();
 
-        $this->assertCount(2, $techArticles);
+        $this->assertCount($baseline + 2, $techArticles);
     }
 
     public function test_formatted_date_accessor_returns_german_format(): void

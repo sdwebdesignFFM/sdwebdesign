@@ -65,6 +65,7 @@ class ClientTest extends TestCase
     public function test_client_display_name_with_company(): void
     {
         $client = Client::factory()->create([
+            'title' => null,
             'first_name' => 'Max',
             'last_name' => 'Mustermann',
             'company' => 'Test GmbH',
@@ -76,6 +77,7 @@ class ClientTest extends TestCase
     public function test_client_display_name_without_company(): void
     {
         $client = Client::factory()->create([
+            'title' => null,
             'first_name' => 'Max',
             'last_name' => 'Mustermann',
             'company' => null,

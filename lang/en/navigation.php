@@ -8,6 +8,8 @@ return [
     'blog' => 'Blog',
     'contact' => 'Contact',
     'cta' => 'Start Project',
+    'cta_short' => 'Inquiry',
+    'cta_consultation' => 'Free consultation',
     'open_menu' => 'Open menu',
     'close_menu' => 'Close menu',
     'imprint' => 'Imprint',

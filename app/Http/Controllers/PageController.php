@@ -43,11 +43,15 @@ class PageController extends Controller
             ->get();
 
         $this->setSeoMeta($page);
+        $this->addBreadcrumbSchema([
+            $this->homeCrumb(),
+            $this->solutionsCrumb(),
+        ]);
 
         return view('pages.solutions', compact('page', 'solutionPages'));
     }
 
-    public function solutionDetail(string $slug): View
+    public function solutionDetail(string $slug): View|RedirectResponse
     {
         $page = Page::findBySlug($slug);
 
@@ -91,11 +95,15 @@ class PageController extends Controller
             ->get();
 
         $this->setSeoMeta($page);
+        $this->addBreadcrumbSchema([
+            $this->homeCrumb(),
+            $this->referencesCrumb(),
+        ]);
 
         return view('pages.references', compact('page', 'referencePages'));
     }
 
-    public function referenceDetail(string $slug): View
+    public function referenceDetail(string $slug): View|RedirectResponse
     {
         $page = Page::findBySlug($slug);
 
@@ -103,7 +111,16 @@ class PageController extends Controller
             abort(404);
         }
 
+        if ($redirect = $this->canonicalRedirect($page)) {
+            return $redirect;
+        }
+
         $this->setSeoMeta($page);
+        $this->addBreadcrumbSchema([
+            $this->homeCrumb(),
+            $this->referencesCrumb(),
+            ['name' => $page->title, 'url' => url($page->getUrl())],
+        ]);
 
         // Get other reference pages for "Related Projects" section
         $otherReferences = Page::active()
@@ -237,12 +254,16 @@ class PageController extends Controller
         return view('pages.accessibility', compact('page'));
     }
 
-    public function solutionHierarchy(string $path): View
+    public function solutionHierarchy(string $path): View|RedirectResponse
     {
         $page = Page::findByHierarchicalSlug($path);
 
         if (! $page || ! in_array($page->type, [Page::TYPE_SOLUTION_HUB, Page::TYPE_SOLUTION_DETAIL])) {
             abort(404);
+        }
+
+        if ($redirect = $this->canonicalRedirect($page)) {
+            return $redirect;
         }
 
         $this->setSeoMeta($page);
@@ -288,6 +309,10 @@ class PageController extends Controller
         }
 
         $this->setSeoMeta($page);
+        $this->addBreadcrumbSchema([
+            $this->homeCrumb(),
+            $this->guidesCrumb(),
+        ]);
 
         // Get published guides with pagination (12 per page)
         $guides = Page::active()
@@ -298,7 +323,7 @@ class PageController extends Controller
         return view('pages.guide-overview', compact('page', 'guides'));
     }
 
-    public function guide(string $slug): View
+    public function guide(string $slug): View|RedirectResponse
     {
         $page = Page::findBySlug($slug);
 
@@ -306,7 +331,16 @@ class PageController extends Controller
             abort(404);
         }
 
+        if ($redirect = $this->canonicalRedirect($page)) {
+            return $redirect;
+        }
+
         $this->setSeoMeta($page);
+        $this->addBreadcrumbSchema([
+            $this->homeCrumb(),
+            $this->guidesCrumb(),
+            ['name' => $page->title, 'url' => url($page->getUrl())],
+        ]);
 
         // Get related solution pages mentioned in this guide
         $relatedSolutions = collect();
@@ -340,6 +374,11 @@ class PageController extends Controller
         }
 
         $this->setSeoMeta($page);
+        $this->addBreadcrumbSchema([
+            $this->homeCrumb(),
+            $this->solutionsCrumb(),
+            ['name' => $page->title, 'url' => url($page->getUrl())],
+        ]);
 
         // Get related solution pages for linking
         $relatedSolutions = Page::active()
@@ -359,6 +398,11 @@ class PageController extends Controller
         }
 
         $this->setSeoMeta($page);
+        $this->addBreadcrumbSchema([
+            $this->homeCrumb(),
+            $this->solutionsCrumb(),
+            ['name' => $page->title, 'url' => url($page->getUrl())],
+        ]);
 
         // Get related solution pages for linking
         $relatedSolutions = Page::active()
@@ -404,12 +448,16 @@ class PageController extends Controller
         return view('pages.local-hub', compact('page', 'localPages'));
     }
 
-    public function localLanding(string $slug): View
+    public function localLanding(string $slug): View|RedirectResponse
     {
         $page = Page::findBySlug($slug);
 
         if (! $page || $page->type !== Page::TYPE_LOCAL) {
             abort(404);
+        }
+
+        if ($redirect = $this->canonicalRedirect($page)) {
+            return $redirect;
         }
 
         $this->setSeoMeta($page);
@@ -457,6 +505,29 @@ class PageController extends Controller
         return is_string($value) ? $value : (string) $value;
     }
 
+    /**
+     * Redirect (301) to the canonical URL of the current locale when a
+     * translatable page is requested through a slug that is not canonical for
+     * that locale (e.g. the German slug on an English URL). Prevents duplicate
+     * content across locales sharing the same resolution logic.
+     */
+    private function canonicalRedirect(Page $page): ?RedirectResponse
+    {
+        // No canonical slug in the current locale (page only exists in another
+        // locale) → nothing to normalise to, render via fallback instead.
+        if (! $page->getTranslation('slug', app()->getLocale(), false)) {
+            return null;
+        }
+
+        $canonical = url($page->getUrl());
+
+        if (rtrim($canonical, '/') === rtrim(url()->current(), '/')) {
+            return null;
+        }
+
+        return redirect($canonical, 301);
+    }
+
     private function setSeoMeta(Page $page): void
     {
         $title = $this->resolveTranslatedString($page->meta_title) ?? $this->resolveTranslatedString($page->title) ?? '';
@@ -476,6 +547,11 @@ class PageController extends Controller
             OpenGraph::setDescription($description);
         }
 
+        JsonLd::setTitle($title);
+        if ($description) {
+            JsonLd::setDescription($description);
+        }
+
         // Per-page noindex toggle (content.meta.noindex). Used to keep pages
         // accessible via direct link while removing them from Google's index —
         // typically for thin/duplicate local landing pages that are still
@@ -487,41 +563,16 @@ class PageController extends Controller
 
     private function setBreadcrumbsJsonLd(Page $page): void
     {
-        $breadcrumbs = $page->getBreadcrumbs();
-        $items = [];
-        $position = 1;
-
-        // Add home as first item
-        $locale = app()->getLocale();
-        $homeUrl = $locale === 'en' ? url('/en') : url('/');
-        $items[] = [
-            '@type' => 'ListItem',
-            'position' => $position++,
-            'name' => 'Home',
-            'item' => $homeUrl,
+        $crumbs = [
+            $this->homeCrumb(),
+            $this->solutionsCrumb(),
         ];
 
-        // Add solutions overview
-        $solutionsUrl = $locale === 'en' ? url('/en/solutions') : url('/loesungen');
-        $items[] = [
-            '@type' => 'ListItem',
-            'position' => $position++,
-            'name' => $locale === 'en' ? 'Solutions' : 'Lösungen',
-            'item' => $solutionsUrl,
-        ];
-
-        // Add breadcrumb items
-        foreach ($breadcrumbs as $url => $name) {
-            $items[] = [
-                '@type' => 'ListItem',
-                'position' => $position++,
-                'name' => $name,
-                'item' => url($url),
-            ];
+        foreach ($page->getBreadcrumbs() as $url => $name) {
+            $crumbs[] = ['name' => $name, 'url' => url($url)];
         }
 
-        JsonLd::setType('BreadcrumbList');
-        JsonLd::addValue('itemListElement', $items);
+        $this->addBreadcrumbSchema($crumbs);
     }
 
     /**
@@ -686,17 +737,16 @@ class PageController extends Controller
                 '@type' => 'WebPage',
                 '@id' => $url,
             ],
-            'headline' => $page->meta_title ?? $page->title,
+            'headline' => $page->title,
             'description' => $page->meta_description,
             'url' => $url,
             'datePublished' => $page->created_at?->toIso8601String(),
             'dateModified' => ($page->updated_at ?? $page->created_at)?->toIso8601String(),
-            'inLanguage' => 'de-DE',
+            'inLanguage' => app()->getLocale(),
             'author' => [
-                '@type' => 'Organization',
-                '@id' => $orgId,
-                'name' => $settings?->company_name ?? 'sdWebdesign',
-                'url' => $baseUrl,
+                '@type' => 'Person',
+                'name' => 'Steffen Fasselt',
+                'url' => 'https://www.linkedin.com/in/steffenfasselt/',
             ],
             'publisher' => [
                 '@type' => 'Organization',
@@ -793,38 +843,66 @@ class PageController extends Controller
     private function setLocalBreadcrumbsJsonLd(Page $page): void
     {
         $locale = app()->getLocale();
-        $city = $page->getSection('city', $page->title);
 
-        $items = [];
-        $position = 1;
+        $this->addBreadcrumbSchema([
+            $this->homeCrumb(),
+            [
+                'name' => $locale === 'en' ? 'Locations' : 'Standorte',
+                'url' => $locale === 'en' ? url('/en/in') : url('/in'),
+            ],
+            [
+                'name' => $page->getSection('city', $page->title),
+                'url' => url($page->getUrl()),
+            ],
+        ]);
+    }
 
-        // Home
-        $homeUrl = $locale === 'en' ? url('/en') : url('/');
-        $items[] = [
-            '@type' => 'ListItem',
-            'position' => $position++,
-            'name' => 'Home',
-            'item' => $homeUrl,
+    /**
+     * @return array{name: string, url: string}
+     */
+    private function homeCrumb(): array
+    {
+        $locale = app()->getLocale();
+
+        return ['name' => 'Home', 'url' => $locale === 'en' ? url('/en') : url('/')];
+    }
+
+    /**
+     * @return array{name: string, url: string}
+     */
+    private function solutionsCrumb(): array
+    {
+        $locale = app()->getLocale();
+
+        return [
+            'name' => $locale === 'en' ? 'Solutions' : 'Lösungen',
+            'url' => $locale === 'en' ? url('/en/solutions') : url('/loesungen'),
         ];
+    }
 
-        // Local Hub
-        $hubUrl = $locale === 'en' ? url('/en/in') : url('/in');
-        $items[] = [
-            '@type' => 'ListItem',
-            'position' => $position++,
-            'name' => $locale === 'en' ? 'Locations' : 'Standorte',
-            'item' => $hubUrl,
+    /**
+     * @return array{name: string, url: string}
+     */
+    private function referencesCrumb(): array
+    {
+        $locale = app()->getLocale();
+
+        return [
+            'name' => $locale === 'en' ? 'References' : 'Referenzen',
+            'url' => $locale === 'en' ? url('/en/references') : url('/referenzen'),
         ];
+    }
 
-        // Current city
-        $items[] = [
-            '@type' => 'ListItem',
-            'position' => $position++,
-            'name' => $city,
-            'item' => url($page->getUrl()),
+    /**
+     * @return array{name: string, url: string}
+     */
+    private function guidesCrumb(): array
+    {
+        $locale = app()->getLocale();
+
+        return [
+            'name' => $locale === 'en' ? 'Guides' : 'Ratgeber',
+            'url' => $locale === 'en' ? url('/en/guides') : url('/ratgeber'),
         ];
-
-        // Note: Since we already set LocalBusiness, we add breadcrumbs via a script tag in the view
-        // This is handled in the blade template
     }
 }
