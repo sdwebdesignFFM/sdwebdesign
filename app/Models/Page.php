@@ -274,33 +274,67 @@ class Page extends Model
     }
 
     /**
-     * Get the URL for this page based on its type and hierarchy
+     * Get the URL for this page in the current locale.
      */
     public function getUrl(): string
     {
-        $locale = app()->getLocale();
+        return $this->getUrlForLocale(app()->getLocale());
+    }
+
+    /**
+     * Get the URL for this page in a specific locale.
+     *
+     * Builds the path using the TARGET locale's slugs across the whole
+     * ancestor chain, so cross-locale links (hreflang, language switcher)
+     * resolve to a real 200 page instead of mixing one locale's path prefix
+     * with another locale's slug (which 3XX-redirects or 404s).
+     */
+    public function getUrlForLocale(string $locale): string
+    {
         $prefix = $locale === 'en' ? '/en' : '';
+        $slug = $this->slugForLocale($locale);
 
         return match ($this->type) {
             self::TYPE_HOME => $prefix.'/',
             self::TYPE_SOLUTIONS => $prefix.($locale === 'en' ? '/solutions' : '/loesungen'),
-            self::TYPE_SOLUTION_HUB, self::TYPE_SOLUTION_DETAIL => $prefix.($locale === 'en' ? '/solutions/' : '/loesungen/').$this->full_slug,
+            self::TYPE_SOLUTION_HUB, self::TYPE_SOLUTION_DETAIL => $prefix.($locale === 'en' ? '/solutions/' : '/loesungen/').$this->fullSlugForLocale($locale),
             self::TYPE_REFERENCES => $prefix.($locale === 'en' ? '/references' : '/referenzen'),
-            self::TYPE_REFERENCE_DETAIL => $prefix.($locale === 'en' ? '/references/' : '/referenzen/').$this->slug,
+            self::TYPE_REFERENCE_DETAIL => $prefix.($locale === 'en' ? '/references/' : '/referenzen/').$slug,
             self::TYPE_ABOUT => $prefix.($locale === 'en' ? '/about-us' : '/ueber-uns'),
             self::TYPE_CONTACT => $prefix.($locale === 'en' ? '/contact' : '/kontakt'),
             self::TYPE_IMPRINT => $prefix.($locale === 'en' ? '/imprint' : '/impressum'),
             self::TYPE_PRIVACY => $prefix.($locale === 'en' ? '/privacy' : '/datenschutz'),
             self::TYPE_GUIDE_OVERVIEW => $prefix.($locale === 'en' ? '/guides' : '/ratgeber'),
-            self::TYPE_GUIDE => $prefix.($locale === 'en' ? '/guides/' : '/ratgeber/').$this->slug,
+            self::TYPE_GUIDE => $prefix.($locale === 'en' ? '/guides/' : '/ratgeber/').$slug,
             self::TYPE_SEO => $prefix.($locale === 'en' ? '/search-engine-optimization' : '/suchmaschinenoptimierung'),
             self::TYPE_SEA => $prefix.($locale === 'en' ? '/search-engine-advertising' : '/suchmaschinenwerbung'),
             self::TYPE_MAINTENANCE => $prefix.($locale === 'en' ? '/hosting-maintenance' : '/betrieb-hosting-wartung'),
             self::TYPE_ACCESSIBILITY => $prefix.($locale === 'en' ? '/accessibility' : '/barrierefreiheit'),
             self::TYPE_LOCAL_HUB => '/in',
-            self::TYPE_LOCAL => '/in/'.$this->slug,
-            default => $prefix.'/'.$this->slug,
+            self::TYPE_LOCAL => '/in/'.$slug,
+            default => $prefix.'/'.$slug,
         };
+    }
+
+    /**
+     * Resolve this page's own slug in a locale, falling back to the German slug.
+     */
+    protected function slugForLocale(string $locale): string
+    {
+        return $this->getTranslation('slug', $locale, false)
+            ?: $this->getTranslation('slug', 'de', false)
+            ?: '';
+    }
+
+    /**
+     * Build the full ancestor + self slug path in a locale.
+     */
+    protected function fullSlugForLocale(string $locale): string
+    {
+        return $this->ancestors()
+            ->map(fn (self $ancestor): string => $ancestor->slugForLocale($locale))
+            ->push($this->slugForLocale($locale))
+            ->implode('/');
     }
 
     /**

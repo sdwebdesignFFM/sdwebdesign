@@ -75,29 +75,37 @@ class SitemapTest extends TestCase
         $this->assertStringNotContainsString('/in/</loc>', $response->getContent());
     }
 
-    public function test_sitemap_includes_published_blog_articles_but_not_drafts(): void
+    public function test_sitemap_excludes_legacy_blog_articles_and_uses_guide_pages(): void
     {
         Config::set('app.url', 'https://sdwebdesign.de');
         $this->seedMinimalPages();
 
+        // Legacy BlogArticle: the /ratgeber/{slug} route now resolves against
+        // Page (TYPE_GUIDE), so a published BlogArticle without a matching guide
+        // page would 404 — it must NOT appear in the sitemap.
         BlogArticle::factory()->create([
-            'slug' => ['de' => 'veroeffentlichter-artikel', 'en' => 'published-article'],
-            'title' => ['de' => 'Veröffentlicht', 'en' => 'Published'],
+            'slug' => ['de' => 'legacy-artikel', 'en' => 'legacy-article'],
+            'title' => ['de' => 'Legacy', 'en' => 'Legacy'],
             'is_published' => true,
             'published_at' => now()->subDay(),
         ]);
 
-        BlogArticle::factory()->create([
-            'slug' => ['de' => 'entwurfs-artikel', 'en' => 'draft-article'],
-            'title' => ['de' => 'Entwurf', 'en' => 'Draft'],
-            'is_published' => false,
-            'published_at' => null,
+        // Real guide as a Page record — this is what should be in the sitemap.
+        Page::factory()->create([
+            'slug' => ['de' => 'echter-ratgeber', 'en' => 'real-guide'],
+            'title' => ['de' => 'Echter Ratgeber', 'en' => 'Real Guide'],
+            'type' => Page::TYPE_GUIDE,
+            'is_active' => true,
+            'content' => ['de' => ['intro' => 'x'], 'en' => ['intro' => 'x']],
         ]);
 
         $response = $this->get('/sitemap.xml');
+        $xml = $response->getContent();
 
-        $response->assertSee('/ratgeber/veroeffentlichter-artikel', false);
-        $this->assertStringNotContainsString('entwurfs-artikel', $response->getContent());
+        $response->assertSee('/ratgeber/echter-ratgeber', false);
+        $response->assertSee('/en/guides/real-guide', false);
+        $this->assertStringNotContainsString('legacy-artikel', $xml);
+        $this->assertStringNotContainsString('legacy-article', $xml);
     }
 
     public function test_sitemap_excludes_inactive_pages(): void

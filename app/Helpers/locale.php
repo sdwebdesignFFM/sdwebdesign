@@ -42,6 +42,26 @@ if (! function_exists('alternate_locale_url')) {
             return $strict ? null : $fallback;
         }
 
+        // Page-detail routes carry a locale-specific slug/path parameter.
+        // Reusing the current locale's slug against the target locale's route
+        // yields the right path prefix with the wrong-language slug (e.g.
+        // /en/solutions/plattformen/interne-tools), which 3XX-redirects or
+        // 404s and breaks hreflang. Resolve the page and use its slug in the
+        // target locale instead.
+        $pageDetailRoutes = ['solutions.show', 'solutions.hierarchy', 'guide.show', 'references.show'];
+
+        if (in_array($baseName, $pageDetailRoutes, true) && $parameters !== []) {
+            $slugPath = (string) reset($parameters);
+            $page = \App\Models\Page::findByHierarchicalSlug($slugPath);
+
+            // No real equivalent in the target locale -> no hreflang pair.
+            if (! $page || ($page->getTranslation('slug', $locale, false) ?: '') === '') {
+                return $strict ? null : $fallback;
+            }
+
+            return url($page->getUrlForLocale($locale));
+        }
+
         return route($newRouteName, $parameters);
     }
 }

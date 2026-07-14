@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BlogArticle;
 use App\Models\Page;
 use Illuminate\Http\Response;
 use Spatie\Sitemap\Sitemap;
@@ -37,25 +36,11 @@ class SitemapController extends Controller
                     ->setPriority(0.8)
             );
 
-            foreach (BlogArticle::published()->get() as $article) {
-                $deSlug = $article->getTranslation('slug', 'de');
-                if ($deSlug) {
-                    $sitemap->add(
-                        Url::create($baseUrl.'/ratgeber/'.$deSlug)
-                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-                            ->setPriority(0.6)
-                    );
-                }
-
-                $enSlug = $article->getTranslation('slug', 'en');
-                if ($enSlug && $enSlug !== $deSlug) {
-                    $sitemap->add(
-                        Url::create($baseUrl.'/en/guides/'.$enSlug)
-                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-                            ->setPriority(0.5)
-                    );
-                }
-            }
+            // NOTE: Legacy BlogArticle records are intentionally NOT emitted.
+            // Guides are now Page records (TYPE_GUIDE, added above) and the
+            // /ratgeber/{slug} route resolves against Page, so any leftover
+            // published BlogArticle whose slug has no matching guide page would
+            // 404 — polluting the sitemap with dead URLs.
         } finally {
             app()->setLocale($originalLocale);
         }
