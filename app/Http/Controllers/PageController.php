@@ -300,12 +300,18 @@ class PageController extends Controller
         return view('pages.solution-detail', compact('page', 'otherSolutions', 'relatedGuide'));
     }
 
-    public function guideOverview(): View
+    public function guideOverview(): View|RedirectResponse
     {
         $page = Page::findByType(Page::TYPE_GUIDE_OVERVIEW);
 
         if (! $page) {
             abort(404);
+        }
+
+        // ?page=1 is a duplicate of the canonical overview URL — 301 to the base
+        // so it doesn't compete with /ratgeber as its own indexable, same-title URL.
+        if (request()->has('page') && (int) request()->query('page') === 1) {
+            return redirect()->to(localized_route('guides'), 301);
         }
 
         $this->setSeoMeta($page);
@@ -319,6 +325,19 @@ class PageController extends Controller
             ->ofType(Page::TYPE_GUIDE)
             ->orderBy('sort_order')
             ->paginate(12);
+
+        // Give paginated pages (2+) a distinct title so they aren't flagged as
+        // duplicate titles of the overview. Page 1 keeps the canonical title.
+        if ($guides->currentPage() >= 2) {
+            $baseTitle = $this->resolveTranslatedString($page->meta_title)
+                ?? $this->resolveTranslatedString($page->title)
+                ?? '';
+            $baseTitle = preg_replace('/\s*\|\s*sd\s?webdesign\s*$/iu', '', $baseTitle);
+            $suffix = (app()->getLocale() === 'en' ? ' – Page ' : ' – Seite ').$guides->currentPage();
+
+            SEOMeta::setTitle($baseTitle.$suffix);
+            OpenGraph::setTitle($baseTitle.$suffix);
+        }
 
         return view('pages.guide-overview', compact('page', 'guides'));
     }

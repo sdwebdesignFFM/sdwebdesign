@@ -233,6 +233,34 @@ class GuidePagesTest extends TestCase
         $response->assertDontSee('page=2');
     }
 
+    public function test_guide_overview_page_one_redirects_to_base(): void
+    {
+        // ?page=1 duplicates /ratgeber (same title, own canonical) -> 301 to base.
+        $response = $this->get('/ratgeber?page=1');
+
+        $response->assertStatus(301);
+        $this->assertStringEndsWith('/ratgeber', (string) $response->headers->get('Location'));
+    }
+
+    public function test_guide_overview_paginated_page_has_distinct_title(): void
+    {
+        for ($i = 1; $i <= 15; $i++) {
+            Page::factory()->create([
+                'slug' => ['de' => "test-guide-{$i}", 'en' => "test-guide-{$i}"],
+                'title' => ['de' => "Test Ratgeber {$i}", 'en' => "Test Guide {$i}"],
+                'type' => Page::TYPE_GUIDE,
+                'is_active' => true,
+                'sort_order' => $i + 10,
+                'content' => ['de' => ['intro' => ['text' => "Test content {$i}"]]],
+            ]);
+        }
+
+        $html = $this->get('/ratgeber?page=2')->getContent();
+        preg_match('#<title>(.*?)</title>#', $html, $m);
+
+        $this->assertStringContainsString('Seite 2', $m[1] ?? '');
+    }
+
     public function test_guide_page_emits_blog_posting_schema(): void
     {
         $response = $this->get('/ratgeber/website-vs-webanwendung');
