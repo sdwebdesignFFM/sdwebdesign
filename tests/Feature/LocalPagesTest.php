@@ -458,6 +458,41 @@ class LocalPagesTest extends TestCase
         $response->assertSee('/in/frankfurt-am-main');
     }
 
+    public function test_local_hub_groups_wiesbaden_and_kassel(): void
+    {
+        Page::factory()->create([
+            'slug' => ['de' => 'in', 'en' => 'in'],
+            'title' => ['de' => 'Lokale Expertise', 'en' => 'Local Expertise'],
+            'type' => Page::TYPE_LOCAL_HUB,
+            'is_active' => true,
+            'content' => ['de' => []],
+        ]);
+
+        Page::factory()->create([
+            'slug' => ['de' => 'wiesbaden', 'en' => 'wiesbaden'],
+            'title' => ['de' => 'Webagentur Wiesbaden', 'en' => 'Web Agency Wiesbaden'],
+            'type' => Page::TYPE_LOCAL,
+            'is_active' => true,
+            'content' => ['de' => ['city' => 'Wiesbaden', 'region' => 'Rhein-Main-Gebiet']],
+        ]);
+
+        Page::factory()->create([
+            'slug' => ['de' => 'kassel', 'en' => 'kassel'],
+            'title' => ['de' => 'Webagentur Kassel', 'en' => 'Web Agency Kassel'],
+            'type' => Page::TYPE_LOCAL,
+            'is_active' => true,
+            'content' => ['de' => ['city' => 'Kassel', 'region' => 'Nordhessen']],
+        ]);
+
+        $response = $this->get('/in');
+
+        $response->assertStatus(200);
+        $response->assertSee('Mainz &amp; Wiesbaden', false);
+        $response->assertSee('Nordhessen');
+        $response->assertSee('/in/wiesbaden');
+        $response->assertSee('/in/kassel');
+    }
+
     public function test_local_hub_shows_why_local_section(): void
     {
         Page::factory()->create([

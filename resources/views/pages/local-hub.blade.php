@@ -8,9 +8,10 @@
         $regions = [
             'Frankfurt & Umgebung' => ['frankfurt-am-main', 'bad-homburg', 'bad-soden', 'bad-vilbel', 'kronberg', 'hanau'],
             'Südhessen' => ['darmstadt', 'offenbach', 'ruesselsheim', 'langen', 'bensheim'],
+            'Mainz & Wiesbaden' => ['mainz', 'wiesbaden'],
             'Mittelhessen' => ['giessen', 'marburg'],
+            'Nordhessen' => ['kassel'],
             'Osthessen' => ['fulda'],
-            'Rheinland-Pfalz' => ['mainz'],
         ];
 
         // Map local pages by slug for easy lookup
