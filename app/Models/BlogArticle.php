@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\BlogArticleFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Spatie\Translatable\HasTranslations;
 
 class BlogArticle extends Model
 {
-    /** @use HasFactory<\Database\Factories\BlogArticleFactory> */
+    /** @use HasFactory<BlogArticleFactory> */
     use HasFactory;
 
     use HasTranslations;

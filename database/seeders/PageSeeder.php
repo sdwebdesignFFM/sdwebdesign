@@ -330,7 +330,7 @@ class PageSeeder extends Seeder
                 'slug' => $solution['slug'],
                 'title' => $solution['title'],
                 'type' => Page::TYPE_SOLUTION_DETAIL,
-                'meta_title' => $solution['title'] . ' – sdWebdesign',
+                'meta_title' => $solution['title'].' – sdWebdesign',
                 'meta_description' => $solution['subtitle'],
                 'content' => [
                     'hero' => [

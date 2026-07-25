@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Page;
+use Illuminate\Support\Facades\Route;
+
 if (! function_exists('localized_route')) {
     /**
      * Generate a localized route URL.
@@ -38,7 +41,7 @@ if (! function_exists('alternate_locale_url')) {
         $parameters = request()->route()?->parameters() ?? [];
         $newRouteName = $locale.'.'.$baseName;
 
-        if (! \Illuminate\Support\Facades\Route::has($newRouteName)) {
+        if (! Route::has($newRouteName)) {
             return $strict ? null : $fallback;
         }
 
@@ -52,7 +55,7 @@ if (! function_exists('alternate_locale_url')) {
 
         if (in_array($baseName, $pageDetailRoutes, true) && $parameters !== []) {
             $slugPath = (string) reset($parameters);
-            $page = \App\Models\Page::findByHierarchicalSlug($slugPath);
+            $page = Page::findByHierarchicalSlug($slugPath);
 
             // No real equivalent in the target locale -> no hreflang pair.
             if (! $page || ($page->getTranslation('slug', $locale, false) ?: '') === '') {

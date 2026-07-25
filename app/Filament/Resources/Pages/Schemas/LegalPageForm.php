@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\HtmlString;
 
 class LegalPageForm
 {
@@ -42,7 +43,7 @@ class LegalPageForm
 
                         Placeholder::make('settings_link')
                             ->label('')
-                            ->content(fn () => new \Illuminate\Support\HtmlString(
+                            ->content(fn () => new HtmlString(
                                 '<a href="'.route('filament.admin.pages.settings').'" class="text-primary-600 hover:underline font-medium">→ Firmendaten in den Einstellungen bearbeiten</a>'
                             ))
                             ->columnSpanFull(),

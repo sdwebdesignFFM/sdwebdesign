@@ -4,10 +4,12 @@ namespace Database\Factories;
 
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
+use App\Models\Client;
+use App\Models\Task;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Task>
+ * @extends Factory<Task>
  */
 class TaskFactory extends Factory
 {
@@ -21,7 +23,7 @@ class TaskFactory extends Factory
         $durationOptions = [30, 60, 90, 120, 180, 240, 300, 360, 480];
 
         return [
-            'client_id' => \App\Models\Client::factory(),
+            'client_id' => Client::factory(),
             'title' => fake()->randomElement([
                 'Website-Update durchführen',
                 'Neues Feature implementieren',

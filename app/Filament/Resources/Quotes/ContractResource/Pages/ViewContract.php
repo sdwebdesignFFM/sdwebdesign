@@ -6,6 +6,7 @@ use App\Enums\ContractStatus;
 use App\Filament\Resources\Quotes\ContractResource;
 use App\Filament\Resources\Quotes\InvoiceResource;
 use App\Services\Quote\ContractService;
+use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\DatePicker;
@@ -70,7 +71,7 @@ class ViewContract extends ViewRecord
                         $contractService->cancel(
                             $this->record,
                             $data['reason'] ?? null,
-                            $data['effective_date'] ? \Carbon\Carbon::parse($data['effective_date']) : null
+                            $data['effective_date'] ? Carbon::parse($data['effective_date']) : null
                         );
 
                         Notification::make()

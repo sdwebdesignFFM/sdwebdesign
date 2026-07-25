@@ -7,11 +7,15 @@ use App\Enums\TaskStatus;
 use App\Filament\Resources\Tasks\Pages\CreateTask;
 use App\Filament\Resources\Tasks\Pages\EditTask;
 use App\Filament\Resources\Tasks\Pages\ListTasks;
+use App\Filament\Resources\Tasks\RelationManagers\WorkLogsRelationManager;
+use App\Filament\Resources\Tasks\TaskResource;
 use App\Models\Client;
 use App\Models\Setting;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\WorkLog;
+use Filament\Actions\CreateAction;
+use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -331,7 +335,7 @@ class TaskTest extends TestCase
         Task::factory()->count(3)->create(['status' => TaskStatus::Pending]);
         Task::factory()->completed()->create();
 
-        $this->assertEquals('3', \App\Filament\Resources\Tasks\TaskResource::getNavigationBadge());
+        $this->assertEquals('3', TaskResource::getNavigationBadge());
     }
 
     public function test_worklog_can_be_linked_to_task(): void
@@ -350,7 +354,7 @@ class TaskTest extends TestCase
         $task = Task::factory()->create();
 
         Livewire::test(EditTask::class, ['record' => $task->id])
-            ->assertSeeLivewire(\App\Filament\Resources\Tasks\RelationManagers\WorkLogsRelationManager::class);
+            ->assertSeeLivewire(WorkLogsRelationManager::class);
     }
 
     public function test_worklog_can_be_created_via_relation_manager(): void
@@ -358,11 +362,11 @@ class TaskTest extends TestCase
         $task = Task::factory()->create();
 
         Livewire::test(
-            \App\Filament\Resources\Tasks\RelationManagers\WorkLogsRelationManager::class,
+            WorkLogsRelationManager::class,
             ['ownerRecord' => $task, 'pageClass' => EditTask::class]
         )
             ->callAction(
-                \Filament\Actions\Testing\TestAction::make(\Filament\Actions\CreateAction::class)->table(),
+                TestAction::make(CreateAction::class)->table(),
                 data: [
                     'worked_on' => now()->format('Y-m-d'),
                     'duration_minutes' => 60,

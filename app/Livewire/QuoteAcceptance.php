@@ -3,10 +3,13 @@
 namespace App\Livewire;
 
 use App\Models\Quote;
+use App\Models\QuoteItem;
 use App\Models\Setting;
 use App\Services\Quote\QuoteService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Collection;
 use Livewire\Component;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class QuoteAcceptance extends Component
 {
@@ -150,7 +153,7 @@ class QuoteAcceptance extends Component
         $this->termsItemId = null;
     }
 
-    public function getTermsItemProperty(): ?\App\Models\QuoteItem
+    public function getTermsItemProperty(): ?QuoteItem
     {
         if (! $this->termsItemId) {
             return null;
@@ -220,7 +223,7 @@ class QuoteAcceptance extends Component
     /**
      * Download PDF for manual signing.
      */
-    public function downloadForSigning(): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function downloadForSigning(): StreamedResponse
     {
         $this->errorMessage = null;
 
@@ -266,7 +269,7 @@ class QuoteAcceptance extends Component
     /**
      * Get items grouped by type (required, optional, option groups).
      *
-     * @return array{required: \Illuminate\Support\Collection, optional: \Illuminate\Support\Collection, option_groups: array<string, \Illuminate\Support\Collection>}
+     * @return array{required: Collection, optional: Collection, option_groups: array<string, Collection>}
      */
     public function getGroupedItemsProperty(): array
     {

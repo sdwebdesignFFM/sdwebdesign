@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Quote>
+ * @extends Factory<Quote>
  */
 class QuoteFactory extends Factory
 {

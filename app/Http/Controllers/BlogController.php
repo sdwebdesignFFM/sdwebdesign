@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlogArticle;
+use App\Models\Setting;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\SEOMeta;
@@ -92,7 +93,7 @@ class BlogController extends Controller
      */
     private function buildBlogPostingSchema(BlogArticle $article): array
     {
-        $settings = \App\Models\Setting::first();
+        $settings = Setting::first();
         $baseUrl = rtrim(config('app.url'), '/');
         if (! str_contains($baseUrl, '.test') && ! str_contains($baseUrl, 'localhost')) {
             $baseUrl = preg_replace('#^http://#', 'https://', $baseUrl);

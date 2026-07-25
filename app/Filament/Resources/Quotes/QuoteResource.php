@@ -11,6 +11,7 @@ use App\Models\Client;
 use App\Models\Quote;
 use App\Models\QuoteTemplate;
 use App\Models\Service;
+use App\Services\Quote\QuoteService;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -511,7 +512,7 @@ class QuoteResource extends Resource
                     ->color('success')
                     ->visible(fn (Quote $record) => $record->status === QuoteStatus::Draft)
                     ->requiresConfirmation()
-                    ->action(fn (Quote $record) => app(\App\Services\Quote\QuoteService::class)->send($record)),
+                    ->action(fn (Quote $record) => app(QuoteService::class)->send($record)),
 
                 Action::make('preview')
                     ->label('Vorschau')

@@ -4,6 +4,11 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\WhitepaperController;
+use App\Models\Contract;
+use App\Models\Invoice;
+use App\Models\Quote;
+use App\Services\Quote\PdfService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -54,7 +59,7 @@ Route::middleware('locale:de')->group(function () {
     Route::get('/in/{slug}', [PageController::class, 'localLanding'])->name('de.local');
 
     // Whitepaper / Lead Magnets
-    Route::get('/whitepaper/eigene-plattform-vs-standard-software', [\App\Http\Controllers\WhitepaperController::class, 'platformVsStandard'])
+    Route::get('/whitepaper/eigene-plattform-vs-standard-software', [WhitepaperController::class, 'platformVsStandard'])
         ->name('de.whitepaper.platform-vs-standard');
 });
 
@@ -143,20 +148,20 @@ Route::middleware('auth')->group(function () {
 
     // Admin PDF Downloads
     Route::prefix('admin/download')->group(function () {
-        Route::get('/invoice/{invoice}', function (\App\Models\Invoice $invoice) {
-            $pdfService = app(\App\Services\Quote\PdfService::class);
+        Route::get('/invoice/{invoice}', function (Invoice $invoice) {
+            $pdfService = app(PdfService::class);
 
             return $pdfService->downloadInvoice($invoice);
         })->name('admin.invoices.download');
 
-        Route::get('/quote/{quote}', function (\App\Models\Quote $quote) {
-            $pdfService = app(\App\Services\Quote\PdfService::class);
+        Route::get('/quote/{quote}', function (Quote $quote) {
+            $pdfService = app(PdfService::class);
 
             return $pdfService->downloadQuote($quote);
         })->name('admin.quotes.download');
 
-        Route::get('/contract/{contract}', function (\App\Models\Contract $contract) {
-            $pdfService = app(\App\Services\Quote\PdfService::class);
+        Route::get('/contract/{contract}', function (Contract $contract) {
+            $pdfService = app(PdfService::class);
 
             return $pdfService->downloadContract($contract);
         })->name('admin.contracts.download');

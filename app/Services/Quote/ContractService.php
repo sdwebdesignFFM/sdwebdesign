@@ -9,6 +9,8 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\QuoteActivity;
 use App\Settings\QuoteSettings;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ContractService
@@ -21,7 +23,7 @@ class ContractService
     /**
      * Cancel a contract.
      */
-    public function cancel(Contract $contract, ?string $reason = null, ?\Carbon\Carbon $effectiveDate = null): bool
+    public function cancel(Contract $contract, ?string $reason = null, ?Carbon $effectiveDate = null): bool
     {
         if (! $contract->canBeCancelled()) {
             return false;
@@ -72,7 +74,7 @@ class ContractService
     /**
      * Generate invoice for contract period.
      */
-    public function generateInvoice(Contract $contract, ?\Carbon\Carbon $periodStart = null, ?\Carbon\Carbon $periodEnd = null): ?Invoice
+    public function generateInvoice(Contract $contract, ?Carbon $periodStart = null, ?Carbon $periodEnd = null): ?Invoice
     {
         if ($contract->status !== ContractStatus::Active) {
             return null;
@@ -134,7 +136,7 @@ class ContractService
     /**
      * Get contracts that need billing.
      */
-    public function getContractsNeedingBilling(): \Illuminate\Database\Eloquent\Collection
+    public function getContractsNeedingBilling(): Collection
     {
         return Contract::needsBilling()->get();
     }
@@ -164,7 +166,7 @@ class ContractService
     /**
      * Get contracts expiring within days.
      */
-    public function getExpiringContracts(int $days = 30): \Illuminate\Database\Eloquent\Collection
+    public function getExpiringContracts(int $days = 30): Collection
     {
         return Contract::expiringMinTerm($days)->get();
     }

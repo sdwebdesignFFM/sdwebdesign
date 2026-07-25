@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use App\Models\Setting;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\SEOMeta;
@@ -229,7 +230,7 @@ class PageController extends Controller
 
     public function agb(): View
     {
-        $settings = \App\Models\Setting::instance();
+        $settings = Setting::instance();
         $locale = app()->getLocale();
 
         $title = $locale === 'de' ? 'Allgemeine Geschäftsbedingungen' : 'Terms and Conditions';
@@ -624,7 +625,7 @@ class PageController extends Controller
      */
     private function buildOrganizationSchema(): array
     {
-        $settings = \App\Models\Setting::first();
+        $settings = Setting::first();
         $baseUrl = $this->schemaBaseUrl();
 
         $address = array_filter([
@@ -677,7 +678,7 @@ class PageController extends Controller
      */
     private function buildFounderPersonSchema(Page $page): array
     {
-        $settings = \App\Models\Setting::first();
+        $settings = Setting::first();
         $baseUrl = $this->schemaBaseUrl();
 
         $members = $page->getSection('team', [])['members'] ?? [];
@@ -714,7 +715,7 @@ class PageController extends Controller
     private function buildWebsiteSchema(): array
     {
         $baseUrl = $this->schemaBaseUrl();
-        $settings = \App\Models\Setting::first();
+        $settings = Setting::first();
 
         return [
             '@context' => 'https://schema.org',
@@ -743,7 +744,7 @@ class PageController extends Controller
      */
     private function buildGuideBlogPostingSchema(Page $page): array
     {
-        $settings = \App\Models\Setting::first();
+        $settings = Setting::first();
         $baseUrl = $this->schemaBaseUrl();
 
         $url = $baseUrl.$page->getUrl();
@@ -792,7 +793,7 @@ class PageController extends Controller
      */
     private function buildLocalBusinessSchema(Page $page): array
     {
-        $settings = \App\Models\Setting::first();
+        $settings = Setting::first();
         $city = $page->getSection('city', $page->title);
         $baseUrl = $this->schemaBaseUrl();
 

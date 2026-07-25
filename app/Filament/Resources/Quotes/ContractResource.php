@@ -7,6 +7,8 @@ use App\Enums\ContractStatus;
 use App\Enums\ServiceType;
 use App\Filament\Resources\Quotes\ContractResource\Pages;
 use App\Models\Contract;
+use App\Services\Quote\ContractService;
+use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -310,7 +312,7 @@ class ContractResource extends Resource
                     ->visible(fn (Contract $record) => $record->status === ContractStatus::Active && $record->isRecurring())
                     ->requiresConfirmation()
                     ->action(function (Contract $record) {
-                        $contractService = app(\App\Services\Quote\ContractService::class);
+                        $contractService = app(ContractService::class);
                         $invoice = $contractService->generateInvoice($record);
 
                         if ($invoice) {
@@ -334,11 +336,11 @@ class ContractResource extends Resource
                             ->default(fn (Contract $record) => $record->getEarliestCancellationDate()),
                     ])
                     ->action(function (Contract $record, array $data) {
-                        $contractService = app(\App\Services\Quote\ContractService::class);
+                        $contractService = app(ContractService::class);
                         $contractService->cancel(
                             $record,
                             $data['reason'] ?? null,
-                            $data['effective_date'] ? \Carbon\Carbon::parse($data['effective_date']) : null
+                            $data['effective_date'] ? Carbon::parse($data['effective_date']) : null
                         );
                     }),
 

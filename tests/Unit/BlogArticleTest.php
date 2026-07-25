@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\BlogArticle;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -87,7 +88,7 @@ class BlogArticleTest extends TestCase
     {
         BlogArticle::factory()->create(['slug' => 'unique-slug']);
 
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(QueryException::class);
 
         BlogArticle::factory()->create(['slug' => 'unique-slug']);
     }

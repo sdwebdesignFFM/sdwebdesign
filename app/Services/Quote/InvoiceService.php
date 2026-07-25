@@ -6,6 +6,7 @@ use App\Enums\InvoiceStatus;
 use App\Models\Invoice;
 use App\Models\QuoteActivity;
 use App\Settings\QuoteSettings;
+use Illuminate\Database\Eloquent\Collection;
 
 class InvoiceService
 {
@@ -106,7 +107,7 @@ class InvoiceService
     /**
      * Get invoices needing payment reminder.
      */
-    public function getInvoicesNeedingReminder(): \Illuminate\Database\Eloquent\Collection
+    public function getInvoicesNeedingReminder(): Collection
     {
         return Invoice::needsReminder()->get();
     }
@@ -131,7 +132,7 @@ class InvoiceService
     /**
      * Get overdue invoices.
      */
-    public function getOverdueInvoices(): \Illuminate\Database\Eloquent\Collection
+    public function getOverdueInvoices(): Collection
     {
         return Invoice::overdue()->get();
     }
@@ -139,7 +140,7 @@ class InvoiceService
     /**
      * Get open invoices.
      */
-    public function getOpenInvoices(): \Illuminate\Database\Eloquent\Collection
+    public function getOpenInvoices(): Collection
     {
         return Invoice::open()->get();
     }

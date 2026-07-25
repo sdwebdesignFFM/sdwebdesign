@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Page;
 use Database\Seeders\PageSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -58,10 +59,10 @@ class PageRoutesTest extends TestCase
     public function test_reference_detail_page_returns_success(): void
     {
         // Create a reference detail page for testing
-        \App\Models\Page::create([
+        Page::create([
             'slug' => 'test-reference',
             'title' => 'Test Referenz',
-            'type' => \App\Models\Page::TYPE_REFERENCE_DETAIL,
+            'type' => Page::TYPE_REFERENCE_DETAIL,
             'is_active' => true,
             'content' => [
                 'hero' => [

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\BillingCycle;
 use App\Enums\ContractStatus;
 use App\Enums\ServiceType;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -139,7 +140,7 @@ class Contract extends Model
         return $this->status === ContractStatus::Active;
     }
 
-    public function getEarliestCancellationDate(): ?\Carbon\Carbon
+    public function getEarliestCancellationDate(): ?Carbon
     {
         if (! $this->canBeCancelled()) {
             return null;
@@ -156,7 +157,7 @@ class Contract extends Model
         return $earliestFromNotice;
     }
 
-    public function getNextRenewalDate(): ?\Carbon\Carbon
+    public function getNextRenewalDate(): ?Carbon
     {
         if (! $this->isRecurring() || ! $this->auto_renewal) {
             return null;

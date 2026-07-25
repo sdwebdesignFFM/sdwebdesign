@@ -6,7 +6,7 @@ use App\Models\Client;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Client>
+ * @extends Factory<Client>
  */
 class ClientFactory extends Factory
 {
@@ -26,7 +26,7 @@ class ClientFactory extends Factory
             'last_name' => fake()->lastName(),
             'company' => fake()->optional(0.7)->company(),
             'email' => fake()->unique()->safeEmail(),
-            'phone' => fake()->optional()->phoneNumber(),
+            'phone' => fake()->optional()->numerify('+49 69 #### ####'),
             'street' => fake()->optional()->streetAddress(),
             'zip' => fake()->optional()->postcode(),
             'city' => fake()->optional()->city(),

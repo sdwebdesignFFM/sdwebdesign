@@ -9,6 +9,7 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Contracts\TranslatableContentDriver;
 use Illuminate\Support\Arr;
@@ -36,7 +37,7 @@ abstract class EditSinglePage extends Page
     abstract protected static function getPageType(): string;
 
     /**
-     * @return array<\Filament\Schemas\Components\Tabs\Tab>
+     * @return array<Tab>
      */
     abstract protected function getContentTabs(): array;
 
